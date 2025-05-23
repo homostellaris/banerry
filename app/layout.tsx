@@ -2,6 +2,8 @@ import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
+import { VoiceProvider } from "@/app/contexts/voice-context"
+import SettingsMenu from "@/app/components/settings-menu"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -20,7 +22,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          {children}
+          <VoiceProvider>
+            {children}
+            <SettingsMenu />
+          </VoiceProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -6,12 +6,9 @@ The following is a script that the child uses:
 
 {{SCRIPT}}
 
-Please generate 5 variations of this script that:
-
-1. Maintain some of the original wording but introduce small changes
-2. Express a similar meaning or intent
-3. Are appropriate for a child's vocabulary level
-4. Gradually introduce more flexible language use
+Please generate 5 'mitigations' of this script. A mitigation is variation of the phrase which re-uses a large meaningful
+chunk of the original script in a new way. The hope is that by seeing different examples the child can learn more about
+that smaller chunk of the original script and how to re-use it in different ways.
 
 For each variation, provide:
 - The variation text

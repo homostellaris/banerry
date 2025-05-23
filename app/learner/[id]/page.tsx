@@ -1,44 +1,10 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { PlusCircle } from "lucide-react"
-import { useParams } from "next/navigation"
-import ScriptCard from "./script-card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ScriptTabs from "@/app/components/script-tabs"
+import { scripts } from "@/app/data/scripts"
 
-interface Script {
-  id: string
-  text: string
-  meanings: {
-    id: string
-    text: string
-    context: string
-  }[]
-  dateAdded: string
-}
-
-export default function LearnerPage() {
-  const [scripts, setScripts] = useState<Script[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const params = useParams()
-  const learnerId = params?.id as string
-
-  useEffect(() => {
-    async function fetchScripts() {
-      try {
-        const response = await fetch(`/api/learner/${learnerId}/scripts`)
-        const data = await response.json()
-        setScripts(data)
-      } catch (error) {
-        console.error("Error fetching scripts:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchScripts()
-  }, [learnerId])
+export default function LearnerPage({ params }: { params: { id: string } }) {
+  const learnerId = params.id
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
@@ -47,47 +13,7 @@ export default function LearnerPage() {
         <p className="text-xl text-gray-600">These are the phrases I use to communicate</p>
       </header>
 
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 h-16 mb-6">
-          <TabsTrigger value="all" className="text-xl py-4">
-            All Scripts
-          </TabsTrigger>
-          <TabsTrigger value="recent" className="text-xl py-4">
-            Recent Scripts
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="all">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-2xl text-gray-500">Loading scripts...</div>
-            </div>
-          ) : (
-            <div className="grid gap-6">
-              {scripts.map((script) => (
-                <ScriptCard key={script.id} script={script} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="recent">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-2xl text-gray-500">Loading scripts...</div>
-            </div>
-          ) : (
-            <div className="grid gap-6">
-              {scripts
-                .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime())
-                .slice(0, 3)
-                .map((script) => (
-                  <ScriptCard key={script.id} script={script} />
-                ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      <ScriptTabs scripts={scripts} />
 
       <div className="fixed bottom-8 right-8">
         <Button

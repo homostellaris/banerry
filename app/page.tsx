@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center p-6 text-center">
+    <div className="flex flex-col min-h-screen items-center justify-center p-6 text-center pr-20">
       <h1 className="text-5xl font-bold text-purple-700 mb-6">Gestalt Speech Therapy</h1>
       <p className="text-2xl text-gray-600 max-w-2xl mb-10">
         A tool to help children who are gestalt language processors develop their speech
