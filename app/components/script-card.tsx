@@ -6,9 +6,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Volume2, Loader2 } from "lucide-react"
 import Link from "next/link"
-import { generateSpeech } from "@/app/actions/tts"
-import { useState, useRef } from "react"
 import { useVoice } from "@/app/contexts/voice-context"
+import { useCachedTTS } from "@/app/hooks/use-cached-tts"
 
 interface ScriptCardProps {
   script: {
@@ -18,87 +17,12 @@ interface ScriptCardProps {
 }
 
 export default function ScriptCard({ script }: ScriptCardProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
   const { selectedVoice } = useVoice()
+  const { speak, isLoading, error } = useCachedTTS()
 
-  // Initialize audio element
-  if (typeof window !== "undefined" && !audioRef.current) {
-    audioRef.current = new Audio()
-  }
-
-  const playAudio = async (e: React.MouseEvent) => {
+  const playAudio = (e: React.MouseEvent) => {
     e.preventDefault() // Prevent navigation when clicking the button
-
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      // Stop any currently playing audio
-      if (audioRef.current) {
-        audioRef.current.pause()
-        audioRef.current.currentTime = 0
-      }
-
-      console.log(`Requesting speech for: "${script.text}" with voice: ${selectedVoice}`)
-
-      // Call the server action directly with selected voice
-      const result = await generateSpeech(script.text, selectedVoice)
-
-      if (!result.success) {
-        throw new Error(result.error || "Failed to generate speech")
-      }
-
-      // Convert base64 back to audio data
-      const audioData = Uint8Array.from(atob(result.audioData), (c) => c.charCodeAt(0))
-      const audioBlob = new Blob([audioData], { type: result.contentType })
-
-      console.log("Audio data received, preparing to play")
-
-      // Create a URL for the blob
-      const audioUrl = URL.createObjectURL(audioBlob)
-
-      // Set the audio source and play
-      if (audioRef.current) {
-        audioRef.current.src = audioUrl
-
-        // Set up error handling for audio playback
-        audioRef.current.onerror = (e) => {
-          console.error("Audio playback error:", e)
-          URL.revokeObjectURL(audioUrl)
-          setError("Failed to play audio")
-        }
-
-        await audioRef.current.play()
-        console.log("Audio playback started")
-
-        // Clean up the URL when audio is done playing
-        audioRef.current.onended = () => {
-          URL.revokeObjectURL(audioUrl)
-          console.log("Audio playback completed")
-        }
-      }
-    } catch (err) {
-      console.error("Error playing TTS:", err)
-
-      // Provide a user-friendly error message
-      let errorMessage = "Failed to play audio"
-
-      if (err instanceof Error) {
-        if (err.message.includes("API key")) {
-          errorMessage = "Text-to-speech is unavailable (API key issue)"
-        } else if (err.message.includes("Rate limit")) {
-          errorMessage = "Too many requests. Please try again later."
-        } else {
-          errorMessage = err.message
-        }
-      }
-
-      setError(errorMessage)
-    } finally {
-      setIsLoading(false)
-    }
+    speak(script.text, selectedVoice)
   }
 
   return (

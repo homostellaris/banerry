@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Volume2 } from "lucide-react"
-import { generateSpeech } from "@/app/actions/tts"
+import { useCachedTTS } from "@/app/hooks/use-cached-tts"
 
 const voices = [
   { id: "alloy", name: "Alloy", description: "Neutral, balanced" },
@@ -21,7 +21,7 @@ interface VoiceSelectorProps {
 
 export default function VoiceSelector({ onVoiceChange, className = "" }: VoiceSelectorProps) {
   const [selectedVoice, setSelectedVoice] = useState("nova")
-  const [isTestingVoice, setIsTestingVoice] = useState(false)
+  const { speak, isLoading: isTestingVoice } = useCachedTTS()
 
   // Load saved voice preference on mount
   useEffect(() => {
@@ -38,28 +38,8 @@ export default function VoiceSelector({ onVoiceChange, className = "" }: VoiceSe
     onVoiceChange?.(voice)
   }
 
-  const testVoice = async () => {
-    if (isTestingVoice) return
-
-    setIsTestingVoice(true)
-    try {
-      const result = await generateSpeech("Hello, this is how I sound!", selectedVoice)
-
-      if (result.success) {
-        // Convert base64 back to audio data and play
-        const audioData = Uint8Array.from(atob(result.audioData), (c) => c.charCodeAt(0))
-        const audioBlob = new Blob([audioData], { type: result.contentType })
-        const audioUrl = URL.createObjectURL(audioBlob)
-
-        const audio = new Audio(audioUrl)
-        audio.onended = () => URL.revokeObjectURL(audioUrl)
-        await audio.play()
-      }
-    } catch (error) {
-      console.error("Error testing voice:", error)
-    } finally {
-      setIsTestingVoice(false)
-    }
+  const testVoice = () => {
+    speak("Hello, this is how I sound!", selectedVoice)
   }
 
   return (
