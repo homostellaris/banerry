@@ -40,16 +40,9 @@ export default function ScriptTabs({ scripts }: ScriptTabsProps) {
 
       <TabsContent value="recent">
         <div className="grid gap-6">
-          {scripts
-            .sort(
-              (a, b) =>
-                new Date(b.dateAdded).getTime() -
-                new Date(a.dateAdded).getTime()
-            )
-            .slice(0, 3)
-            .map((script) => (
-              <ScriptCard key={script.id} script={script} />
-            ))}
+          {scripts.map((script) => (
+            <ScriptCard key={script.id} script={script} />
+          ))}
         </div>
       </TabsContent>
     </Tabs>
