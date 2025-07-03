@@ -29,17 +29,17 @@ export function useCachedTTS() {
       console.log(`Requesting speech for: "${text}" with voice: ${voice}`);
 
       // Check cache first
-      let audioData: string;
       let audioUrl: string = "";
-      let contentType: string;
       let fromCache = false;
 
       try {
         const cachedAudio = await audioCache.get(text, voice);
         if (cachedAudio) {
           console.log("Using cached audio");
-          audioData = cachedAudio.audioData;
-          contentType = cachedAudio.contentType;
+          const audioBlob = new Blob([cachedAudio.audioData], {
+            type: cachedAudio.contentType,
+          });
+          audioUrl = URL.createObjectURL(audioBlob);
           fromCache = true;
         }
       } catch (cacheError) {
@@ -73,11 +73,9 @@ export function useCachedTTS() {
         const blob = await response.blob();
         audioUrl = URL.createObjectURL(blob);
 
-        // audioData = result.audioData;
-        // contentType = result.contentType;
-
         try {
-          // await audioCache.set(text, voice, audioData, contentType);
+          const arrayBuffer = await blob.arrayBuffer();
+          await audioCache.set(text, voice, arrayBuffer, blob.type);
         } catch (cacheError) {
           console.warn(
             "Failed to cache audio, but continuing with playback:",
@@ -85,11 +83,6 @@ export function useCachedTTS() {
           );
         }
       }
-
-      // const audioDataArray = Uint8Array.from(atob(audioData), (c) =>
-      //   c.charCodeAt(0)
-      // );
-      // const audioBlob = new Blob([audioDataArray], { type: contentType });
 
       console.log("Audio data ready, preparing to play");
 
