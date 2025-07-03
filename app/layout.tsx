@@ -40,7 +40,7 @@ export default function RootLayout({
         >
           <VoiceProvider>
             {children}
-            <SettingsMenu />
+            {/* <SettingsMenu /> */}
           </VoiceProvider>
         </ThemeProvider>
       </body>
