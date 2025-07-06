@@ -5,6 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { VoiceProvider } from "@/app/contexts/voice-context";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import ConvexClientProvider from "@/components/ConvexClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -98,32 +100,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
+    <ConvexAuthNextjsServerProvider>
+      <html lang="en" suppressHydrationWarning>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#7c3aed" />
-        <Script
-          src="https://unpkg.com/@elevenlabs/convai-widget-embed"
-          async
-          type="text/javascript"
-        ></Script>
-      </head>
-      <body className={inter.className}>
-        {/* @ts-ignore */}
-        <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <VoiceProvider>
-            {children}
-            {/* <SettingsMenu /> */}
-          </VoiceProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+        <head>
+          <Script
+            src="https://unpkg.com/@elevenlabs/convai-widget-embed"
+            async
+            type="text/javascript"
+          ></Script>
+        </head>
+        <body className={inter.className}>
+          {/* @ts-ignore */}
+          <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
+          <ConvexClientProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <VoiceProvider>
+                {children}
+                {/* <SettingsMenu /> */}
+              </VoiceProvider>
+            </ThemeProvider>
+          </ConvexClientProvider>
+        </body>
+      </html>
+    </ConvexAuthNextjsServerProvider>
   );
 }
