@@ -1,20 +1,26 @@
-import type React from "react"
-import "@/app/globals.css"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
-import { VoiceProvider } from "@/app/contexts/voice-context"
-import Script from "next/script"
-import type { Metadata, Viewport } from "next"
+import type React from "react";
+import "@/app/globals.css";
+import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { VoiceProvider } from "@/app/contexts/voice-context";
+import Script from "next/script";
+import type { Metadata, Viewport } from "next";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
     default: "Banerry",
     template: "%s | Banerry",
   },
-  description: "A tool to help people who are gestalt language processors develop their speech",
-  keywords: ["PWA", "Gestalt Language Processing", "Language Development", "Communication"],
+  description:
+    "A tool to help people who are gestalt language processors develop their speech",
+  keywords: [
+    "PWA",
+    "Gestalt Language Processing",
+    "Language Development",
+    "Communication",
+  ],
   authors: [{ name: "Banerry Team" }],
   creator: "Banerry",
   publisher: "Banerry",
@@ -23,7 +29,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app"
+  ),
   alternates: {
     canonical: "/",
   },
@@ -32,7 +40,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app",
     title: "Banerry",
-    description: "A tool to help people who are gestalt language processors develop their speech",
+    description:
+      "A tool to help people who are gestalt language processors develop their speech",
     siteName: "Banerry",
     images: [
       {
@@ -46,7 +55,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Banerry",
-    description: "A tool to help people who are gestalt language processors develop their speech",
+    description:
+      "A tool to help people who are gestalt language processors develop their speech",
     images: ["/og-image.png"],
   },
   appleWebApp: {
@@ -68,8 +78,8 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#7c3aed",
     "msapplication-config": "/browserconfig.xml",
   },
-    generator: 'v0.dev'
-}
+  generator: "v0.dev",
+};
 
 export const viewport: Viewport = {
   themeColor: [
@@ -80,27 +90,34 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#7c3aed" />
-        <Script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></Script>
+        <Script
+          src="https://unpkg.com/@elevenlabs/convai-widget-embed"
+          async
+          type="text/javascript"
+        ></Script>
       </head>
       <body className={inter.className}>
         {/* @ts-ignore */}
         <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
           <VoiceProvider>
             {children}
             {/* <SettingsMenu /> */}
@@ -108,5 +125,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

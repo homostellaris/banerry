@@ -1,10 +1,11 @@
-import type { MetadataRoute } from "next"
+import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Banerry",
     short_name: "Banerry",
-    description: "A tool to help people who are gestalt language processors develop their speech",
+    description:
+      "A tool to help people who are gestalt language processors develop their speech",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
@@ -46,22 +47,22 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: "any",
       },
     ],
-    screenshots: [
-      {
-        src: "/screenshot-wide.png",
-        sizes: "1280x720",
-        type: "image/png",
-        form_factor: "wide",
-        label: "Banerry - Desktop View",
-      },
-      {
-        src: "/screenshot-narrow.png",
-        sizes: "750x1334",
-        type: "image/png",
-        form_factor: "narrow",
-        label: "Banerry - Mobile View",
-      },
-    ],
+    // screenshots: [
+    //   {
+    //     src: "/screenshot-wide.png",
+    //     sizes: "1280x720",
+    //     type: "image/png",
+    //     form_factor: "wide",
+    //     label: "Banerry - Desktop View",
+    //   },
+    //   {
+    //     src: "/screenshot-narrow.png",
+    //     sizes: "750x1334",
+    //     type: "image/png",
+    //     form_factor: "narrow",
+    //     label: "Banerry - Mobile View",
+    //   },
+    // ],
     shortcuts: [
       {
         name: "View Scripts",
@@ -71,5 +72,5 @@ export default function manifest(): MetadataRoute.Manifest {
         icons: [{ src: "/icon-192x192.png", sizes: "192x192" }],
       },
     ],
-  }
+  };
 }
