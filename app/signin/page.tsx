@@ -11,10 +11,7 @@ export default function SignIn() {
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        void signIn("resend", {
-          ...formData,
-          redirectTo: "/",
-        });
+        void signIn("resend", formData);
       }}
     >
       <input name="email" placeholder="Email" type="text" />
