@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     template: "%s | Banerry",
   },
   description:
-    "A tool to help people who are gestalt language processors develop their speech",
+    "Speech and transition assistance for gestalt language processors.",
   keywords: [
     "PWA",
     "Gestalt Language Processing",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app",
     title: "Banerry",
     description:
-      "A tool to help people who are gestalt language processors develop their speech",
+      "Speech and transition assistance for gestalt language processors.",
     siteName: "Banerry",
     images: [
       {
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Banerry",
     description:
-      "A tool to help people who are gestalt language processors develop their speech",
+      "Speech and transition assistance for gestalt language processors.",
     images: ["/og-image.png"],
   },
   appleWebApp: {

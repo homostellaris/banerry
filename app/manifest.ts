@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Banerry",
     short_name: "Banerry",
     description:
-      "A tool to help people who are gestalt language processors develop their speech",
+      "Speech and transition assistance for gestalt language processors.",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

@@ -1,6 +1,6 @@
 # Banerry
 
-This is a [Next.js](https://nextjs.org) project for helping people who are gestalt language processors develop their speech.
+Speech and transition assistance for gestalt language processors.
 
 ## Getting Started
 
@@ -8,11 +8,17 @@ First, run the development server:
 
 \`\`\`bash
 npm run dev
+
 # or
+
 yarn dev
+
 # or
+
 pnpm dev
+
 # or
+
 bun dev
 \`\`\`
 
