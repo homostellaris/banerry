@@ -26,7 +26,7 @@ export default defineSchema({
   learnerScripts: defineTable({
     learnerId: v.id("learners"),
     scriptId: v.id("scripts"),
-  }),
+  }).index("by_learner", ["learnerId"]),
   mentors: defineTable({
     name: v.string(),
   }),

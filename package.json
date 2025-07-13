@@ -6,8 +6,11 @@
     "crypto": false
   },
   "scripts": {
+    "dev": "npm-run-all --parallel dev:frontend dev:backend",
+    "dev:frontend": "next dev",
+    "dev:backend": "convex dev",
+    "predev": "convex dev --until-success && convex dev --once --run-sh \"node setup.mjs --once\" && convex dashboard",
     "build": "next build",
-    "dev": "next dev",
     "lint": "next lint",
     "start": "next start"
   },
