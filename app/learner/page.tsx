@@ -1,58 +1,60 @@
-"use client"
+"use client";
 
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { ArrowRight, Loader2, AlertCircle } from "lucide-react"
-import { useQuery } from "convex/react"
-import { api } from "@/convex/_generated/api"
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function LearnerPage() {
-  const [passphrase, setPassphrase] = useState("")
-  const [isValidating, setIsValidating] = useState(false)
-  const [error, setError] = useState("")
-  const router = useRouter()
+  const [passphrase, setPassphrase] = useState("");
+  const [isValidating, setIsValidating] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   // Only validate when we have a passphrase and user clicked submit
   const learner = useQuery(
-    api.scripts.validatePassphrase,
-    isValidating && passphrase.trim() ? { passphrase: passphrase.trim() } : "skip"
-  )
+    api.learnerLinks.validatePassphrase,
+    isValidating && passphrase.trim()
+      ? { passphrase: passphrase.trim() }
+      : "skip"
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (!passphrase.trim()) {
-      setError("Please enter your access code")
-      return
+      setError("Please enter your access code");
+      return;
     }
 
-    setIsValidating(true)
-    setError("")
-  }
+    setIsValidating(true);
+    setError("");
+  };
 
   // Handle the validation result
   React.useEffect(() => {
     if (isValidating && learner !== undefined) {
       if (learner) {
         // Success - navigate to the learner page
-        router.push(`/learner/${passphrase.trim()}`)
+        router.push(`/learner/${passphrase.trim()}`);
       } else {
         // Invalid passphrase
-        setError("Invalid access code. Please check and try again.")
-        setIsValidating(false)
+        setError("Invalid access code. Please check and try again.");
+        setIsValidating(false);
       }
     }
-  }, [learner, isValidating, passphrase, router])
+  }, [learner, isValidating, passphrase, router]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassphrase(e.target.value)
-    setError("") // Clear error when user types
-    setIsValidating(false) // Reset validation state
-  }
+    setPassphrase(e.target.value);
+    setError(""); // Clear error when user types
+    setIsValidating(false); // Reset validation state
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
@@ -99,9 +101,9 @@ export default function LearnerPage() {
                 </div>
               )}
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 size="lg"
                 disabled={!passphrase.trim() || isValidating}
               >
@@ -121,12 +123,13 @@ export default function LearnerPage() {
 
             <div className="mt-6 pt-6 border-t border-gray-100">
               <p className="text-xs text-gray-500 text-center">
-                Don't have an access code? Ask your mentor to share one with you.
+                Don't have an access code? Ask your mentor to share one with
+                you.
               </p>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

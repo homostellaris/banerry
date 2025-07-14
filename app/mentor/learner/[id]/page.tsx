@@ -19,7 +19,7 @@ export default function MentorLearnerPage({
 }) {
   const { id } = use(params);
 
-  const learner = useQuery(api.scripts.getLearner, {
+  const learner = useQuery(api.learners.getLearner, {
     learnerId: id as Id<"learners">,
   });
   const scripts = useQuery(api.scripts.listScriptsForLearner, {
@@ -62,9 +62,9 @@ export default function MentorLearnerPage({
               Back to Learners
             </Button>
           </Link>
-          <DeleteLearnerButton 
-            learnerId={id as Id<"learners">} 
-            learnerName={learner.name} 
+          <DeleteLearnerButton
+            learnerId={id as Id<"learners">}
+            learnerName={learner.name}
           />
         </div>
 
@@ -82,8 +82,8 @@ export default function MentorLearnerPage({
       </header>
 
       <div className="mb-6">
-        <LearnerUrlDisplay 
-          learnerId={id as Id<"learners">} 
+        <LearnerUrlDisplay
+          learnerId={id as Id<"learners">}
           learnerName={learner.name}
         />
       </div>

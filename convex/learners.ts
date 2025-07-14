@@ -1,19 +1,6 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
-export const listLearners = query({
-  args: {},
-  returns: v.array(v.object({
-    _id: v.id("learners"),
-    _creationTime: v.number(),
-    name: v.string(),
-    bio: v.optional(v.string()),
-  })),
-  handler: async (ctx, args) => {
-    return await ctx.db.query("learners").order("desc").collect();
-  },
-});
-
 export const createLearner = mutation({
   args: {
     name: v.string(),
@@ -30,20 +17,41 @@ export const createLearner = mutation({
     // Generate a three-word passphrase
     const words = [
       // Animals
-      "elephant", "giraffe", "penguin", "dolphin", "butterfly", "rainbow", "sunshine", "mountain",
+      "elephant",
+      "giraffe",
+      "penguin",
+      "dolphin",
+      "butterfly",
+      "rainbow",
+      "sunshine",
+      "mountain",
       // Colors/Nature
-      "purple", "golden", "silver", "crystal", "emerald", "sapphire", "coral", "amber",
+      "purple",
+      "golden",
+      "silver",
+      "crystal",
+      "emerald",
+      "sapphire",
+      "coral",
+      "amber",
       // Actions/Feelings
-      "dancing", "singing", "jumping", "flying", "sparkling", "glowing", "bouncing", "flowing"
+      "dancing",
+      "singing",
+      "jumping",
+      "flying",
+      "sparkling",
+      "glowing",
+      "bouncing",
+      "flowing",
     ];
-    
+
     const generatePassphrase = () => {
       const shuffled = [...words].sort(() => Math.random() - 0.5);
       return shuffled.slice(0, 3).join("-");
     };
 
     let passphrase = generatePassphrase();
-    
+
     // Ensure uniqueness by checking existing passphrases
     let attempts = 0;
     while (attempts < 10) {
@@ -51,9 +59,9 @@ export const createLearner = mutation({
         .query("learnerLinks")
         .filter((q) => q.eq(q.field("passphrase"), passphrase))
         .first();
-      
+
       if (!existing) break;
-      
+
       passphrase = generatePassphrase();
       attempts++;
     }
@@ -65,6 +73,21 @@ export const createLearner = mutation({
     });
 
     return learnerId;
+  },
+});
+
+export const listLearners = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id("learners"),
+      _creationTime: v.number(),
+      name: v.string(),
+      bio: v.optional(v.string()),
+    })
+  ),
+  handler: async (ctx, args) => {
+    return await ctx.db.query("learners").order("desc").collect();
   },
 });
 
@@ -117,7 +140,25 @@ export const deleteLearner = mutation({
 
     // Finally, delete the learner
     await ctx.db.delete(args.learnerId);
-    
+
     return null;
+  },
+});
+
+export const getLearner = query({
+  args: {
+    learnerId: v.id("learners"),
+  },
+  returns: v.union(
+    v.object({
+      _id: v.id("learners"),
+      _creationTime: v.number(),
+      name: v.string(),
+      bio: v.optional(v.string()),
+    }),
+    v.null()
+  ),
+  handler: async (ctx, args) => {
+    return await ctx.db.get(args.learnerId);
   },
 });
