@@ -17,16 +17,12 @@ export default defineSchema({
   learnerLinks: defineTable({
     learnerId: v.id("learners"),
     passphrase: v.string(),
-  }),
+  }).index("by_passphrase", ["passphrase"]),
   learnerMentorRelationships: defineTable({
     learnerId: v.id("learners"),
     mentorId: v.id("learners"),
     relationshipType: v.string(), // e.g., "parent", "teacher", "therapist"
   }),
-  learnerScripts: defineTable({
-    learnerId: v.id("learners"),
-    scriptId: v.id("scripts"),
-  }).index("by_learner", ["learnerId"]),
   mentors: defineTable({
     name: v.string(),
   }),
@@ -36,7 +32,8 @@ export default defineSchema({
     rationale: v.string(),
   }),
   scripts: defineTable({
+    learnerId: v.id("learners"),
     dialogue: v.string(),
     parentheticals: v.string(),
-  }),
+  }).index("by_learner", ["learnerId"]),
 });

@@ -1,24 +1,11 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Doc } from "@/convex/_generated/dataModel";
 import ScriptCard from "./script-card";
 
-interface Script {
-  id: string;
-  text: string;
-  meanings: {
-    id: string;
-    text: string;
-    context: string;
-  }[];
-  dateAdded: string;
-}
-
-interface ScriptTabsProps {
-  scripts: Script[];
-}
-
-export default function ScriptTabs({ scripts }: ScriptTabsProps) {
+export default function ScriptTabs({ scripts }: { scripts: Doc<"scripts">[] }) {
+  console.log("ScriptTabs scripts:", scripts);
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="grid w-full grid-cols-2 h-17 mb-6">
@@ -32,17 +19,25 @@ export default function ScriptTabs({ scripts }: ScriptTabsProps) {
 
       <TabsContent value="all">
         <div className="grid gap-6">
-          {scripts.map((script) => (
-            <ScriptCard key={script.id} script={script} />
-          ))}
+          {scripts.length > 0 ? (
+            scripts.map((script) => (
+              <ScriptCard key={script._id} script={script} />
+            ))
+          ) : (
+            <p>No scripts available</p>
+          )}
         </div>
       </TabsContent>
 
       <TabsContent value="recent">
         <div className="grid gap-6">
-          {scripts.map((script) => (
-            <ScriptCard key={script.id} script={script} />
-          ))}
+          {scripts.length > 0 ? (
+            scripts.map((script) => (
+              <ScriptCard key={script._id} script={script} />
+            ))
+          ) : (
+            <p>No scripts available</p>
+          )}
         </div>
       </TabsContent>
     </Tabs>

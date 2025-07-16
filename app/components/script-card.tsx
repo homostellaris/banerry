@@ -1,36 +1,32 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Volume2, Loader2 } from "lucide-react"
-import Link from "next/link"
-import { useVoice } from "@/app/contexts/voice-context"
-import { useCachedTTS } from "@/app/hooks/use-cached-tts"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Volume2, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useVoice } from "@/app/contexts/voice-context";
+import { useCachedTTS } from "@/app/hooks/use-cached-tts";
+import { Doc } from "@/convex/_generated/dataModel";
 
-interface ScriptCardProps {
-  script: {
-    id: string
-    text: string
-  }
-}
-
-export default function ScriptCard({ script }: ScriptCardProps) {
-  const { selectedVoice } = useVoice()
-  const { speak, isLoading, error } = useCachedTTS()
+export default function ScriptCard({ script }: { script: Doc<"scripts"> }) {
+  const { selectedVoice } = useVoice();
+  const { speak, isLoading, error } = useCachedTTS();
 
   const playAudio = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent navigation when clicking the button
-    speak(script.text, selectedVoice)
-  }
+    e.preventDefault(); // Prevent navigation when clicking the button
+    speak(script.dialogue, selectedVoice);
+  };
 
   return (
-    <Link href={`/script/${script.id}`} className="block">
+    <Link href={`/script/${script._id}`} className="block">
       <Card className="overflow-hidden border-2 border-purple-200 shadow-md hover:shadow-lg transition-shadow">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-bold text-gray-800 pr-4">{script.text}</h3>
+            <h3 className="text-2xl font-bold text-gray-800 pr-4">
+              {script.dialogue}
+            </h3>
             <Button
               variant="ghost"
               size="icon"
@@ -50,5 +46,5 @@ export default function ScriptCard({ script }: ScriptCardProps) {
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 }

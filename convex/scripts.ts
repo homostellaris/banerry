@@ -9,16 +9,11 @@ export const createScript = mutation({
   },
   returns: v.id("scripts"),
   handler: async (ctx, args) => {
-    // Create the script first
+    // Create the script with learnerId
     const scriptId = await ctx.db.insert("scripts", {
       dialogue: args.dialogue,
       parentheticals: args.parentheticals,
-    });
-
-    // Link the script to the learner
-    await ctx.db.insert("learnerScripts", {
       learnerId: args.learnerId,
-      scriptId: scriptId,
     });
 
     return scriptId;
@@ -35,25 +30,16 @@ export const listScriptsForLearner = query({
       _creationTime: v.number(),
       dialogue: v.string(),
       parentheticals: v.string(),
+      learnerId: v.id("learners"),
     })
   ),
   handler: async (ctx, args) => {
-    // Get all learnerScript relationships for this learner
-    const learnerScripts = await ctx.db
-      .query("learnerScripts")
+    const scripts = await ctx.db
+      .query("scripts")
       .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
+      .order("desc")
       .collect();
 
-    // Get all the scripts
-    const scripts = [];
-    for (const learnerScript of learnerScripts) {
-      const script = await ctx.db.get(learnerScript.scriptId);
-      if (script) {
-        scripts.push(script);
-      }
-    }
-
-    // Sort by creation time (most recent first)
-    return scripts.sort((a, b) => b._creationTime - a._creationTime);
+    return scripts;
   },
 });
