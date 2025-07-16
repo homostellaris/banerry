@@ -4,15 +4,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ScriptCard from "./script-card";
 import { Doc } from "@/convex/_generated/dataModel";
 
-interface MentorScriptTabsProps {
-  scripts: Doc<"scripts">[];
-  learnerId: string;
-}
-
 export default function MentorScriptTabs({
   scripts,
-  learnerId,
-}: MentorScriptTabsProps) {
+}: {
+  scripts: Doc<"scripts">[];
+}) {
   // Filter recent scripts (created in the last 7 days)
   const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   const recentScripts = scripts.filter(

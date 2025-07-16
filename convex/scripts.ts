@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
-export const createScript = mutation({
+export const create = mutation({
   args: {
     dialogue: v.string(),
     parentheticals: v.string(),
@@ -20,7 +20,7 @@ export const createScript = mutation({
   },
 });
 
-export const listScriptsForLearner = query({
+export const list = query({
   args: {
     learnerId: v.id("learners"),
   },

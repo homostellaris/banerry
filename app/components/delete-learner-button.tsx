@@ -1,46 +1,49 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { 
-  AlertDialog, 
-  AlertDialogAction, 
-  AlertDialogCancel, 
-  AlertDialogContent, 
-  AlertDialogDescription, 
-  AlertDialogFooter, 
-  AlertDialogHeader, 
-  AlertDialogTitle, 
-  AlertDialogTrigger 
-} from "@/components/ui/alert-dialog"
-import { Trash2, Loader2 } from "lucide-react"
-import { useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { Id } from "@/convex/_generated/dataModel"
-import { useRouter } from "next/navigation"
+import type React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash2, Loader2 } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useRouter } from "next/navigation";
 
 interface DeleteLearnerButtonProps {
-  learnerId: Id<"learners">
-  learnerName: string
+  learnerId: Id<"learners">;
+  learnerName: string;
 }
 
-export default function DeleteLearnerButton({ learnerId, learnerName }: DeleteLearnerButtonProps) {
-  const [isDeleting, setIsDeleting] = useState(false)
-  const router = useRouter()
-  const deleteLearner = useMutation(api.learners.deleteLearner)
+export default function DeleteLearnerButton({
+  learnerId,
+  learnerName,
+}: DeleteLearnerButtonProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
+  const deleteLearner = useMutation(api.learners.del);
 
   const handleDelete = async () => {
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
-      await deleteLearner({ learnerId })
-      router.push("/mentor")
+      await deleteLearner({ learnerId });
+      router.push("/mentor");
     } catch (error) {
-      console.error("Failed to delete learner:", error)
+      console.error("Failed to delete learner:", error);
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <AlertDialog>
@@ -54,12 +57,14 @@ export default function DeleteLearnerButton({ learnerId, learnerName }: DeleteLe
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Learner</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete <strong>{learnerName}</strong>? This action cannot be undone and will permanently remove:
-            <br /><br />
-            • All scripts associated with this learner
-            • All mitigations and contexts
-            • All learner links and relationships
-            <br /><br />
+            Are you sure you want to delete <strong>{learnerName}</strong>? This
+            action cannot be undone and will permanently remove:
+            <br />
+            <br />
+            • All scripts associated with this learner • All mitigations and
+            contexts • All learner links and relationships
+            <br />
+            <br />
             This action is permanent and cannot be reversed.
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -85,5 +90,5 @@ export default function DeleteLearnerButton({ learnerId, learnerName }: DeleteLe
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

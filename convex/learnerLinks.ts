@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
-export const getLearnerLink = query({
+export const get = query({
   args: {
     learnerId: v.id("learners"),
   },
@@ -22,7 +22,7 @@ export const getLearnerLink = query({
   },
 });
 
-export const validatePassphrase = query({
+export const validate = query({
   args: {
     passphrase: v.string(),
   },

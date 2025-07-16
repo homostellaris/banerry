@@ -19,7 +19,7 @@ export default function LearnerUrlDisplay({
   learnerName,
 }: LearnerUrlDisplayProps) {
   const [copied, setCopied] = useState(false);
-  const learnerLink = useQuery(api.learnerLinks.getLearnerLink, { learnerId });
+  const learnerLink = useQuery(api.learnerLinks.get, { learnerId });
 
   const copyToClipboard = async (text: string) => {
     try {

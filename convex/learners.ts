@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
-export const createLearner = mutation({
+export const create = mutation({
   args: {
     name: v.string(),
     bio: v.optional(v.string()),
@@ -76,7 +76,7 @@ export const createLearner = mutation({
   },
 });
 
-export const listLearners = query({
+export const list = query({
   args: {},
   returns: v.array(
     v.object({
@@ -91,7 +91,7 @@ export const listLearners = query({
   },
 });
 
-export const deleteLearner = mutation({
+export const del = mutation({
   args: {
     learnerId: v.id("learners"),
   },
@@ -145,7 +145,7 @@ export const deleteLearner = mutation({
   },
 });
 
-export const getLearner = query({
+export const get = query({
   args: {
     learnerId: v.id("learners"),
   },
@@ -163,7 +163,7 @@ export const getLearner = query({
   },
 });
 
-export const getLearnerByPassphrase = query({
+export const getByPassphrase = query({
   args: {
     passphrase: v.string(),
   },

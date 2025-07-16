@@ -11,7 +11,7 @@ export default function LearnerPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const learnerWithScripts = useQuery(api.learners.getLearnerByPassphrase, {
+  const learnerWithScripts = useQuery(api.learners.getByPassphrase, {
     passphrase: id,
   });
 
