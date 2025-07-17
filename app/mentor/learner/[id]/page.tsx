@@ -19,10 +19,10 @@ export default function MentorLearnerPage({
 }) {
   const { id } = use(params);
 
-  const learner = useQuery(api.learners.getLearner, {
+  const learner = useQuery(api.learners.get, {
     learnerId: id as Id<"learners">,
   });
-  const scripts = useQuery(api.scripts.listScriptsForLearner, {
+  const scripts = useQuery(api.scripts.list, {
     learnerId: id as Id<"learners">,
   });
 
@@ -83,12 +83,12 @@ export default function MentorLearnerPage({
 
       <div className="mb-6">
         <LearnerUrlDisplay
-          learnerId={id as Id<"learners">}
-          learnerName={learner.name}
+          name={learner.name}
+          passphrase={learner.passphrase}
         />
       </div>
 
-      <MentorScriptTabs scripts={scripts} learnerId={id as Id<"learners">} />
+      <MentorScriptTabs scripts={scripts} />
     </div>
   );
 }

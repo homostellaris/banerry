@@ -18,7 +18,7 @@ export default function LearnerPage() {
 
   // Only validate when we have a passphrase and user clicked submit
   const learner = useQuery(
-    api.learnerLinks.validatePassphrase,
+    api.learners.validate,
     isValidating && passphrase.trim()
       ? { passphrase: passphrase.trim() }
       : "skip"

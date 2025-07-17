@@ -3,9 +3,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Doc } from "@/convex/_generated/dataModel";
 import ScriptCard from "./script-card";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function ScriptTabs({ scripts }: { scripts: Doc<"scripts">[] }) {
-  console.log("ScriptTabs scripts:", scripts);
+  const pathname = usePathname();
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="grid w-full grid-cols-2 h-17 mb-6">
@@ -21,7 +23,13 @@ export default function ScriptTabs({ scripts }: { scripts: Doc<"scripts">[] }) {
         <div className="grid gap-6">
           {scripts.length > 0 ? (
             scripts.map((script) => (
-              <ScriptCard key={script._id} script={script} />
+              <Link
+                href={`${pathname}/script/${script._id}`}
+                key={script._id}
+                className="block"
+              >
+                <ScriptCard script={script} />
+              </Link>
             ))
           ) : (
             <p>No scripts available</p>

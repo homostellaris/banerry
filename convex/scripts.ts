@@ -43,3 +43,23 @@ export const list = query({
     return scripts;
   },
 });
+
+export const get = query({
+  args: {
+    id: v.id("scripts"),
+  },
+  returns: v.union(
+    v.object({
+      _id: v.id("scripts"),
+      _creationTime: v.number(),
+      dialogue: v.string(),
+      parentheticals: v.string(),
+      learnerId: v.id("learners"),
+    }),
+    v.null()
+  ),
+  handler: async (ctx, args) => {
+    const script = await ctx.db.get(args.id);
+    return script;
+  },
+});

@@ -47,7 +47,6 @@ Key tables in `convex/schema.ts`:
 - `learners` - User profiles for language learners
 - `scripts` - Stored phrases with dialogue and context
 - `mitigations` - Contextual interpretations of scripts
-- `learnerLinks` - Secure links for learner access
 - `learnerMentorRelationships` - Connects mentors and learners
 - `learnerScripts` - Associates scripts with specific learners
 
@@ -103,39 +102,40 @@ No specific test framework is configured. When adding tests, check the codebase 
 
 - ALWAYS use the new function syntax for Convex functions. For example:
   `typescript
-    import { query } from "./_generated/server";
-    import { v } from "convex/values";
-    export const f = query({
-        args: {},
-        returns: v.null(),
-        handler: async (ctx, args) => {
-        // Function body
-        },
-    });
-    `
+  import { query } from "./_generated/server";
+  import { v } from "convex/values";
+  export const f = query({
+      args: {},
+      returns: v.null(),
+      handler: async (ctx, args) => {
+      // Function body
+      },
+  });
+  `
 
 ### Http endpoint syntax
 
 - HTTP endpoints are defined in `convex/http.ts` and require an `httpAction` decorator. For example:
   `typescript
-    import { httpRouter } from "convex/server";
-    import { httpAction } from "./_generated/server";
-    const http = httpRouter();
-    http.route({
-        path: "/echo",
-        method: "POST",
-        handler: httpAction(async (ctx, req) => {
-        const body = await req.bytes();
-        return new Response(body, { status: 200 });
-        }),
-    });
-    `
+  import { httpRouter } from "convex/server";
+  import { httpAction } from "./_generated/server";
+  const http = httpRouter();
+  http.route({
+      path: "/echo",
+      method: "POST",
+      handler: httpAction(async (ctx, req) => {
+      const body = await req.bytes();
+      return new Response(body, { status: 200 });
+      }),
+  });
+  `
 - HTTP endpoints are always registered at the exact path you specify in the `path` field. For example, if you specify `/api/someRoute`, the endpoint will be registered at `/api/someRoute`.
 
 ### Validators
 
 - Below is an example of an array validator:
-  ```typescript
+
+  ````typescript
   import { mutation } from "./\_generated/server";
   import { v } from "convex/values";
 
@@ -149,8 +149,11 @@ No specific test framework is configured. When adding tests, check the codebase 
                             });
                             ```
 
+  ````
+
 - Below is an example of a schema with validators that codify a discriminated union type:
-  ```typescript
+
+  ````typescript
   import { defineSchema, defineTable } from "convex/server";
   import { v } from "convex/values";
 
@@ -170,8 +173,11 @@ No specific test framework is configured. When adding tests, check the codebase 
                             });
                             ```
 
+  ````
+
 - Always use the `v.null()` validator when returning a null value. Below is an example query that returns a null value:
-  ```typescript
+
+  ````typescript
   import { query } from "./\_generated/server";
   import { v } from "convex/values";
 
@@ -184,6 +190,8 @@ No specific test framework is configured. When adding tests, check the codebase 
                                     },
                                   });
                                   ```
+
+  ````
 
 - Here are the valid Convex types along with their respective validators:
   Convex Type | TS/JS type | Example Usage | Validator for argument validation and schemas | Notes |
@@ -216,7 +224,8 @@ No specific test framework is configured. When adding tests, check the codebase 
 - Try to use as few calls from actions to queries and mutations as possible. Queries and mutations are transactions, so splitting logic up into multiple calls introduces the risk of race conditions.
 - All of these calls take in a `FunctionReference`. Do NOT try to pass the callee function directly into one of these calls.
 - When using `ctx.runQuery`, `ctx.runMutation`, or `ctx.runAction` to call a function in the same file, specify a type annotation on the return value to work around TypeScript circularity limitations. For example,
-  ```
+
+  ````
   export const f = query({
   args: { name: v.string() },
   returns: v.string(),
@@ -234,6 +243,7 @@ No specific test framework is configured. When adding tests, check the codebase 
                               },
                             });
                             ```
+  ````
 
 ### Function references
 
@@ -293,7 +303,8 @@ No specific test framework is configured. When adding tests, check the codebase 
 
 - You can use the helper typescript type `Id` imported from './\_generated/dataModel' to get the type of the id for a given table. For example if there is a table called 'users' you can use `Id<'users'>` to get the type of the id for that table.
 - If you need to define a `Record` make sure that you correctly provide the type of the key and value in the type. For example a validator `v.record(v.id('users'), v.string())` would have the type `Record<Id<'users'>, string>`. Below is an example of using `Record` with an `Id` type in a query:
-  ```ts
+
+  ````ts
   import { query } from "./\_generated/server";
   import { Doc, Id } from "./\_generated/dataModel";
 
@@ -313,6 +324,8 @@ No specific test framework is configured. When adding tests, check the codebase 
                         },
                     });
                     ```
+
+  ````
 
 - Be strict with types, particularly around id's of documents. For example, if a function takes in an id for a document in the 'users' table, take in `Id<'users'>` rather than `string`.
 - Always use `as const` for string literals in discriminated union types.
@@ -354,7 +367,8 @@ q.search("body", "hello hi").eq("channel", "#general"),
 - Always add `"use node";` to the top of files containing actions that use Node.js built-in modules.
 - Never use `ctx.db` inside of an action. Actions don't have access to the database.
 - Below is an example of the syntax for an action:
-  ```ts
+
+  ````ts
   import { action } from "./\_generated/server";
 
                     export const exampleAction = action({
@@ -366,6 +380,7 @@ q.search("body", "hello hi").eq("channel", "#general"),
                         },
                     });
                     ```
+  ````
 
 ## Scheduling guidelines
 
@@ -374,7 +389,8 @@ q.search("body", "hello hi").eq("channel", "#general"),
 - Only use the `crons.interval` or `crons.cron` methods to schedule cron jobs. Do NOT use the `crons.hourly`, `crons.daily`, or `crons.weekly` helpers.
 - Both cron methods take in a FunctionReference. Do NOT try to pass the function directly into one of these methods.
 - Define crons by declaring the top-level `crons` object, calling some methods on it, and then exporting it as default. For example,
-  ```ts
+
+  ````ts
   import { cronJobs } from "convex/server";
   import { internal } from "./\_generated/api";
   import { internalAction } from "./\_generated/server";
@@ -394,6 +410,8 @@ q.search("body", "hello hi").eq("channel", "#general"),
 
                             export default crons;
                             ```
+
+  ````
 
 - You can register Convex functions within `crons.ts` just like any other file.
 - If a cron calls an internal function, always import the `internal` object from '\_generated/api`, even if the internal function is registered in the same file.

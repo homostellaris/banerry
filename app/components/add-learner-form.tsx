@@ -1,58 +1,58 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
+import type React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
-  DialogFooter 
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Plus, Loader2 } from "lucide-react"
-import { useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Plus, Loader2 } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function AddLearnerForm() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [name, setName] = useState("")
-  const [bio, setBio] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  const createLearner = useMutation(api.learners.createLearner)
+  const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [bio, setBio] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const createLearner = useMutation(api.learners.create);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name.trim()) return
+    e.preventDefault();
+    if (!name.trim()) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       await createLearner({
         name: name.trim(),
         bio: bio.trim() || undefined,
-      })
-      
+      });
+
       // Reset form and close dialog
-      setName("")
-      setBio("")
-      setIsOpen(false)
+      setName("");
+      setBio("");
+      setIsOpen(false);
     } catch (error) {
-      console.error("Failed to create learner:", error)
+      console.error("Failed to create learner:", error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setName("")
-    setBio("")
-    setIsOpen(false)
-  }
+    setName("");
+    setBio("");
+    setIsOpen(false);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -88,18 +88,15 @@ export default function AddLearnerForm() {
             />
           </div>
           <DialogFooter>
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={handleCancel}
               disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
-              disabled={!name.trim() || isSubmitting}
-            >
+            <Button type="submit" disabled={!name.trim() || isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -113,5 +110,5 @@ export default function AddLearnerForm() {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

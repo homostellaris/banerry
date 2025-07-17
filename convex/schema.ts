@@ -13,9 +13,6 @@ export default defineSchema({
   learners: defineTable({
     name: v.string(),
     bio: v.optional(v.string()),
-  }),
-  learnerLinks: defineTable({
-    learnerId: v.id("learners"),
     passphrase: v.string(),
   }).index("by_passphrase", ["passphrase"]),
   learnerMentorRelationships: defineTable({

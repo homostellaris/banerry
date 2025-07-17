@@ -8,11 +8,11 @@ import { use } from "react";
 export default function LearnerPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ passphrase: string }>;
 }) {
-  const { id } = use(params);
+  const { passphrase } = use(params);
   const learnerWithScripts = useQuery(api.learners.getByPassphrase, {
-    passphrase: id,
+    passphrase,
   });
 
   return (

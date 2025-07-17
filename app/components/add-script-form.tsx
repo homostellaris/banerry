@@ -1,64 +1,64 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
+import type React from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogTrigger,
-  DialogFooter 
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Plus, Loader2 } from "lucide-react"
-import { useMutation } from "convex/react"
-import { api } from "@/convex/_generated/api"
-import { Id } from "@/convex/_generated/dataModel"
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Plus, Loader2 } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 interface AddScriptFormProps {
-  learnerId: Id<"learners">
+  learnerId: Id<"learners">;
 }
 
 export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [dialogue, setDialogue] = useState("")
-  const [parentheticals, setParentheticals] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  const createScript = useMutation(api.scripts.createScript)
+  const [isOpen, setIsOpen] = useState(false);
+  const [dialogue, setDialogue] = useState("");
+  const [parentheticals, setParentheticals] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const createScript = useMutation(api.scripts.create);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!dialogue.trim()) return
+    e.preventDefault();
+    if (!dialogue.trim()) return;
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     try {
       await createScript({
         dialogue: dialogue.trim(),
         parentheticals: parentheticals.trim(),
         learnerId: learnerId,
-      })
-      
+      });
+
       // Reset form and close dialog
-      setDialogue("")
-      setParentheticals("")
-      setIsOpen(false)
+      setDialogue("");
+      setParentheticals("");
+      setIsOpen(false);
     } catch (error) {
-      console.error("Failed to create script:", error)
+      console.error("Failed to create script:", error);
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setDialogue("")
-    setParentheticals("")
-    setIsOpen(false)
-  }
+    setDialogue("");
+    setParentheticals("");
+    setIsOpen(false);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -94,18 +94,15 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
             />
           </div>
           <DialogFooter>
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={handleCancel}
               disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
-              disabled={!dialogue.trim() || isSubmitting}
-            >
+            <Button type="submit" disabled={!dialogue.trim() || isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -119,5 +116,5 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

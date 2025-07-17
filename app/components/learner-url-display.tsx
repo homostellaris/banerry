@@ -9,17 +9,14 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 
-interface LearnerUrlDisplayProps {
-  learnerId: Id<"learners">;
-  learnerName: string;
-}
-
 export default function LearnerUrlDisplay({
-  learnerId,
-  learnerName,
-}: LearnerUrlDisplayProps) {
+  name,
+  passphrase,
+}: {
+  name: string;
+  passphrase: string;
+}) {
   const [copied, setCopied] = useState(false);
-  const learnerLink = useQuery(api.learnerLinks.get, { learnerId });
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -31,7 +28,7 @@ export default function LearnerUrlDisplay({
     }
   };
 
-  if (!learnerLink) {
+  if (!passphrase) {
     return (
       <Card className="border-orange-200 bg-orange-50">
         <CardHeader className="pb-3">
@@ -46,7 +43,7 @@ export default function LearnerUrlDisplay({
     );
   }
 
-  const fullUrl = `${window.location.origin}/learner/${learnerLink.passphrase}`;
+  const fullUrl = `${window.location.origin}/learner/${passphrase}`;
 
   return (
     <Card className="border-green-200 bg-green-50">
@@ -57,7 +54,7 @@ export default function LearnerUrlDisplay({
       </CardHeader>
       <CardContent className="pt-0 space-y-3">
         <p className="text-xs text-green-600">
-          Share this link with {learnerName} to access their scripts:
+          Share this link with {name} to access their scripts:
         </p>
 
         <div className="flex items-center gap-2 p-2 bg-white rounded border">
@@ -98,7 +95,7 @@ export default function LearnerUrlDisplay({
         </div>
 
         <p className="text-xs text-green-600">
-          Easy to remember: <strong>{learnerLink.passphrase}</strong>
+          Easy to remember: <strong>{passphrase}</strong>
         </p>
       </CardContent>
     </Card>
