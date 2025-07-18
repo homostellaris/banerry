@@ -19,10 +19,10 @@ export default function MentorScriptTabs({
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="grid w-full grid-cols-2 h-17 mb-6">
         <TabsTrigger value="all" className="text-xl py-4">
-          All Scripts ({scripts.length})
+          All Scripts
         </TabsTrigger>
         <TabsTrigger value="recent" className="text-xl py-4">
-          Recent Scripts ({recentScripts.length})
+          Recent Scripts
         </TabsTrigger>
       </TabsList>
 

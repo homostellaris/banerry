@@ -1,6 +1,6 @@
 import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
 import { api } from "@/convex/_generated/api";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { preloadQuery } from "convex/nextjs";
 
 export default async function LearnerPage({
