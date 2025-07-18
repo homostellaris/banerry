@@ -1,45 +1,56 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Volume2, Loader2 } from "lucide-react"
-import { useVoice } from "@/app/contexts/voice-context"
-import { useCachedTTS } from "@/app/hooks/use-cached-tts"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Volume2, Loader2 } from "lucide-react";
+import { useVoice } from "@/app/_tts/voice-context";
+import { useCachedTTS } from "@/app/_tts/use-cached-tts";
 
 interface MitigationCardProps {
   mitigation: {
-    id: string
-    text: string
-    explanation: string
-  }
-  originalScript: string
+    id: string;
+    text: string;
+    explanation: string;
+  };
+  originalScript: string;
 }
 
-export default function MitigationCard({ mitigation, originalScript }: MitigationCardProps) {
-  const { selectedVoice } = useVoice()
-  const { speak, isLoading, error } = useCachedTTS()
+export default function MitigationCard({
+  mitigation,
+  originalScript,
+}: MitigationCardProps) {
+  const { selectedVoice } = useVoice();
+  const { speak, isLoading, error } = useCachedTTS();
 
   const playAudio = () => {
-    speak(mitigation.text, selectedVoice)
-  }
+    speak(mitigation.text, selectedVoice);
+  };
 
   // Function to highlight matching words
-  const highlightMatchingWords = (mitigationText: string, originalText: string) => {
+  const highlightMatchingWords = (
+    mitigationText: string,
+    originalText: string
+  ) => {
     // Convert both texts to lowercase and split into words
-    const originalWords = originalText.toLowerCase().split(/\s+/).filter(Boolean)
+    const originalWords = originalText
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean);
 
     // Create a Set for faster lookups
-    const originalWordsSet = new Set(originalWords)
+    const originalWordsSet = new Set(originalWords);
 
     // Split the mitigation text into words while preserving punctuation
     // This regex captures words and punctuation separately
-    const mitigationParts = mitigationText.split(/(\s+|[.,!?;:'"()-])/g).filter(Boolean)
+    const mitigationParts = mitigationText
+      .split(/(\s+|[.,!?;:'"()-])/g)
+      .filter(Boolean);
 
     return (
       <>
         {mitigationParts.map((part, index) => {
           // Check if this part is a word (not whitespace or punctuation)
-          const isWord = !/^\s+$/.test(part) && !/^[.,!?;:'"()-]$/.test(part)
+          const isWord = !/^\s+$/.test(part) && !/^[.,!?;:'"()-]$/.test(part);
 
           if (isWord && originalWordsSet.has(part.toLowerCase())) {
             // If it's a word that appears in the original script, highlight it
@@ -47,15 +58,15 @@ export default function MitigationCard({ mitigation, originalScript }: Mitigatio
               <span key={index} className="text-purple-700 font-medium">
                 {part}
               </span>
-            )
+            );
           } else {
             // Otherwise, render it normally
-            return <span key={index}>{part}</span>
+            return <span key={index}>{part}</span>;
           }
         })}
       </>
-    )
-  }
+    );
+  };
 
   return (
     <Card className="overflow-hidden border-2 border-green-200 shadow-md">
@@ -82,5 +93,5 @@ export default function MitigationCard({ mitigation, originalScript }: Mitigatio
         {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -2,7 +2,7 @@ import type React from "react";
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { VoiceProvider } from "@/app/contexts/voice-context";
+import { VoiceProvider } from "@/app/_tts/voice-context";
 import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";

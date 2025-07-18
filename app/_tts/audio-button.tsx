@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Volume2, Loader2 } from "lucide-react";
-import { useVoice } from "@/app/contexts/voice-context";
-import { useCachedTTS } from "@/app/hooks/use-cached-tts";
+import { useVoice } from "@/app/_tts/voice-context";
+import { useCachedTTS } from "@/app/_tts/use-cached-tts";
 
 interface AudioButtonProps {
   text: string;

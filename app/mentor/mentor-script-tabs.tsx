@@ -1,7 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ScriptCard from "./script-card";
+import ScriptCard from "../_scripts/script-card";
 import { Doc } from "@/convex/_generated/dataModel";
 
 export default function MentorScriptTabs({

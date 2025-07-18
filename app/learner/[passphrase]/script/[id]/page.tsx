@@ -1,4 +1,4 @@
-import MitigationsLoading from "@/app/components/mitigations-loading";
+import MitigationsLoading from "@/app/_mitigations/mitigations-loading";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { fetchQuery } from "convex/nextjs";

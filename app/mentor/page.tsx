@@ -3,8 +3,8 @@
 import React from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import LearnerCard from "@/app/components/learner-card";
-import AddLearnerForm from "@/app/components/add-learner-form";
+import LearnerCard from "@/app/learner/learner-card";
+import AddLearnerForm from "@/app/mentor/add-learner-form";
 
 export default function MentorPage() {
   const learners = useQuery(api.learners.list);

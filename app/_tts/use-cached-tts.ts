@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { audioCache } from "@/app/utils/audio-cache";
-import { streamSpeech } from "@/app/actions/stream-speech";
+import { audioCache } from "@/app/_tts/audio-cache";
+import { streamSpeech } from "@/app/_tts/stream-speech";
 import { TextToSpeechRequest } from "@elevenlabs/elevenlabs-js/api";
 
 export function useCachedTTS() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import PWAInstall from "./components/pwa-install";
+import PWAInstall from "./_common/pwa-install";
 import Link from "next/link";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useConvexAuth } from "convex/react";

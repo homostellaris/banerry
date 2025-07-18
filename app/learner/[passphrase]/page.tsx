@@ -1,4 +1,4 @@
-import ReactiveScriptsList from "@/app/components/reactive-scripts-list";
+import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
 import { api } from "@/convex/_generated/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { preloadQuery } from "convex/nextjs";

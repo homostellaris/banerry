@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Doc } from "@/convex/_generated/dataModel";
-import AudioButton from "./audio-button";
+import AudioButton from "../_tts/audio-button";
 
 export default function ScriptCard({ script }: { script: Doc<"scripts"> }) {
   return (

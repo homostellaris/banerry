@@ -1,4 +1,4 @@
-import ScriptCard from "@/app/components/script-card";
+import ScriptCard from "@/app/_scripts/script-card";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { fetchQuery, preloadQuery } from "convex/nextjs";

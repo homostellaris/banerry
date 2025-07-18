@@ -1,4 +1,4 @@
-import { generateMitigations } from "@/app/actions/mitigations";
+import { generateMitigations } from "@/app/_mitigations/mitigations";
 import MitigationCard from "./mitigation-card";
 
 export async function MitigationsSection({
