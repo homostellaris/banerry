@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Volume2, Loader2 } from "lucide-react"
-import { useVoice } from "@/app/contexts/voice-context"
-import { useCachedTTS } from "@/app/hooks/use-cached-tts"
+import { Button } from "@/components/ui/button";
+import { Volume2, Loader2 } from "lucide-react";
+import { useVoice } from "@/app/contexts/voice-context";
+import { useCachedTTS } from "@/app/hooks/use-cached-tts";
 
 interface AudioButtonProps {
-  text: string
+  text: string;
 }
 
 export default function AudioButton({ text }: AudioButtonProps) {
-  const { selectedVoice } = useVoice()
-  const { speak, isLoading, error } = useCachedTTS()
+  const { selectedVoice } = useVoice();
+  const { speak, isLoading, error } = useCachedTTS();
 
-  const handleClick = () => {
-    speak(text, selectedVoice)
-  }
+  const playAudio = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation when clicking the button
+    speak(text, selectedVoice);
+  };
 
   return (
     <div className="relative">
@@ -23,7 +24,7 @@ export default function AudioButton({ text }: AudioButtonProps) {
         variant="ghost"
         size="icon"
         className="rounded-full h-14 w-14 flex-shrink-0 bg-purple-100 hover:bg-purple-200"
-        onClick={handleClick}
+        onClick={playAudio}
         disabled={isLoading}
         aria-label="Play audio"
       >
@@ -39,5 +40,5 @@ export default function AudioButton({ text }: AudioButtonProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

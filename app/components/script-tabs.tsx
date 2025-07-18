@@ -1,13 +1,18 @@
-"use client";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Doc } from "@/convex/_generated/dataModel";
 import ScriptCard from "./script-card";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { api } from "@/convex/_generated/api";
+import { Preloaded } from "convex/react";
 
-export default function ScriptTabs({ scripts }: { scripts: Doc<"scripts">[] }) {
+export default function ScriptTabs({
+  preloadedScripts,
+}: {
+  preloadedScripts: Preloaded<typeof api.scripts.get>[];
+}) {
   const pathname = usePathname();
+
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="grid w-full grid-cols-2 h-17 mb-6">

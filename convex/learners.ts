@@ -202,6 +202,7 @@ export const validate = query({
       _id: v.id("learners"),
       name: v.string(),
       bio: v.optional(v.string()),
+      passphrase: v.string(),
     }),
     v.null()
   ),

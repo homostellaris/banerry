@@ -1,16 +1,22 @@
+import ScriptCard from "@/app/components/script-card";
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { fetchQuery, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type React from "react";
-import { use } from "react";
 
-export default function ScriptLayout({
+export default async function ScriptLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ passphrase: string }>;
+  params: Promise<{ passphrase: string; id: Id<"scripts"> }>;
 }) {
-  const { passphrase } = use(params);
+  const { passphrase, id } = await params;
+  const script = await fetchQuery(api.scripts.get, { id });
+  if (script === null) notFound();
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
@@ -21,6 +27,9 @@ export default function ScriptLayout({
         <ArrowLeft className="mr-2 h-5 w-5" /> Back to Scripts
       </Link>
 
+      <header className="mb-8 text-center">
+        <ScriptCard script={script} />
+      </header>
       <main className="min-h-[400px]">{children}</main>
     </div>
   );
