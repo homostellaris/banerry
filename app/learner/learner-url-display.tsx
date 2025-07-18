@@ -1,13 +1,9 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, ExternalLink } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check, Copy, ExternalLink } from "lucide-react";
+import { useState } from "react";
 
 export default function LearnerUrlDisplay({
   name,
@@ -43,8 +39,6 @@ export default function LearnerUrlDisplay({
     );
   }
 
-  const fullUrl = `${window.location.origin}/learner/${passphrase}`;
-
   return (
     <Card className="border-green-200 bg-green-50">
       <CardHeader className="pb-3">
@@ -59,12 +53,12 @@ export default function LearnerUrlDisplay({
 
         <div className="flex items-center gap-2 p-2 bg-white rounded border">
           <code className="text-sm flex-1 text-gray-700 break-all">
-            {fullUrl}
+            {passphrase}
           </code>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => copyToClipboard(fullUrl)}
+            onClick={() => copyToClipboard(passphrase)}
             className="flex-shrink-0"
           >
             {copied ? (
@@ -79,7 +73,7 @@ export default function LearnerUrlDisplay({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => copyToClipboard(fullUrl)}
+            onClick={() => copyToClipboard(passphrase)}
             disabled={copied}
           >
             {copied ? "Copied!" : "Copy Link"}
@@ -87,16 +81,17 @@ export default function LearnerUrlDisplay({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => window.open(fullUrl, "_blank")}
+            onClick={() =>
+              window.open(
+                `${window.location.origin}/learner/${passphrase}`,
+                "_blank"
+              )
+            }
           >
             <ExternalLink className="h-4 w-4 mr-1" />
             Open
           </Button>
         </div>
-
-        <p className="text-xs text-green-600">
-          Easy to remember: <strong>{passphrase}</strong>
-        </p>
       </CardContent>
     </Card>
   );

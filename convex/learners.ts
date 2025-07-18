@@ -148,6 +148,46 @@ export const get = query({
   },
 });
 
+export const getWithScripts = query({
+  args: {
+    learnerId: v.id("learners"),
+  },
+  returns: v.union(
+    v.object({
+      _id: v.id("learners"),
+      _creationTime: v.number(),
+      name: v.string(),
+      bio: v.optional(v.string()),
+      passphrase: v.string(),
+      scripts: v.array(
+        v.object({
+          _id: v.id("scripts"),
+          _creationTime: v.number(),
+          dialogue: v.string(),
+          parentheticals: v.string(),
+          learnerId: v.id("learners"),
+        })
+      ),
+    }),
+    v.null()
+  ),
+  handler: async (ctx, args) => {
+    const learner = await ctx.db.get(args.learnerId);
+    if (!learner) return null;
+
+    const scripts = await ctx.db
+      .query("scripts")
+      .withIndex("by_learner", (q) => q.eq("learnerId", learner._id))
+      .order("desc")
+      .collect();
+
+    return {
+      ...learner,
+      scripts,
+    };
+  },
+});
+
 export const getByPassphrase = query({
   args: {
     passphrase: v.string(),

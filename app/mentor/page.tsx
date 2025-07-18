@@ -1,27 +1,12 @@
-"use client";
-
 import React from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import LearnerCard from "@/app/learner/learner-card";
 import AddLearnerForm from "@/app/mentor/add-learner-form";
+import { fetchQuery } from "convex/nextjs";
 
-export default function MentorPage() {
-  const learners = useQuery(api.learners.list);
-
-  if (learners === undefined) {
-    return (
-      <div className="container mx-auto p-6">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Learners</h1>
-          <AddLearnerForm />
-        </div>
-        <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500">Loading learners...</div>
-        </div>
-      </div>
-    );
-  }
+export default async function MentorPage() {
+  const learners = await fetchQuery(api.learners.list);
 
   return (
     <div className="container mx-auto p-6">

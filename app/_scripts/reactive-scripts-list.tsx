@@ -10,9 +10,8 @@ import Link from "next/link";
 export default function ReactiveScriptsList({
   preloadedLearnerWithScripts,
 }: {
-  preloadedLearnerWithScripts: Preloaded<typeof api.learners.getByPassphrase>;
+  preloadedLearnerWithScripts: Preloaded<typeof api.learners.getWithScripts>;
 }) {
-  const pathname = usePathname();
   const learnerWithScripts = usePreloadedQuery(preloadedLearnerWithScripts);
   if (learnerWithScripts === null) {
     notFound();
@@ -22,7 +21,7 @@ export default function ReactiveScriptsList({
     <div className="grid gap-6">
       {learnerWithScripts.scripts.map((script) => (
         <Link
-          href={`${pathname}/script/${script._id}`}
+          href={`/learner/${learnerWithScripts.passphrase}/script/${script._id}`}
           key={script._id}
           className="block"
         >

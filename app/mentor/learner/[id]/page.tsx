@@ -1,56 +1,30 @@
-"use client";
-
-import React, { use } from "react";
-import { useQuery } from "convex/react";
+import AddScriptForm from "@/app/_scripts/add-script-form";
+import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
+import LearnerUrlDisplay from "@/app/learner/learner-url-display";
+import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
+import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import MentorScriptTabs from "@/app/mentor/mentor-script-tabs";
-import AddScriptForm from "@/app/_scripts/add-script-form";
-import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
-import LearnerUrlDisplay from "@/app/learner/learner-url-display";
+import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
 
-export default function MentorLearnerPage({
+export default async function MentorLearnerPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: Id<"learners"> }>;
 }) {
-  const { id } = use(params);
+  const { id } = await params;
 
-  const learner = useQuery(api.learners.get, {
-    learnerId: id as Id<"learners">,
-  });
-  const scripts = useQuery(api.scripts.list, {
-    learnerId: id as Id<"learners">,
-  });
-
-  if (learner === undefined || scripts === undefined) {
-    return (
-      <div className="container mx-auto p-4 max-w-4xl">
-        <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500">Loading...</div>
-        </div>
-      </div>
-    );
-  }
-
-  if (learner === null) {
-    return (
-      <div className="container mx-auto p-4 max-w-4xl">
-        <div className="text-center py-12">
-          <div className="text-gray-500 mb-4">Learner not found</div>
-          <Link href="/mentor">
-            <Button variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Learners
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  const preloadedLearnerWithScripts = await preloadQuery(
+    api.learners.getWithScripts,
+    {
+      learnerId: id,
+    }
+  );
+  const learnerWithScripts = preloadedQueryResult(preloadedLearnerWithScripts);
+  if (learnerWithScripts === null) notFound();
 
   return (
     <div className="container mx-auto p-4 max-w-4xl">
@@ -64,17 +38,19 @@ export default function MentorLearnerPage({
           </Link>
           <DeleteLearnerButton
             learnerId={id as Id<"learners">}
-            learnerName={learner.name}
+            learnerName={learnerWithScripts.name}
           />
         </div>
 
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-bold text-purple-700 mb-2">
-              {learner.name}'s Scripts
+              {learnerWithScripts.name}'s Scripts
             </h1>
-            {learner.bio && (
-              <p className="text-gray-600 max-w-2xl">{learner.bio}</p>
+            {learnerWithScripts.bio && (
+              <p className="text-gray-600 max-w-2xl">
+                {learnerWithScripts.bio}
+              </p>
             )}
           </div>
           <AddScriptForm learnerId={id as Id<"learners">} />
@@ -83,12 +59,14 @@ export default function MentorLearnerPage({
 
       <div className="mb-6">
         <LearnerUrlDisplay
-          name={learner.name}
-          passphrase={learner.passphrase}
+          name={learnerWithScripts.name}
+          passphrase={learnerWithScripts.passphrase}
         />
       </div>
 
-      <MentorScriptTabs scripts={scripts} />
+      <ReactiveScriptsList
+        preloadedLearnerWithScripts={preloadedLearnerWithScripts}
+      />
     </div>
   );
 }
