@@ -10,9 +10,6 @@ import { useRouter } from "next/navigation";
 export default function HomePage() {
   return (
     <>
-      <header className="sticky top-0 z-10 bg-background p-4 border-b-2 border-slate-200 dark:border-slate-800 flex flex-row justify-between items-center">
-        <SignOutButton />
-      </header>
       <main>
         <div className="flex flex-col min-h-screen items-center justify-center p-6 text-center pr-20">
           <h1 className="text-5xl font-bold text-purple-700 mb-6">Banerry</h1>
@@ -41,27 +38,6 @@ export default function HomePage() {
           <PWAInstall />
         </div>
       </main>
-    </>
-  );
-}
-function SignOutButton() {
-  const { isAuthenticated } = useConvexAuth();
-  const { signOut } = useAuthActions();
-  const router = useRouter();
-  return (
-    <>
-      {isAuthenticated && (
-        <button
-          className="bg-slate-200 dark:bg-slate-800 text-foreground rounded-md px-2 py-1"
-          onClick={() =>
-            void signOut().then(() => {
-              router.push("/signin");
-            })
-          }
-        >
-          Sign out
-        </button>
-      )}
     </>
   );
 }

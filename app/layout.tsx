@@ -7,6 +7,7 @@ import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -126,6 +127,7 @@ export default function RootLayout({
                 {children}
                 {/* <SettingsMenu /> */}
               </VoiceProvider>
+              <Toaster />
             </ThemeProvider>
           </ConvexClientProvider>
         </body>

@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { User } from "lucide-react"
-import Link from "next/link"
+import type React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { User } from "lucide-react";
+import Link from "next/link";
 
 interface LearnerCardProps {
   learner: {
-    _id: string
-    name: string
-    bio?: string
-    _creationTime: number
-  }
+    _id: string;
+    name: string;
+    bio?: string;
+    _creationTime: number;
+  };
 }
 
 export default function LearnerCard({ learner }: LearnerCardProps) {
@@ -31,10 +31,10 @@ export default function LearnerCard({ learner }: LearnerCardProps) {
         <CardContent className="pt-0">
           {/* TODO: Change this to last activity */}
           <p className="text-xs text-gray-400">
-            Created {new Date(learner._creationTime).toLocaleDateString()}
+            {/* Created {new Date(learner._creationTime).toLocaleDateString()} */}
           </p>
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 }
