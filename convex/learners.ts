@@ -1,5 +1,7 @@
 import { v } from "convex/values";
-import { query, mutation } from "./_generated/server";
+import { query, mutation, QueryCtx } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
+import { Doc, Id } from "./_generated/dataModel";
 
 const words = [
   // Animals
@@ -80,8 +82,19 @@ export const list = query({
       passphrase: v.string(),
     })
   ),
-  handler: async (ctx, args) => {
-    return await ctx.db.query("learners").order("desc").collect();
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) throw new Error("Unauthenticated");
+    const learnerMentorRelationships = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
+      .collect();
+    const learners = await Promise.all(
+      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId))
+    );
+    return learners.filter((learner) => learner !== null) as Array<
+      Doc<"learners">
+    >; // TODO: Consolidate Convex and main TS config so that this doesn't throw during Convex build
   },
 });
 
@@ -215,7 +228,6 @@ export const getByPassphrase = query({
     const learner = await ctx.db
       .query("learners")
       .withIndex("by_passphrase", (q) => q.eq("passphrase", args.passphrase))
-      .filter((q) => q.eq(q.field("passphrase"), args.passphrase))
       .unique();
     if (!learner) return null;
 
@@ -255,3 +267,11 @@ export const validate = query({
     return learner;
   },
 });
+
+async function ensureTeamAdmin(
+  ctx: QueryCtx,
+  user: Doc<"users">,
+  learnerId: Id<"learners">
+) {
+  // use `ctx.db` to check that `user` is a team admin and throw an error otherwise
+}

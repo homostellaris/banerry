@@ -11,12 +11,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export default function SignIn() {
   const { signIn } = useAuthActions();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   return (
@@ -40,17 +39,15 @@ export default function SignIn() {
                 const formData = new FormData(event.currentTarget);
                 const email = formData.get("email") as string;
 
-                await signIn("resend", formData);
+                // await signIn("resend", formData);
+                await signIn("resend", { ...formData, redirectTo: "/mentor" });
 
-                toast({
-                  title: "Sign-in link sent!",
+                toast.success("Sign-in link sent!", {
                   description: `Check your email at ${email} for the sign-in link.`,
                 });
               } catch (error) {
-                toast({
-                  title: "Error",
+                toast.error("Error", {
                   description: "Failed to send sign-in link. Please try again.",
-                  variant: "destructive",
                 });
               } finally {
                 setIsLoading(false);
@@ -71,7 +68,6 @@ export default function SignIn() {
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Sending...
                 </>
               ) : (
                 "Send sign-in link"

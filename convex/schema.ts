@@ -17,9 +17,11 @@ export default defineSchema({
   }).index("by_passphrase", ["passphrase"]),
   learnerMentorRelationships: defineTable({
     learnerId: v.id("learners"),
-    mentorId: v.id("learners"),
+    mentorId: v.id("users"),
     relationshipType: v.string(), // e.g., "parent", "teacher", "therapist"
-  }),
+  })
+    .index("by_learner", ["learnerId"])
+    .index("by_mentor", ["mentorId"]),
   mentors: defineTable({
     name: v.string(),
   }),

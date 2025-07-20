@@ -1,6 +1,6 @@
 # Banerry
 
-Speech and transition assistance for gestalt language processors.
+Communication assistance for gestalt language processors.
 
 ## Getting Started
 

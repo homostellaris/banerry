@@ -7,7 +7,7 @@ import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,8 +16,7 @@ export const metadata: Metadata = {
     default: "Banerry",
     template: "%s | Banerry",
   },
-  description:
-    "Speech and transition assistance for gestalt language processors.",
+  description: "Communication assistance for gestalt language processors.",
   keywords: [
     "PWA",
     "Gestalt Language Processing",
@@ -43,8 +42,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app",
     title: "Banerry",
-    description:
-      "Speech and transition assistance for gestalt language processors.",
+    description: "Communication assistance for gestalt language processors.",
     siteName: "Banerry",
     images: [
       {
@@ -58,8 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Banerry",
-    description:
-      "Speech and transition assistance for gestalt language processors.",
+    description: "Communication assistance for gestalt language processors.",
     images: ["/og-image.png"],
   },
   appleWebApp: {
@@ -127,7 +124,7 @@ export default function RootLayout({
                 {children}
                 {/* <SettingsMenu /> */}
               </VoiceProvider>
-              <Toaster />
+              <Toaster position="top-center" />
             </ThemeProvider>
           </ConvexClientProvider>
         </body>
