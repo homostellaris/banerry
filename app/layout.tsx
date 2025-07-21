@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.banerry.app"
   ),
   alternates: {
     canonical: "/",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://banerry.vercel.app",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.banerry.app",
     title: "Banerry",
     description: "Communication assistance for gestalt language processors.",
     siteName: "Banerry",
