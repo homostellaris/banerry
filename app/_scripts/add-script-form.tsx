@@ -65,12 +65,12 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Add New Script
+          Add Script
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Script</DialogTitle>
+          <DialogTitle>Add Script</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

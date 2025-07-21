@@ -50,10 +50,10 @@ export default async function MentorLearnerPage({
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div>
             <h1 className="text-4xl font-bold text-purple-700 mb-2">
-              {learnerWithScripts.name}'s Scripts
+              {learnerWithScripts.name}
             </h1>
             {learnerWithScripts.bio && (
               <p className="text-gray-600 max-w-2xl">
