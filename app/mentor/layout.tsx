@@ -19,7 +19,7 @@ export default function Layout({ children }: PropsWithChildren) {
         type="text/javascript"
       ></Script>
       {/* @ts-ignore */}
-      <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
+      <elevenlabs-convai agent-id="agent_01k0qbvbr9fm0tmxc6a1szqs6k"></elevenlabs-convai>
       {children}
     </>
   );

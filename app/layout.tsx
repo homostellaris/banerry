@@ -103,16 +103,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#7c3aed" />
-        <head>
-          <Script
-            src="https://unpkg.com/@elevenlabs/convai-widget-embed"
-            async
-            type="text/javascript"
-          ></Script>
-        </head>
         <body className={inter.className}>
-          {/* @ts-ignore */}
-          <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
           <ConvexClientProvider>
             <ThemeProvider
               attribute="class"
