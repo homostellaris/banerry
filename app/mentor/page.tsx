@@ -4,6 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { fetchQuery, preloadQuery } from "convex/nextjs";
 import Learners from "./learners";
+import ShareLearnerForm from "./share-learner-form";
 
 export default async function MentorPage() {
   const preloadedLearners = await preloadQuery(

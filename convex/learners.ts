@@ -279,6 +279,31 @@ export const validate = query({
   },
 });
 
+export const share = mutation({
+  args: {
+    email: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const userId = await ensureAuthenticated(ctx);
+    const learnerMentorRelationship = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
+      .first();
+
+    if (!learnerMentorRelationship) {
+      throw new Error("Unauthorized");
+    }
+
+    // Here you would implement the logic to share the learner with the email
+    // This could involve sending an email or creating a new relationship
+    // For now, we just log it
+    console.log(`Sharing learner with email: ${args.email}`);
+
+    return null;
+  },
+});
+
 async function ensureLearnerRelationship(
   ctx: QueryCtx,
   learnerId: Id<"learners">

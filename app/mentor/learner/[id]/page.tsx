@@ -10,6 +10,7 @@ import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ShareLearnerForm from "../../share-learner-form";
 
 export default async function MentorLearnerPage({
   params,
@@ -40,10 +41,13 @@ export default async function MentorLearnerPage({
               Back to Learners
             </Button>
           </Link>
-          <DeleteLearnerButton
-            learnerId={id as Id<"learners">}
-            learnerName={learnerWithScripts.name}
-          />
+          <div className="flex items-center gap-2">
+            <DeleteLearnerButton
+              learnerId={id as Id<"learners">}
+              learnerName={learnerWithScripts.name}
+            />
+            {/* <ShareLearnerForm /> */}
+          </div>
         </div>
 
         <div className="flex items-center justify-between">
