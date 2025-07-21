@@ -37,10 +37,13 @@ export default function SignIn() {
 
               try {
                 const formData = new FormData(event.currentTarget);
-                const email = formData.get("email") as string;
+                const email = formData.get("email");
 
-                // await signIn("resend", formData);
-                await signIn("resend", { ...formData, redirectTo: "/mentor" });
+                await signIn("resend", {
+                  email: email as string,
+                  redirectTo: "/mentor",
+                });
+                // await signIn("resend", { ...formData, redirectTo: "/mentor" });
 
                 toast.success("Sign-in link sent!", {
                   description: `Check your email at ${email} for the sign-in link.`,

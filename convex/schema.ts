@@ -18,7 +18,7 @@ export default defineSchema({
   learnerMentorRelationships: defineTable({
     learnerId: v.id("learners"),
     mentorId: v.id("users"),
-    relationshipType: v.string(), // e.g., "parent", "teacher", "therapist"
+    relationshipType: v.optional(v.string()), // e.g., "parent", "teacher", "therapist"
   })
     .index("by_learner", ["learnerId"])
     .index("by_mentor", ["mentorId"]),

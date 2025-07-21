@@ -1,11 +1,10 @@
 "use client";
 
-import { Doc } from "@/convex/_generated/dataModel";
-import ScriptCard from "./script-card";
 import { api } from "@/convex/_generated/api";
 import { Preloaded, usePreloadedQuery } from "convex/react";
-import { notFound, usePathname } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import ScriptCard from "./script-card";
 
 export default function ReactiveScriptsList({
   preloadedLearnerWithScripts,

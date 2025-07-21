@@ -45,6 +45,7 @@ export const create = mutation({
   },
   returns: v.id("learners"),
   handler: async (ctx, args) => {
+    const userId = await ensureAuthenticated(ctx);
     let passphrase = generatePassphrase();
 
     // Ensure uniqueness by checking existing passphrases
@@ -65,6 +66,11 @@ export const create = mutation({
       name: args.name,
       bio: args.bio,
       passphrase,
+    });
+
+    await ctx.db.insert("learnerMentorRelationships", {
+      learnerId,
+      mentorId: userId,
     });
 
     return learnerId;
@@ -92,6 +98,7 @@ export const list = query({
     const learners = await Promise.all(
       learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId))
     );
+
     return learners.filter((learner) => learner !== null) as Array<
       Doc<"learners">
     >; // TODO: Consolidate Convex and main TS config so that this doesn't throw during Convex build
@@ -104,6 +111,8 @@ export const del = mutation({
   },
   returns: v.null(),
   handler: async (ctx, args) => {
+    await ensureLearnerRelationship(ctx, args.learnerId);
+
     // First, get all scripts for this learner
     const scripts = await ctx.db
       .query("scripts")
@@ -157,6 +166,7 @@ export const get = query({
     v.null()
   ),
   handler: async (ctx, args) => {
+    await ensureLearnerRelationship(ctx, args.learnerId);
     return await ctx.db.get(args.learnerId);
   },
 });
@@ -185,6 +195,7 @@ export const getWithScripts = query({
     v.null()
   ),
   handler: async (ctx, args) => {
+    await ensureLearnerRelationship(ctx, args.learnerId);
     const learner = await ctx.db.get(args.learnerId);
     if (!learner) return null;
 
@@ -268,10 +279,22 @@ export const validate = query({
   },
 });
 
-async function ensureTeamAdmin(
+async function ensureLearnerRelationship(
   ctx: QueryCtx,
-  user: Doc<"users">,
   learnerId: Id<"learners">
 ) {
-  // use `ctx.db` to check that `user` is a team admin and throw an error otherwise
+  const userId = await ensureAuthenticated(ctx);
+  const learnerMentorRelationship = await ctx.db
+    .query("learnerMentorRelationships")
+    .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
+    .filter((q) => q.eq(q.field("learnerId"), learnerId)) // TODO: Use compound index instead?
+    .unique();
+  if (learnerMentorRelationship === null) throw new Error("Unauthorized");
+  return learnerMentorRelationship;
+}
+
+async function ensureAuthenticated(ctx: QueryCtx) {
+  const userId = await getAuthUserId(ctx);
+  if (userId === null) throw new Error("Unauthenticated");
+  return userId;
 }

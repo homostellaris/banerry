@@ -5,6 +5,7 @@ import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
 import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -21,6 +22,9 @@ export default async function MentorLearnerPage({
     api.learners.getWithScripts,
     {
       learnerId: id,
+    },
+    {
+      token: await convexAuthNextjsToken(),
     }
   );
   const learnerWithScripts = preloadedQueryResult(preloadedLearnerWithScripts);
