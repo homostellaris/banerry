@@ -1,5 +1,5 @@
 import AddScriptForm from "@/app/_scripts/add-script-form";
-import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
+import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
 import LearnerUrlDisplay from "@/app/learner/learner-url-display";
 import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
 import { Button } from "@/components/ui/button";
@@ -72,7 +72,7 @@ export default async function MentorLearnerPage({
         />
       </div>
 
-      <ReactiveScriptsList
+      <MentorScriptsList
         preloadedLearnerWithScripts={preloadedLearnerWithScripts}
       />
     </div>

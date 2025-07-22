@@ -19,11 +19,6 @@ export default defineSchema({
   })
     .index("by_learner", ["learnerId"])
     .index("by_mentor", ["mentorId"]),
-  mitigations: defineTable({
-    learnerId: v.id("learners"),
-    scriptId: v.id("scripts"),
-    rationale: v.string(),
-  }),
   scripts: defineTable({
     learnerId: v.id("learners"),
     dialogue: v.string(),

@@ -63,3 +63,18 @@ export const get = query({
     return script;
   },
 });
+
+export const remove = mutation({
+  args: {
+    id: v.id("scripts"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const script = await ctx.db.get(args.id);
+    if (!script) {
+      throw new Error("Script not found");
+    }
+    await ctx.db.delete(args.id);
+    return null;
+  },
+});
