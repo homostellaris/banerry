@@ -29,7 +29,7 @@ export default function LearnerUrlDisplay({
       <Card className="border-orange-200 bg-orange-50">
         <CardHeader className="pb-3">
           <CardTitle className="text-sm font-medium text-orange-800">
-            Learner Access Link
+            Learner Passphrase
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
@@ -43,12 +43,13 @@ export default function LearnerUrlDisplay({
     <Card className="border-green-200 bg-green-50">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium text-green-800">
-          Learner Access Link
+          Learner Passphrase
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-3">
         <p className="text-xs text-green-600">
-          Share this link with {name} to access their scripts:
+          Go to Banerry and enter the passphrase on your learner's device to
+          give them access to their scripts.
         </p>
 
         <div className="flex items-center gap-2 p-2 bg-white rounded border">
@@ -76,7 +77,7 @@ export default function LearnerUrlDisplay({
             onClick={() => copyToClipboard(passphrase)}
             disabled={copied}
           >
-            {copied ? "Copied!" : "Copy Link"}
+            {copied ? "Copied!" : "Copy Passphrase"}
           </Button>
           <Button
             variant="outline"
@@ -89,7 +90,7 @@ export default function LearnerUrlDisplay({
             }
           >
             <ExternalLink className="h-4 w-4 mr-1" />
-            Open
+            Preview Learner Experience
           </Button>
         </div>
       </CardContent>

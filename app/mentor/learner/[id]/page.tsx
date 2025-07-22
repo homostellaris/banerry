@@ -34,22 +34,6 @@ export default async function MentorLearnerPage({
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <header className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <Link href="/mentor">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Learners
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <DeleteLearnerButton
-              learnerId={id as Id<"learners">}
-              learnerName={learnerWithScripts.name}
-            />
-            {/* <ShareLearnerForm /> */}
-          </div>
-        </div>
-
         <div className="flex items-center justify-between gap-2">
           <div>
             <h1 className="text-4xl font-bold text-purple-700 mb-2">
@@ -61,7 +45,14 @@ export default async function MentorLearnerPage({
               </p>
             )}
           </div>
-          <AddScriptForm learnerId={id as Id<"learners">} />
+          <div className="flex items-center gap-2">
+            <DeleteLearnerButton
+              learnerId={id as Id<"learners">}
+              learnerName={learnerWithScripts.name}
+            />
+            {/* <ShareLearnerForm /> */}
+            <AddScriptForm learnerId={id as Id<"learners">} />
+          </div>
         </div>
       </header>
 
