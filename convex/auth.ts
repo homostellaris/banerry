@@ -1,10 +1,6 @@
-import Resend from "@auth/core/providers/resend";
 import { convexAuth } from "@convex-dev/auth/server";
+import { ResendOTP } from "./resendOtp";
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [
-    Resend({
-      from: "hello@banerry.app",
-    }),
-  ],
+  providers: [ResendOTP],
 });
