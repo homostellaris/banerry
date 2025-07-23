@@ -113,28 +113,15 @@ export const del = mutation({
   handler: async (ctx, args) => {
     await ensureLearnerRelationship(ctx, args.learnerId);
 
-    // First, get all scripts for this learner
     const scripts = await ctx.db
       .query("scripts")
       .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
       .collect();
 
-    // Delete all scripts for this learner
     for (const script of scripts) {
       await ctx.db.delete(script._id);
     }
 
-    // Delete all mitigations for this learner
-    const mitigations = await ctx.db
-      .query("mitigations")
-      .filter((q) => q.eq(q.field("learnerId"), args.learnerId))
-      .collect();
-
-    for (const mitigation of mitigations) {
-      await ctx.db.delete(mitigation._id);
-    }
-
-    // Delete learner mentor relationships
     const relationships = await ctx.db
       .query("learnerMentorRelationships")
       .filter((q) => q.eq(q.field("learnerId"), args.learnerId))
@@ -144,7 +131,6 @@ export const del = mutation({
       await ctx.db.delete(relationship._id);
     }
 
-    // Finally, delete the learner
     await ctx.db.delete(args.learnerId);
 
     return null;
