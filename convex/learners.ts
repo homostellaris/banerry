@@ -122,6 +122,15 @@ export const del = mutation({
       await ctx.db.delete(script._id);
     }
 
+    const targetScripts = await ctx.db
+      .query("targetScripts")
+      .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
+      .collect();
+
+    for (const targetScript of targetScripts) {
+      await ctx.db.delete(targetScript._id);
+    }
+
     const relationships = await ctx.db
       .query("learnerMentorRelationships")
       .filter((q) => q.eq(q.field("learnerId"), args.learnerId))
@@ -177,6 +186,15 @@ export const getWithScripts = query({
           learnerId: v.id("learners"),
         })
       ),
+      targetScripts: v.array(
+        v.object({
+          _id: v.id("targetScripts"),
+          _creationTime: v.number(),
+          dialogue: v.string(),
+          parentheticals: v.string(),
+          learnerId: v.id("learners"),
+        })
+      ),
     }),
     v.null()
   ),
@@ -191,9 +209,16 @@ export const getWithScripts = query({
       .order("desc")
       .collect();
 
+    const targetScripts = await ctx.db
+      .query("targetScripts")
+      .withIndex("by_learner", (q) => q.eq("learnerId", learner._id))
+      .order("desc")
+      .collect();
+
     return {
       ...learner,
       scripts,
+      targetScripts,
     };
   },
 });
@@ -218,6 +243,15 @@ export const getByPassphrase = query({
           learnerId: v.id("learners"),
         })
       ),
+      targetScripts: v.array(
+        v.object({
+          _id: v.id("targetScripts"),
+          _creationTime: v.number(),
+          dialogue: v.string(),
+          parentheticals: v.string(),
+          learnerId: v.id("learners"),
+        })
+      ),
     }),
     v.null()
   ),
@@ -234,9 +268,16 @@ export const getByPassphrase = query({
       .order("desc")
       .collect();
 
+    const targetScripts = await ctx.db
+      .query("targetScripts")
+      .withIndex("by_learner", (q) => q.eq("learnerId", learner._id))
+      .order("desc")
+      .collect();
+
     return {
       ...learner,
       scripts,
+      targetScripts,
     };
   },
 });

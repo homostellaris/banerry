@@ -1,16 +1,14 @@
 import AddScriptForm from "@/app/_scripts/add-script-form";
+import AddTargetScriptForm from "@/app/_scripts/add-target-script-form";
 import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
+import MentorTargetScriptsList from "@/app/_scripts/mentor-target-scripts-list";
 import LearnerUrlDisplay from "@/app/learner/learner-url-display";
 import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
-import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { preloadedQueryResult, preloadQuery } from "convex/nextjs";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import ShareLearnerForm from "../../share-learner-form";
 
 export default async function MentorLearnerPage({
   params,
@@ -51,6 +49,7 @@ export default async function MentorLearnerPage({
               learnerName={learnerWithScripts.name}
             />
             {/* <ShareLearnerForm /> */}
+            <AddTargetScriptForm learnerId={id as Id<"learners">} />
             <AddScriptForm learnerId={id as Id<"learners">} />
           </div>
         </div>
@@ -63,9 +62,32 @@ export default async function MentorLearnerPage({
         />
       </div>
 
-      <MentorScriptsList
-        preloadedLearnerWithScripts={preloadedLearnerWithScripts}
-      />
+      {/* Target Scripts Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
+          🎯 Target Scripts
+          <span className="text-sm font-normal text-gray-600">
+            ({learnerWithScripts.targetScripts.length}/3)
+          </span>
+        </h2>
+        {learnerWithScripts.targetScripts.length > 0 ? (
+          <MentorTargetScriptsList
+            preloadedLearnerWithScripts={preloadedLearnerWithScripts}
+          />
+        ) : (
+          <p className="text-gray-600 italic">
+            No target scripts yet. Add up to 3 scripts that you want the learner to work towards.
+          </p>
+        )}
+      </div>
+
+      {/* Regular Scripts Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-purple-700 mb-4">📝 All Scripts</h2>
+        <MentorScriptsList
+          preloadedLearnerWithScripts={preloadedLearnerWithScripts}
+        />
+      </div>
     </div>
   );
 }

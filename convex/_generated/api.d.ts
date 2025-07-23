@@ -18,6 +18,7 @@ import type * as http from "../http.js";
 import type * as learners from "../learners.js";
 import type * as resendOtp from "../resendOtp.js";
 import type * as scripts from "../scripts.js";
+import type * as targetScripts from "../targetScripts.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   learners: typeof learners;
   resendOtp: typeof resendOtp;
   scripts: typeof scripts;
+  targetScripts: typeof targetScripts;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

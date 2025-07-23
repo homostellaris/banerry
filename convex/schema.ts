@@ -24,4 +24,9 @@ export default defineSchema({
     dialogue: v.string(),
     parentheticals: v.string(),
   }).index("by_learner", ["learnerId"]),
+  targetScripts: defineTable({
+    learnerId: v.id("learners"),
+    dialogue: v.string(),
+    parentheticals: v.string(),
+  }).index("by_learner", ["learnerId"]),
 });
