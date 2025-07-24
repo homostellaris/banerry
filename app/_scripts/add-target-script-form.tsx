@@ -23,7 +23,9 @@ interface AddTargetScriptFormProps {
   learnerId: Id<"learners">;
 }
 
-export default function AddTargetScriptForm({ learnerId }: AddTargetScriptFormProps) {
+export default function AddTargetScriptForm({
+  learnerId,
+}: AddTargetScriptFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [dialogue, setDialogue] = useState("");
   const [parentheticals, setParentheticals] = useState("");
@@ -71,14 +73,17 @@ export default function AddTargetScriptForm({ learnerId }: AddTargetScriptFormPr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          className="flex items-center gap-2" 
+        <Button
+          className="flex items-center gap-2"
           variant="outline"
           disabled={isAtLimit}
-          title={isAtLimit ? "Maximum 3 target scripts allowed" : "Add Target Script"}
+          title={
+            isAtLimit ? "Maximum 3 target scripts allowed" : "Add Target Script"
+          }
         >
           <Target className="h-4 w-4" />
-          Add Target Script {targetScriptCount !== undefined && `(${targetScriptCount}/3)`}
+          Add Target Script{" "}
+          {targetScriptCount !== undefined && `(${targetScriptCount}/3)`}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -120,8 +125,8 @@ export default function AddTargetScriptForm({ learnerId }: AddTargetScriptFormPr
             >
               Cancel
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               disabled={!dialogue.trim() || isSubmitting || isAtLimit}
             >
               {isSubmitting ? (

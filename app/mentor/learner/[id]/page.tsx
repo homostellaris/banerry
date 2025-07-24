@@ -30,41 +30,32 @@ export default async function MentorLearnerPage({
   if (learnerWithScripts === null) notFound();
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <header className="mb-8">
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <h1 className="text-4xl font-bold text-purple-700 mb-2">
-              {learnerWithScripts.name}
-            </h1>
-            {learnerWithScripts.bio && (
-              <p className="text-gray-600 max-w-2xl">
-                {learnerWithScripts.bio}
-              </p>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <DeleteLearnerButton
-              learnerId={id as Id<"learners">}
-              learnerName={learnerWithScripts.name}
-            />
-            {/* <ShareLearnerForm /> */}
-            <AddTargetScriptForm learnerId={id as Id<"learners">} />
-            <AddScriptForm learnerId={id as Id<"learners">} />
-          </div>
-        </div>
+    <div className="container mx-auto p-4 max-w-4xl space-y-6">
+      <header>
+        <h1 className="text-4xl font-bold text-purple-700">
+          {learnerWithScripts.name}
+        </h1>
+        {learnerWithScripts.bio && (
+          <p className="text-gray-600 max-w-2xl">{learnerWithScripts.bio}</p>
+        )}
       </header>
-
-      <div className="mb-6">
-        <LearnerUrlDisplay
-          name={learnerWithScripts.name}
-          passphrase={learnerWithScripts.passphrase}
+      <div className="flex flex-wrap items-center gap-2">
+        {/* <ShareLearnerForm /> */}
+        <AddScriptForm learnerId={id as Id<"learners">} />
+        <AddTargetScriptForm learnerId={id as Id<"learners">} />
+        <DeleteLearnerButton
+          learnerId={id as Id<"learners">}
+          learnerName={learnerWithScripts.name}
         />
       </div>
 
-      {/* Target Scripts Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-orange-700 mb-4 flex items-center gap-2">
+      <LearnerUrlDisplay
+        name={learnerWithScripts.name}
+        passphrase={learnerWithScripts.passphrase}
+      />
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-orange-700 flex items-center gap-2">
           🎯 Target Scripts
           <span className="text-sm font-normal text-gray-600">
             ({learnerWithScripts.targetScripts.length}/3)
@@ -76,14 +67,14 @@ export default async function MentorLearnerPage({
           />
         ) : (
           <p className="text-gray-600 italic">
-            No target scripts yet. Add up to 3 scripts that you want the learner to work towards.
+            No target scripts yet. Add up to 3 scripts that you want the learner
+            to work towards.
           </p>
         )}
       </div>
 
-      {/* Regular Scripts Section */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-purple-700 mb-4">📝 All Scripts</h2>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-purple-700">📝 All Scripts</h2>
         <MentorScriptsList
           preloadedLearnerWithScripts={preloadedLearnerWithScripts}
         />
