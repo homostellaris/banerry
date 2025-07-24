@@ -6,7 +6,7 @@ import Navbar from "../_common/navbar";
 export default function Layout({ children }: PropsWithChildren) {
   return (
     <>
-      <Navbar basePath="/mentor" />
+      <Navbar basePath="/mentor" showHome />
       <Script
         src="https://unpkg.com/@elevenlabs/convai-widget-embed"
         async
