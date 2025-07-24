@@ -55,7 +55,7 @@ export default function Navigation({ basePath }: { basePath: string }) {
               )}
             >
               <item.icon className="h-4 w-4" />
-              {item.name}
+              <span className="hidden sm:inline">{item.name}</span>
             </Link>
           );
         })}
