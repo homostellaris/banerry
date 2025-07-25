@@ -45,14 +45,6 @@ export const metadata: Metadata = {
     title: "Banerry",
     description: "Communication assistance for gestalt language processors.",
     siteName: "Banerry",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Banerry - Helping gestalt language processors",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
