@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type React from "react";
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
@@ -114,6 +115,7 @@ export default function RootLayout({
               <VoiceProvider>
                 {children}
                 {/* <SettingsMenu /> */}
+                <Analytics />
               </VoiceProvider>
               <Toaster position="top-center" />
             </ThemeProvider>
