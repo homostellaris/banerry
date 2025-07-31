@@ -60,7 +60,14 @@ export default function EditTargetScriptDialog({
   };
 
   return (
-    <DialogContent className="sm:max-w-[500px]">
+    <DialogContent
+      className="sm:max-w-[500px]"
+      // https://github.com/radix-ui/primitives/issues/1241#issuecomment-2932189460
+      onCloseAutoFocus={(event) => {
+        event.preventDefault();
+        document.body.style.pointerEvents = "";
+      }}
+    >
       <DialogHeader>
         <DialogTitle>Edit Target Script</DialogTitle>
         <DialogDescription>

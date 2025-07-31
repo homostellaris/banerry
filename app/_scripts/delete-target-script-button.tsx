@@ -47,8 +47,14 @@ export default function DeleteTargetScriptButton({
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogContent>
+    <AlertDialog open={state[0]} onOpenChange={state[1]}>
+      <AlertDialogContent
+        // https://github.com/radix-ui/primitives/issues/1241#issuecomment-2932189460
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          document.body.style.pointerEvents = "";
+        }}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Target Script</AlertDialogTitle>
           <AlertDialogDescription>

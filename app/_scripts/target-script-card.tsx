@@ -1,27 +1,18 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Doc } from "@/convex/_generated/dataModel";
 import { Edit3, MoreVertical, Trash2 } from "lucide-react";
+import { useState } from "react";
 import AudioButton from "../_tts/audio-button";
 import DeleteTargetScriptButton from "./delete-target-script-button";
 import EditTargetScriptDialog from "./edit-target-script-dialog";
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 
 export default function TargetScriptCard({
   targetScript,
@@ -32,7 +23,6 @@ export default function TargetScriptCard({
   showDeleteButton?: boolean;
   showEditButton?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
   const [dialog, setDialog] = useState<"edit" | "delete" | null>();
 
   return (
@@ -48,10 +38,8 @@ export default function TargetScriptCard({
             <AudioButton text={targetScript.dialogue} />
             {(showEditButton || showDeleteButton) && (
               <Dialog
-                // open={!!dialog}
-                // onOpenChange={(open) => setDialog(open ? dialog : null)}
-                open={open}
-                onOpenChange={setOpen}
+                open={!!dialog}
+                onOpenChange={(open) => setDialog(open ? dialog : null)}
               >
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -66,7 +54,6 @@ export default function TargetScriptCard({
                           onClick={(e) => {
                             e.preventDefault();
                             setDialog("edit");
-                            setOpen(true);
                           }}
                         >
                           <Edit3 className="mr-2 h-4 w-4" />
@@ -87,24 +74,22 @@ export default function TargetScriptCard({
                     )}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <EditTargetScriptDialog
-                  state={[dialog === "edit", () => setDialog(undefined)]}
-                  targetScript={targetScript}
+                {dialog === "edit" && (
+                  <EditTargetScriptDialog
+                    state={[dialog === "edit", () => setDialog(undefined)]}
+                    targetScript={targetScript}
+                  />
+                )}
+                <DeleteTargetScriptButton
+                  dialogue={targetScript.dialogue}
+                  state={[dialog === "delete", () => setDialog(undefined)]}
+                  targetScriptId={targetScript._id}
                 />
               </Dialog>
             )}
           </div>
         </div>
       </CardContent>
-      {/* <EditTargetScriptDialog
-        state={editDialogState}
-        targetScript={targetScript}
-      /> */}
-      {/* <DeleteTargetScriptButton
-        dialogue={targetScript.dialogue}
-        state={showDeleteDialog}
-        targetScriptId={targetScript._id}
-      /> */}
     </Card>
   );
 }
