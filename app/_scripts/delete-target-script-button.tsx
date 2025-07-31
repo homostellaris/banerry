@@ -20,13 +20,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 interface DeleteTargetScriptButtonProps {
-  targetScriptId: Id<"targetScripts">;
   dialogue: string;
+  state: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+  targetScriptId: Id<"targetScripts">;
 }
 
 export default function DeleteTargetScriptButton({
-  targetScriptId,
   dialogue,
+  state,
+  targetScriptId,
 }: DeleteTargetScriptButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteTargetScript = useMutation(api.targetScripts.remove);
@@ -46,22 +48,12 @@ export default function DeleteTargetScriptButton({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="destructive"
-          size="sm"
-          disabled={isDeleting}
-          className="ml-2"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Target Script</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete the target script &quot;{dialogue}&quot;? This action cannot be
-            undone.
+            Are you sure you want to delete the target script &quot;{dialogue}
+            &quot;? This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

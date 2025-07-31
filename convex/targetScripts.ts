@@ -74,6 +74,26 @@ export const get = query({
   },
 });
 
+export const update = mutation({
+  args: {
+    id: v.id("targetScripts"),
+    dialogue: v.string(),
+    parentheticals: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const targetScript = await ctx.db.get(args.id);
+    if (!targetScript) {
+      throw new Error("Target script not found");
+    }
+    await ctx.db.patch(args.id, {
+      dialogue: args.dialogue,
+      parentheticals: args.parentheticals,
+    });
+    return null;
+  },
+});
+
 export const remove = mutation({
   args: {
     id: v.id("targetScripts"),

@@ -22,11 +22,13 @@ import { toast } from "sonner";
 interface DeleteScriptButtonProps {
   scriptId: Id<"scripts">;
   dialogue: string;
+  children?: React.ReactNode;
 }
 
 export default function DeleteScriptButton({
   scriptId,
   dialogue,
+  children,
 }: DeleteScriptButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteScript = useMutation(api.scripts.remove);
@@ -47,14 +49,16 @@ export default function DeleteScriptButton({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          variant="destructive"
-          size="sm"
-          disabled={isDeleting}
-          className="ml-2"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
+        {children || (
+          <Button
+            variant="destructive"
+            size="sm"
+            disabled={isDeleting}
+            className="ml-2"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        )}
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

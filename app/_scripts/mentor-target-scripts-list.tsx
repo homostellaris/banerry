@@ -42,6 +42,7 @@ export default function MentorTargetScriptsList({
           <TargetScriptCard
             targetScript={targetScript}
             showDeleteButton={true}
+            showEditButton={true}
           />
         </div>
       ))}

@@ -41,6 +41,7 @@ export default function MentorScriptsList({
           <ScriptCard 
             script={script} 
             showDeleteButton={true}
+            showEditButton={true}
           />
         </div>
       ))}
