@@ -2,13 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,19 +14,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
 interface EditScriptDialogProps {
+  state: [boolean, Dispatch<SetStateAction<boolean>>];
   script: Doc<"scripts">;
-  children: React.ReactNode;
 }
 
 export default function EditScriptDialog({
+  state,
   script,
-  children,
 }: EditScriptDialogProps) {
-  const [open, setOpen] = useState(false);
   const [dialogue, setDialogue] = useState(script.dialogue);
   const [parentheticals, setParentheticals] = useState(script.parentheticals);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -49,7 +46,7 @@ export default function EditScriptDialog({
         parentheticals: parentheticals.trim(),
       });
       toast.success("Script updated successfully");
-      setOpen(false);
+      state[1](false);
     } catch (error) {
       console.error("Error updating script:", error);
       toast.error("Failed to update script");
@@ -58,63 +55,57 @@ export default function EditScriptDialog({
     }
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-    if (newOpen) {
-      // Reset form when opening
-      setDialogue(script.dialogue);
-      setParentheticals(script.parentheticals);
-    }
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Edit Script</DialogTitle>
-          <DialogDescription>
-            Update the dialogue and parentheticals for this script.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="dialogue">Dialogue</Label>
-              <Input
-                id="dialogue"
-                value={dialogue}
-                onChange={(e) => setDialogue(e.target.value)}
-                placeholder="Enter the script dialogue..."
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="parentheticals">Parentheticals</Label>
-              <Textarea
-                id="parentheticals"
-                value={parentheticals}
-                onChange={(e) => setParentheticals(e.target.value)}
-                placeholder="Enter context or meaning..."
-                rows={3}
-              />
-            </div>
+    <DialogContent
+      className="sm:max-w-[500px]"
+      onCloseAutoFocus={(event) => {
+        event.preventDefault();
+        document.body.style.pointerEvents = "";
+      }}
+    >
+      <DialogHeader>
+        <DialogTitle>Edit Script</DialogTitle>
+        <DialogDescription>
+          Update the dialogue and parentheticals for this script.
+        </DialogDescription>
+      </DialogHeader>
+      <form onSubmit={handleSubmit}>
+        <div className="grid gap-4 py-4">
+          <div className="grid gap-2">
+            <Label htmlFor="dialogue">Dialogue</Label>
+            <Input
+              id="dialogue"
+              value={dialogue}
+              onChange={(e) => setDialogue(e.target.value)}
+              placeholder="Enter the script dialogue..."
+              required
+            />
           </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-              disabled={isUpdating}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isUpdating}>
-              {isUpdating ? "Updating..." : "Update Script"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+          <div className="grid gap-2">
+            <Label htmlFor="parentheticals">Parentheticals</Label>
+            <Textarea
+              id="parentheticals"
+              value={parentheticals}
+              onChange={(e) => setParentheticals(e.target.value)}
+              placeholder="Enter context or meaning..."
+              rows={3}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => state[1](false)}
+            disabled={isUpdating}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isUpdating}>
+            {isUpdating ? "Updating..." : "Update Script"}
+          </Button>
+        </DialogFooter>
+      </form>
+    </DialogContent>
   );
 }

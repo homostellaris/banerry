@@ -1,5 +1,5 @@
 import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
-import ReactiveTargetScriptsList from "@/app/_scripts/reactive-target-scripts-list";
+import ReactiveTargetScriptsList from "@/app/_target-scripts/reactive-target-scripts-list";
 import { api } from "@/convex/_generated/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { preloadQuery } from "convex/nextjs";

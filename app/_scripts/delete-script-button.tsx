@@ -16,18 +16,18 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
 interface DeleteScriptButtonProps {
   scriptId: Id<"scripts">;
-  dialogue: string;
+  state: [boolean, Dispatch<SetStateAction<boolean>>];
   children?: React.ReactNode;
 }
 
 export default function DeleteScriptButton({
   scriptId,
-  dialogue,
+  state,
   children,
 }: DeleteScriptButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -47,19 +47,7 @@ export default function DeleteScriptButton({
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        {children || (
-          <Button
-            variant="destructive"
-            size="sm"
-            disabled={isDeleting}
-            className="ml-2"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        )}
-      </AlertDialogTrigger>
+    <AlertDialog open={state[0]} onOpenChange={state[1]}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Script</AlertDialogTitle>

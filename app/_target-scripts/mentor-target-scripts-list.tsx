@@ -39,11 +39,7 @@ export default function MentorTargetScriptsList({
           onClick={(e) => handleTargetScriptClick(targetScript._id, e)}
           className="block cursor-pointer"
         >
-          <TargetScriptCard
-            targetScript={targetScript}
-            showDeleteButton={true}
-            showEditButton={true}
-          />
+          <TargetScriptCard targetScript={targetScript} showDropdown />
         </div>
       ))}
     </div>

@@ -1,7 +1,7 @@
 import AddScriptForm from "@/app/_scripts/add-script-form";
-import AddTargetScriptForm from "@/app/_scripts/add-target-script-form";
+import AddTargetScriptForm from "@/app/_target-scripts/add-target-script-form";
 import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
-import MentorTargetScriptsList from "@/app/_scripts/mentor-target-scripts-list";
+import MentorTargetScriptsList from "@/app/_target-scripts/mentor-target-scripts-list";
 import LearnerUrlDisplay from "@/app/learner/learner-url-display";
 import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
 import { api } from "@/convex/_generated/api";
