@@ -2,12 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Header from "./_common/header";
 import PWAInstall from "./_common/pwa-install";
+import RecentLearners from "./_learners/recent";
 
 export default function HomePage() {
   return (
     <>
       <main>
+        <Header>
+          <nav>
+            <RecentLearners />
+          </nav>
+        </Header>
         <div className="flex flex-col min-h-screen items-center justify-center p-6 text-center">
           <h1 className="text-5xl font-bold text-purple-700 mb-6">Banerry</h1>
           <p className="text-2xl text-gray-600 max-w-2xl mb-10">
@@ -23,7 +30,7 @@ export default function HomePage() {
               </Link>
               <Link href="/learner">
                 <Button
-                  className="text-xl py-6 px-8 w-full max-w-md bg-transparent"
+                  className="text-xl text-black py-6 px-8 w-full max-w-md bg-transparent"
                   variant="outline"
                 >
                   Learner
