@@ -1,14 +1,13 @@
-import { Analytics } from "@vercel/analytics/next";
-import type React from "react";
-import "@/app/globals.css";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider";
 import { VoiceProvider } from "@/app/_tts/voice-context";
-import Script from "next/script";
-import type { Metadata, Viewport } from "next";
-import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import "@/app/globals.css";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
+import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import { Analytics } from "@vercel/analytics/next";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import type React from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
