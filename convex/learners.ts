@@ -308,26 +308,145 @@ export const validate = query({
 
 export const share = mutation({
   args: {
+    learnerId: v.id("learners"),
     email: v.string(),
   },
-  returns: v.null(),
+  returns: v.object({
+    success: v.boolean(),
+    message: v.string(),
+  }),
   handler: async (ctx, args) => {
     const userId = await ensureAuthenticated(ctx);
-    const learnerMentorRelationship = await ctx.db
-      .query("learnerMentorRelationships")
-      .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
-      .first();
+    
+    // Verify the current user has access to this learner
+    await ensureLearnerRelationship(ctx, args.learnerId);
 
-    if (!learnerMentorRelationship) {
-      throw new Error("Unauthorized");
+    // Find the user by email
+    const targetUser = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", args.email))
+      .unique();
+
+    if (!targetUser) {
+      return {
+        success: false,
+        message: "No user found with that email address. They need to sign up first.",
+      };
     }
 
-    // Here you would implement the logic to share the learner with the email
-    // This could involve sending an email or creating a new relationship
-    // For now, we just log it
-    console.log(`Sharing learner with email: ${args.email}`);
+    // Check if the relationship already exists
+    const existingRelationship = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_mentor", (q) => q.eq("mentorId", targetUser._id))
+      .filter((q) => q.eq(q.field("learnerId"), args.learnerId))
+      .unique();
 
-    return null;
+    if (existingRelationship) {
+      return {
+        success: false,
+        message: "This user already has access to this learner.",
+      };
+    }
+
+    // Prevent sharing with yourself
+    if (targetUser._id === userId) {
+      return {
+        success: false,
+        message: "You already have access to this learner.",
+      };
+    }
+
+    // Create the new relationship
+    await ctx.db.insert("learnerMentorRelationships", {
+      learnerId: args.learnerId,
+      mentorId: targetUser._id,
+    });
+
+    return {
+      success: true,
+      message: `Successfully shared learner with ${args.email}`,
+    };
+  },
+});
+
+export const removeMentor = mutation({
+  args: {
+    learnerId: v.id("learners"),
+    mentorId: v.id("users"),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    message: v.string(),
+  }),
+  handler: async (ctx, args) => {
+    const userId = await ensureAuthenticated(ctx);
+    
+    // Verify the current user has access to this learner
+    await ensureLearnerRelationship(ctx, args.learnerId);
+
+    // Don't allow removing yourself if you're the only mentor
+    const allRelationships = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
+      .collect();
+
+    if (allRelationships.length === 1 && args.mentorId === userId) {
+      return {
+        success: false,
+        message: "Cannot remove yourself - you are the only mentor for this learner.",
+      };
+    }
+
+    // Find and remove the relationship
+    const relationship = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_mentor", (q) => q.eq("mentorId", args.mentorId))
+      .filter((q) => q.eq(q.field("learnerId"), args.learnerId))
+      .unique();
+
+    if (!relationship) {
+      return {
+        success: false,
+        message: "Mentor access not found.",
+      };
+    }
+
+    await ctx.db.delete(relationship._id);
+
+    return {
+      success: true,
+      message: "Mentor access removed successfully.",
+    };
+  },
+});
+
+export const getMentors = query({
+  args: {
+    learnerId: v.id("learners"),
+  },
+  returns: v.array(
+    v.object({
+      _id: v.id("users"),
+      _creationTime: v.number(),
+      name: v.optional(v.string()),
+      email: v.optional(v.string()),
+    })
+  ),
+  handler: async (ctx, args) => {
+    await ensureLearnerRelationship(ctx, args.learnerId);
+    
+    const relationships = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
+      .collect();
+
+    const mentors = await Promise.all(
+      relationships.map((r) => ctx.db.get(r.mentorId))
+    );
+
+    return mentors.filter((mentor) => mentor !== null) as Array<
+      Doc<"users">
+    >;
   },
 });
 

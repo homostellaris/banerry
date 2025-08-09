@@ -4,6 +4,8 @@ import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
 import MentorTargetScriptsList from "@/app/_target-scripts/mentor-target-scripts-list";
 import LearnerUrlDisplay from "@/app/learner/learner-url-display";
 import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
+import ShareLearnerForm from "@/app/mentor/share-learner-form";
+import MentorsList from "@/app/mentor/mentors-list";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
@@ -40,7 +42,10 @@ export default async function MentorLearnerPage({
         )}
       </header>
       <div className="flex flex-wrap items-center gap-2">
-        {/* <ShareLearnerForm /> */}
+        <ShareLearnerForm 
+          learnerId={id as Id<"learners">} 
+          learnerName={learnerWithScripts.name}
+        />
         <AddScriptForm learnerId={id as Id<"learners">} />
         <AddTargetScriptForm learnerId={id as Id<"learners">} />
         <DeleteLearnerButton
@@ -54,7 +59,12 @@ export default async function MentorLearnerPage({
         passphrase={learnerWithScripts.passphrase}
       />
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <MentorsList learnerId={id as Id<"learners">} />
+        </div>
+        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-4">
         <h2 className="text-2xl font-bold text-orange-700 flex items-center gap-2">
           🎯 Target Scripts
           <span className="text-sm font-normal text-gray-600">
@@ -78,6 +88,8 @@ export default async function MentorLearnerPage({
         <MentorScriptsList
           preloadedLearnerWithScripts={preloadedLearnerWithScripts}
         />
+      </div>
+        </div>
       </div>
     </div>
   );
