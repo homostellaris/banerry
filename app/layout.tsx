@@ -6,10 +6,10 @@ import { Toaster } from "@/components/ui/sonner";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import type React from "react";
 
-// Use system fonts to avoid network dependency during build
-const inter = { className: "font-sans" };
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
