@@ -43,7 +43,14 @@ export default function ShareLearnerForm({ learnerId, learnerName }: ShareLearne
       });
 
       if (result.success) {
-        toast.success(result.message);
+        if (result.isInvitation) {
+          toast.success(result.message, {
+            description: "They will receive an email with instructions to join.",
+            duration: 5000,
+          });
+        } else {
+          toast.success(result.message);
+        }
         // Reset form and close dialog
         setEmail("");
         setIsOpen(false);
@@ -89,7 +96,7 @@ export default function ShareLearnerForm({ learnerId, learnerName }: ShareLearne
               required
             />
             <p className="text-sm text-gray-500">
-              The user must already have a Banerry account to receive access.
+              Enter the email address of someone you&apos;d like to share this learner with. If they don&apos;t have a Banerry account yet, they&apos;ll receive an invitation email.
             </p>
           </div>
           <DialogFooter>
