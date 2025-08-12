@@ -19,6 +19,17 @@ export default defineSchema({
   })
     .index("by_learner", ["learnerId"])
     .index("by_mentor", ["mentorId"]),
+  learnerInvitations: defineTable({
+    email: v.string(),
+    learnerId: v.id("learners"),
+    invitingMentorId: v.id("users"),
+    token: v.string(),
+    expiresAt: v.number(),
+    status: v.union(v.literal("pending"), v.literal("accepted"), v.literal("expired")),
+  })
+    .index("by_email", ["email"])
+    .index("by_token", ["token"])
+    .index("by_learner", ["learnerId"]),
   scripts: defineTable({
     learnerId: v.id("learners"),
     dialogue: v.string(),
