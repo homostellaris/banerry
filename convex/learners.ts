@@ -364,6 +364,13 @@ export const share = mutation({
         mentorId: targetUser._id,
       });
 
+      // Send notification email to the existing user
+      await ctx.runAction(internal.learners.sendAccessNotificationEmail, {
+        email,
+        learnerId: args.learnerId,
+        mentorId: targetUser._id,
+      });
+
       return {
         success: true,
         message: `Successfully shared learner with ${email}`,
@@ -386,7 +393,7 @@ export const share = mutation({
       }
 
       // Create new invitation and send email
-      await ctx.scheduler.runAfter(0, internal.learners.sendInvitation, {
+      await ctx.runAction(internal.learners.sendInvitation, {
         email,
         learnerId: args.learnerId,
         invitingMentorId: userId,
@@ -627,6 +634,58 @@ export const getUserDetails = internalQuery({
   },
 });
 
+export const sendAccessNotificationEmail = internalAction({
+  args: {
+    email: v.string(),
+    learnerId: v.id("learners"),
+    mentorId: v.id("users"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const learner = await ctx.runQuery(internal.learners.getLearnerDetails, {
+      learnerId: args.learnerId,
+    });
+    
+    if (!learner) {
+      throw new Error("Learner not found");
+    }
+
+    const learnerUrl = `${process.env.CONVEX_SITE_URL}/learner?id=${args.learnerId}`;
+
+    // Send email using Resend
+    const { Resend } = await import("resend");
+    const resend = new Resend(process.env.AUTH_RESEND_KEY);
+
+    const { error } = await resend.emails.send({
+      from: "Banerry <invitations@banerry.app>",
+      to: [args.email],
+      subject: `You now have access to "${learner.name}" on Banerry`,
+      html: createAccessNotificationEmailTemplate({
+        learnerName: learner.name,
+        learnerUrl,
+      }),
+      text: `You now have access to mentor "${learner.name}" on Banerry. Visit: ${learnerUrl}`,
+    });
+
+    if (error) {
+      throw new Error(`Failed to send access notification email: ${JSON.stringify(error)}`);
+    }
+
+    return null;
+  },
+});
+
+export const markInvitationExpired = mutation({
+  args: {
+    invitationId: v.id("learnerInvitations"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.invitationId, { status: "expired" });
+    return null;
+  },
+});
+
 export const getInvitation = query({
   args: {
     token: v.string(),
@@ -658,11 +717,10 @@ export const getInvitation = query({
 
     if (!invitation) return null;
 
-    // Check if expired
+    // Check if expired and handle it (readonly check)
+    let currentStatus = invitation.status;
     if (invitation.expiresAt < Date.now() && invitation.status === "pending") {
-      // Mark as expired
-      await ctx.db.patch(invitation._id, { status: "expired" });
-      return { ...invitation, status: "expired" as const };
+      currentStatus = "expired";
     }
 
     const learner = await ctx.db.get(invitation.learnerId);
@@ -672,6 +730,7 @@ export const getInvitation = query({
 
     return {
       ...invitation,
+      status: currentStatus,
       learner: {
         name: learner.name,
         bio: learner.bio,
@@ -833,6 +892,58 @@ function createInvitationEmailTemplate({ learnerName, inviterName, invitationUrl
   
   <p style="font-size: 12px; color: #9ca3af;">
     This email was sent by Banerry. If you didn't expect this invitation, you can safely ignore this email.
+  </p>
+</body>
+</html>
+  `.trim();
+}
+
+function createAccessNotificationEmailTemplate({ learnerName, learnerUrl }: {
+  learnerName: string;
+  learnerUrl: string;
+}): string {
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>You have access to a learner on Banerry</title>
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <h1 style="color: #1f2937; margin: 0;">You have new access on Banerry!</h1>
+  </div>
+  
+  <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+    Hi there!
+  </p>
+  
+  <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+    You now have access to help mentor <strong>"${learnerName}"</strong> on Banerry, 
+    a speech and transition assistance app for gestalt language processors.
+  </p>
+  
+  <p style="font-size: 16px; line-height: 1.6; color: #374151;">
+    You can start collaborating right away:
+  </p>
+  
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="${learnerUrl}" style="background-color: #3b82f6; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
+      View Learner
+    </a>
+  </div>
+  
+  <p style="font-size: 14px; line-height: 1.6; color: #6b7280;">
+    If the button doesn't work, you can copy and paste this link into your browser:
+  </p>
+  <p style="font-size: 14px; color: #6b7280; word-break: break-all;">
+    ${learnerUrl}
+  </p>
+  
+  <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
+  
+  <p style="font-size: 12px; color: #9ca3af;">
+    This email was sent by Banerry. If you didn't expect this access, please contact your mentor.
   </p>
 </body>
 </html>
