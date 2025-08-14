@@ -1,7 +1,7 @@
 import { generateMitigations } from "@/app/_mitigations/mitigations";
 import MitigationCard from "./mitigation-card";
 
-export async function MitigationsSection({
+export default async function MitigationsSection({
   scriptText,
 }: {
   scriptText: string;

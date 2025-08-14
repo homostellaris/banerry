@@ -136,8 +136,8 @@ export default function LearnerPage() {
 
               <div className="mt-6 pt-6 border-t border-gray-100">
                 <p className="text-xs text-gray-500 text-center">
-                  Don't have an access code? Ask your mentor to share one with
-                  you.
+                  Don&apos;t have an access code? Ask your mentor to share one
+                  with you.
                 </p>
               </div>
             </CardContent>
