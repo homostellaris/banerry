@@ -1,7 +1,15 @@
 "use node";
 
 import { v } from "convex/values";
-import { query, mutation, action, internalAction, internalMutation, internalQuery, QueryCtx } from "./_generated/server";
+import {
+  query,
+  mutation,
+  action,
+  internalAction,
+  internalMutation,
+  internalQuery,
+  QueryCtx,
+} from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Doc, Id } from "./_generated/dataModel";
 import { internal } from "./_generated/api";
@@ -321,7 +329,7 @@ export const share = mutation({
   }),
   handler: async (ctx, args) => {
     const userId = await ensureAuthenticated(ctx);
-    
+
     // Verify the current user has access to this learner
     await ensureLearnerRelationship(ctx, args.learnerId);
 
@@ -365,11 +373,15 @@ export const share = mutation({
       });
 
       // Send notification email to the existing user
-      await ctx.runAction(internal.learners.sendAccessNotificationEmail, {
-        email,
-        learnerId: args.learnerId,
-        mentorId: targetUser._id,
-      });
+      await ctx.scheduler.runAfter(
+        0,
+        internal.learners.sendAccessNotificationEmail,
+        {
+          email,
+          learnerId: args.learnerId,
+          mentorId: targetUser._id,
+        }
+      );
 
       return {
         success: true,
@@ -393,7 +405,7 @@ export const share = mutation({
       }
 
       // Create new invitation and send email
-      await ctx.runAction(internal.learners.sendInvitation, {
+      await ctx.scheduler.runAfter(0, internal.learners.sendInvitation, {
         email,
         learnerId: args.learnerId,
         invitingMentorId: userId,
@@ -419,7 +431,7 @@ export const removeMentor = mutation({
   }),
   handler: async (ctx, args) => {
     const userId = await ensureAuthenticated(ctx);
-    
+
     // Verify the current user has access to this learner
     await ensureLearnerRelationship(ctx, args.learnerId);
 
@@ -432,7 +444,8 @@ export const removeMentor = mutation({
     if (allRelationships.length === 1 && args.mentorId === userId) {
       return {
         success: false,
-        message: "Cannot remove yourself - you are the only mentor for this learner.",
+        message:
+          "Cannot remove yourself - you are the only mentor for this learner.",
       };
     }
 
@@ -473,7 +486,7 @@ export const getMentors = query({
   ),
   handler: async (ctx, args) => {
     await ensureLearnerRelationship(ctx, args.learnerId);
-    
+
     const relationships = await ctx.db
       .query("learnerMentorRelationships")
       .withIndex("by_learner", (q) => q.eq("learnerId", args.learnerId))
@@ -483,9 +496,7 @@ export const getMentors = query({
       relationships.map((r) => ctx.db.get(r.mentorId))
     );
 
-    return mentors.filter((mentor) => mentor !== null) as Array<
-      Doc<"users">
-    >;
+    return mentors.filter((mentor) => mentor !== null) as Array<Doc<"users">>;
   },
 });
 
@@ -499,7 +510,7 @@ export const sendInvitation = internalAction({
   handler: async (ctx, args) => {
     // Generate a secure token
     const token = generateInvitationToken();
-    const expiresAt = Date.now() + (7 * 24 * 60 * 60 * 1000); // 7 days from now
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
 
     // Store the invitation
     await ctx.runMutation(internal.learners.createInvitation, {
@@ -556,9 +567,12 @@ export const sendInvitationEmail = internalAction({
     const learner = await ctx.runQuery(internal.learners.getLearnerDetails, {
       learnerId: args.learnerId,
     });
-    const invitingMentor = await ctx.runQuery(internal.learners.getUserDetails, {
-      userId: args.invitingMentorId,
-    });
+    const invitingMentor = await ctx.runQuery(
+      internal.learners.getUserDetails,
+      {
+        userId: args.invitingMentorId,
+      }
+    );
 
     if (!learner || !invitingMentor) {
       throw new Error("Failed to get learner or mentor details");
@@ -585,7 +599,9 @@ export const sendInvitationEmail = internalAction({
     });
 
     if (error) {
-      throw new Error(`Failed to send invitation email: ${JSON.stringify(error)}`);
+      throw new Error(
+        `Failed to send invitation email: ${JSON.stringify(error)}`
+      );
     }
 
     return null;
@@ -645,7 +661,7 @@ export const sendAccessNotificationEmail = internalAction({
     const learner = await ctx.runQuery(internal.learners.getLearnerDetails, {
       learnerId: args.learnerId,
     });
-    
+
     if (!learner) {
       throw new Error("Learner not found");
     }
@@ -668,7 +684,9 @@ export const sendAccessNotificationEmail = internalAction({
     });
 
     if (error) {
-      throw new Error(`Failed to send access notification email: ${JSON.stringify(error)}`);
+      throw new Error(
+        `Failed to send access notification email: ${JSON.stringify(error)}`
+      );
     }
 
     return null;
@@ -697,7 +715,11 @@ export const getInvitation = query({
       learnerId: v.id("learners"),
       invitingMentorId: v.id("users"),
       expiresAt: v.number(),
-      status: v.union(v.literal("pending"), v.literal("accepted"), v.literal("expired")),
+      status: v.union(
+        v.literal("pending"),
+        v.literal("accepted"),
+        v.literal("expired")
+      ),
       learner: v.object({
         name: v.string(),
         bio: v.optional(v.string()),
@@ -755,7 +777,7 @@ export const acceptInvitation = mutation({
   handler: async (ctx, args) => {
     const userId = await ensureAuthenticated(ctx);
     const user = await ctx.db.get(userId);
-    
+
     if (!user?.email) {
       return {
         success: false,
@@ -826,22 +848,28 @@ export const acceptInvitation = mutation({
 
     return {
       success: true,
-      message: "Successfully accepted invitation! You now have access to this learner.",
+      message:
+        "Successfully accepted invitation! You now have access to this learner.",
       learnerId: invitation.learnerId,
     };
   },
 });
 
 function generateInvitationToken(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let token = '';
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let token = "";
   for (let i = 0; i < 32; i++) {
     token += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return token;
 }
 
-function createInvitationEmailTemplate({ learnerName, inviterName, invitationUrl }: {
+function createInvitationEmailTemplate({
+  learnerName,
+  inviterName,
+  invitationUrl,
+}: {
   learnerName: string;
   inviterName: string;
   invitationUrl: string;
@@ -898,7 +926,10 @@ function createInvitationEmailTemplate({ learnerName, inviterName, invitationUrl
   `.trim();
 }
 
-function createAccessNotificationEmailTemplate({ learnerName, learnerUrl }: {
+function createAccessNotificationEmailTemplate({
+  learnerName,
+  learnerUrl,
+}: {
   learnerName: string;
   learnerUrl: string;
 }): string {

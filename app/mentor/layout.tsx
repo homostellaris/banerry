@@ -12,7 +12,7 @@ export default function Layout({ children }: PropsWithChildren) {
         async
         type="text/javascript"
       ></Script>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error: because I said so */}
       <elevenlabs-convai agent-id="agent_01k0qbvbr9fm0tmxc6a1szqs6k"></elevenlabs-convai>
       {children}
     </>
