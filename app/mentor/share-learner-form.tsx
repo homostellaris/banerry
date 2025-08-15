@@ -14,14 +14,21 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Plus, Loader2, Share } from "lucide-react";
+import { Plus, Loader2, Share, CheckCircle } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { useToast } from "@/hooks/use-toast";
 
-export default function ShareLearnerForm() {
+interface ShareLearnerFormProps {
+  learnerId: Id<"learners">;
+}
+
+export default function ShareLearnerForm({ learnerId }: ShareLearnerFormProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const shareLearner = useMutation(api.learners.share);
 
@@ -32,14 +39,26 @@ export default function ShareLearnerForm() {
     setIsSubmitting(true);
     try {
       await shareLearner({
+        learnerId,
         email: email.trim(),
+      });
+
+      // Show success message
+      toast({
+        title: "Learner shared successfully!",
+        description: `${email.trim()} has been added as a mentor for this learner.`,
       });
 
       // Reset form and close dialog
       setEmail("");
       setIsOpen(false);
     } catch (error) {
-      console.error("Failed to create learner:", error);
+      console.error("Failed to share learner:", error);
+      toast({
+        title: "Failed to share learner",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -87,7 +106,7 @@ export default function ShareLearnerForm() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating...
+                  Sharing...
                 </>
               ) : (
                 "Share Learner"

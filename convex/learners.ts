@@ -308,24 +308,68 @@ export const validate = query({
 
 export const share = mutation({
   args: {
+    learnerId: v.id("learners"),
     email: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     const userId = await ensureAuthenticated(ctx);
-    const learnerMentorRelationship = await ctx.db
-      .query("learnerMentorRelationships")
-      .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
-      .first();
+    
+    // Verify the current user is a mentor of this learner
+    await ensureLearnerRelationship(ctx, args.learnerId);
 
-    if (!learnerMentorRelationship) {
-      throw new Error("Unauthorized");
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(args.email)) {
+      throw new Error("Invalid email format");
     }
 
-    // Here you would implement the logic to share the learner with the email
-    // This could involve sending an email or creating a new relationship
-    // For now, we just log it
-    console.log(`Sharing learner with email: ${args.email}`);
+    // Find user by email in the auth system
+    // In Convex Auth, we need to look in the authAccounts table for the email
+    const existingAuthAccount = await ctx.db
+      .query("authAccounts")
+      .filter((q) => q.eq(q.field("providerAccountId"), args.email))
+      .first();
+
+    let targetUserId: Id<"users">;
+
+    if (existingAuthAccount) {
+      // User exists, use their user ID
+      targetUserId = existingAuthAccount.userId;
+    } else {
+      // User doesn't exist, create a user record
+      // Note: In a real app, you might want to send an invitation email instead
+      // For now, we'll create the user account and they can complete signup later
+      targetUserId = await ctx.db.insert("users", {});
+      
+      // Create auth account for email-based authentication
+      await ctx.db.insert("authAccounts", {
+        userId: targetUserId,
+        provider: "resend-otp",
+        providerAccountId: args.email,
+      });
+    }
+
+    // Check if relationship already exists
+    const existingRelationship = await ctx.db
+      .query("learnerMentorRelationships")
+      .filter((q) => 
+        q.and(
+          q.eq(q.field("learnerId"), args.learnerId),
+          q.eq(q.field("mentorId"), targetUserId)
+        )
+      )
+      .first();
+
+    if (existingRelationship) {
+      throw new Error("User is already a mentor for this learner");
+    }
+
+    // Create new learner-mentor relationship
+    await ctx.db.insert("learnerMentorRelationships", {
+      learnerId: args.learnerId,
+      mentorId: targetUserId,
+    });
 
     return null;
   },

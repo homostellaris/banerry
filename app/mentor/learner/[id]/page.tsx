@@ -4,6 +4,7 @@ import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
 import MentorTargetScriptsList from "@/app/_target-scripts/mentor-target-scripts-list";
 import LearnerUrlDisplay from "@/app/learner/learner-url-display";
 import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
+import ShareLearnerForm from "@/app/mentor/share-learner-form";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
@@ -40,7 +41,7 @@ export default async function MentorLearnerPage({
         )}
       </header>
       <div className="flex flex-wrap items-center gap-2">
-        {/* <ShareLearnerForm /> */}
+        <ShareLearnerForm learnerId={id as Id<"learners">} />
         <AddScriptForm learnerId={id as Id<"learners">} />
         <AddTargetScriptForm learnerId={id as Id<"learners">} />
         <DeleteLearnerButton
