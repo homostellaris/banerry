@@ -48,8 +48,8 @@ export default function LearnerUrlDisplay({
       </CardHeader>
       <CardContent className="pt-0 space-y-3">
         <p className="text-xs text-green-600">
-          Go to Banerry and enter the passphrase on your learner's device to
-          give them access to their scripts.
+          Go to Banerry and enter the passphrase on your learner&apos;s device
+          to give them access to their scripts.
         </p>
 
         <div className="flex items-center gap-2 p-2 bg-white rounded border">

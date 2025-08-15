@@ -19,7 +19,7 @@ export default async function LearnerPassphraseLayout({
         async
         type="text/javascript"
       ></Script>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error: because I said so */}
       <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
       {children}
     </>

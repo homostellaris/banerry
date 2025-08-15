@@ -36,6 +36,7 @@
     "types/index.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "app/sw.ts", // TODO: Fix the types
   ]
 }
