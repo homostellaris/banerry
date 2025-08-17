@@ -479,7 +479,12 @@ export const getMentors = query({
       _id: v.id("users"),
       _creationTime: v.number(),
       name: v.optional(v.string()),
+      image: v.optional(v.string()),
       email: v.optional(v.string()),
+      emailVerificationTime: v.optional(v.number()),
+      phone: v.optional(v.string()),
+      phoneVerificationTime: v.optional(v.number()),
+      isAnonymous: v.optional(v.boolean()),
     })
   ),
   handler: async (ctx, args) => {
@@ -708,6 +713,7 @@ export const getInvitation = query({
   },
   returns: v.union(
     v.object({
+      _creationTime: v.number(),
       _id: v.id("learnerInvitations"),
       email: v.string(),
       learnerId: v.id("learners"),
@@ -726,6 +732,7 @@ export const getInvitation = query({
         name: v.optional(v.string()),
         email: v.optional(v.string()),
       }),
+      token: v.string(),
     }),
     v.null()
   ),
@@ -890,7 +897,7 @@ function createInvitationEmailTemplate({
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     <strong>${inviterName}</strong> has invited you to help mentor <strong>"${learnerName}"</strong> on Banerry, 
-    a speech and transition assistance app for gestalt language processors.
+    a communication assistance app for gestalt language processors.
   </p>
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
@@ -949,7 +956,7 @@ function createAccessNotificationEmailTemplate({
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     You now have access to help mentor <strong>"${learnerName}"</strong> on Banerry, 
-    a speech and transition assistance app for gestalt language processors.
+    a communication assistance app for gestalt language processors.
   </p>
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
