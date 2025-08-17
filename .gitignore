@@ -29,3 +29,8 @@ next-env.d.ts
 
 # MacOS
 .DS_Store
+
+# Cypress
+/cypress/videos
+/cypress/screenshots
+/cypress/downloads

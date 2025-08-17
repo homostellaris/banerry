@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +18,7 @@ export default function InvitationPage() {
   const invitation = useQuery(api.learners.getInvitation, { token });
   const acceptInvitation = useMutation(api.learners.acceptInvitation);
 
-  const handleAcceptInvitation = async () => {
+  const handleAcceptInvitation = useCallback(async () => {
     if (!invitation) return;
 
     setIsAccepting(true);
@@ -42,7 +42,7 @@ export default function InvitationPage() {
     } finally {
       setIsAccepting(false);
     }
-  };
+  }, [invitation, token, acceptInvitation, router]);
 
   const handleSignInAndAccept = async () => {
     if (!invitation) return;
@@ -195,6 +195,7 @@ export default function InvitationPage() {
               onClick={handleSignInAndAccept}
               className="w-full"
               disabled={isAccepting}
+              data-testid="sign-in-to-accept-button"
             >
               {isAccepting ? (
                 <>
