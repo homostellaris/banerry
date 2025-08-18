@@ -370,14 +370,15 @@ export const share = mutation({
         mentorId: targetUser._id,
       });
 
-      // Send notification email to the existing user
+      // Handle notification for existing user with invitation token
       await ctx.scheduler.runAfter(
         0,
-        internal.learners.sendAccessNotificationEmail,
+        internal.learners.sendAccessNotificationWithToken,
         {
           email,
           learnerId: args.learnerId,
           mentorId: targetUser._id,
+          invitingMentorId: userId,
         }
       );
 
@@ -658,6 +659,7 @@ export const sendAccessNotificationEmail = internalAction({
     email: v.string(),
     learnerId: v.id("learners"),
     mentorId: v.id("users"),
+    token: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -669,7 +671,8 @@ export const sendAccessNotificationEmail = internalAction({
       throw new Error("Learner not found");
     }
 
-    const learnerUrl = `${process.env.CONVEX_SITE_URL}/learner?id=${args.learnerId}`;
+    const baseUrl = process.env.SITE_URL || "http://localhost:3000";
+    const invitationUrl = `${baseUrl}/invitation/${args.token}`;
 
     // Send email using Resend
     const { Resend } = await import("resend");
@@ -681,9 +684,9 @@ export const sendAccessNotificationEmail = internalAction({
       subject: `You now have access to "${learner.name}" on Banerry`,
       html: createAccessNotificationEmailTemplate({
         learnerName: learner.name,
-        learnerUrl,
+        learnerUrl: invitationUrl,
       }),
-      text: `You now have access to mentor "${learner.name}" on Banerry. Visit: ${learnerUrl}`,
+      text: `You now have access to mentor "${learner.name}" on Banerry. Visit: ${invitationUrl}`,
     });
 
     if (error) {
@@ -693,6 +696,61 @@ export const sendAccessNotificationEmail = internalAction({
     }
 
     return null;
+  },
+});
+
+export const sendAccessNotificationWithToken = internalAction({
+  args: {
+    email: v.string(),
+    learnerId: v.id("learners"),
+    mentorId: v.id("users"),
+    invitingMentorId: v.id("users"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // Generate a token for the notification invitation
+    const token = generateInvitationToken();
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
+
+    // Create an invitation record (marked as accepted since user already has access)
+    await ctx.runMutation(internal.learners.createInvitationForExistingUser, {
+      email: args.email,
+      learnerId: args.learnerId,
+      invitingMentorId: args.invitingMentorId,
+      token,
+      expiresAt,
+    });
+
+    // Send the notification email with invitation link
+    await ctx.runAction(internal.learners.sendAccessNotificationEmail, {
+      email: args.email,
+      learnerId: args.learnerId,
+      mentorId: args.mentorId,
+      token,
+    });
+
+    return null;
+  },
+});
+
+export const createInvitationForExistingUser = internalMutation({
+  args: {
+    email: v.string(),
+    learnerId: v.id("learners"),
+    invitingMentorId: v.id("users"),
+    token: v.string(),
+    expiresAt: v.number(),
+  },
+  returns: v.id("learnerInvitations"),
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("learnerInvitations", {
+      email: args.email,
+      learnerId: args.learnerId,
+      invitingMentorId: args.invitingMentorId,
+      token: args.token,
+      expiresAt: args.expiresAt,
+      status: "accepted", // Already accepted since user has immediate access
+    });
   },
 });
 
