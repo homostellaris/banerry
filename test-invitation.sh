@@ -3,6 +3,25 @@
 # Simple test script to validate the invitation system
 echo "🧪 Testing Banerry Invitation System"
 
+# Check environment variables first
+echo "🔧 Checking environment configuration..."
+
+if [ ! -f ".env.local" ]; then
+    echo "❌ .env.local file not found"
+    echo "   Please copy .env.sample to .env.local:"
+    echo "   cp .env.sample .env.local"
+    exit 1
+fi
+
+# Check for critical environment variables
+if ! grep -q "NEXT_PUBLIC_CONVEX_URL" .env.local || ! grep -q "CONVEX_DEPLOYMENT" .env.local; then
+    echo "❌ Missing critical environment variables in .env.local"
+    echo "   Please ensure NEXT_PUBLIC_CONVEX_URL and CONVEX_DEPLOYMENT are set"
+    exit 1
+fi
+
+echo "✅ Environment configuration looks good"
+
 # Check if required files exist
 echo "📁 Checking file structure..."
 
@@ -114,3 +133,12 @@ echo "   2. Run Cypress tests: npm run cy:open"
 echo "   3. Or run headless: npm run cy:run"
 echo ""
 echo "📧 To test email delivery, check your Resend configuration and logs."
+echo ""
+echo "🚨 If invitation emails are not working locally:"
+echo "   1. Ensure .env.local exists: cp .env.sample .env.local"
+echo "   2. Check NEXT_PUBLIC_CONVEX_URL is set in .env.local"
+echo "   3. Start Convex backend: npm run dev:backend"
+echo "   4. Verify Resend API key is configured for email sending"
+echo ""
+echo "🔗 Test a manual invitation URL:"
+echo "   http://localhost:3000/invitation/test-token-123"

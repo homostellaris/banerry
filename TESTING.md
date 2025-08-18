@@ -20,14 +20,33 @@ This script validates:
 
 ## End-to-End Testing with Cypress
 
-### Prerequisites
+## Prerequisites
 
-1. Install dependencies:
+⚠️ **Environment Setup Required** ⚠️
+
+1. **Install dependencies:**
    ```bash
    npm install --legacy-peer-deps
    ```
 
-2. Set up environment variables (copy from `.env.sample` to `.env.local`)
+2. **Set up environment variables:**
+   ```bash
+   cp .env.sample .env.local
+   ```
+   
+   Ensure `.env.local` contains:
+   ```
+   CONVEX_DEPLOYMENT=dev:content-toucan-531
+   NEXT_PUBLIC_CONVEX_URL=https://content-toucan-531.convex.cloud
+   SITE_URL=http://localhost:3000
+   ```
+
+3. **Verify setup:**
+   ```bash
+   ./test-invitation.sh
+   ```
+
+📚 **Having Issues?** See [INVITATION_TROUBLESHOOTING.md](./INVITATION_TROUBLESHOOTING.md) for detailed debugging steps.
 
 ### Running Tests
 
