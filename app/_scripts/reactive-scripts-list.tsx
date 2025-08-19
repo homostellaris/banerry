@@ -9,7 +9,7 @@ import ScriptCard from "./script-card";
 export default function ReactiveScriptsList({
   preloadedLearnerWithScripts,
 }: {
-  preloadedLearnerWithScripts: Preloaded<typeof api.learners.getWithScripts>;
+  preloadedLearnerWithScripts: Preloaded<typeof api.learners.getByPassphrase>;
 }) {
   const learnerWithScripts = usePreloadedQuery(preloadedLearnerWithScripts);
   if (learnerWithScripts === null) {

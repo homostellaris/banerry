@@ -8,7 +8,7 @@ export default function ScriptCard({
   showDropdown = false,
 }: {
   script: Doc<"scripts">;
-  showDropdown: boolean;
+  showDropdown?: boolean;
 }) {
   return (
     <Card className="overflow-hidden border-2 border-purple-200 shadow-md hover:shadow-lg transition-shadow">

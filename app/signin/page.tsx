@@ -16,7 +16,7 @@ export default function SignIn() {
             Banerry
           </CardTitle>
           <CardDescription>
-            {/* Sign in to access your speech and transition assistance */}
+            {/* Sign in to access your communication assistance */}
           </CardDescription>
         </CardHeader>
         <CardContent>
