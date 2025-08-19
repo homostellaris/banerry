@@ -42,8 +42,8 @@ export default async function MentorLearnerPage({
         )}
       </header>
       <div className="flex flex-wrap items-center gap-2">
-        <ShareLearnerForm 
-          learnerId={id as Id<"learners">} 
+        <ShareLearnerForm
+          learnerId={id as Id<"learners">}
           learnerName={learnerWithScripts.name}
         />
         <AddScriptForm learnerId={id as Id<"learners">} />
@@ -59,12 +59,10 @@ export default async function MentorLearnerPage({
         passphrase={learnerWithScripts.passphrase}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <MentorsList learnerId={id as Id<"learners">} />
-        </div>
-        <div className="lg:col-span-2 space-y-6">
-        <div className="space-y-4">
+      <div className="space-y-4">
+        <MentorsList learnerId={id as Id<"learners">} />
+      </div>
+      <div className="space-y-4">
         <h2 className="text-2xl font-bold text-orange-700 flex items-center gap-2">
           🎯 Target Scripts
           <span className="text-sm font-normal text-gray-600">
@@ -88,8 +86,6 @@ export default async function MentorLearnerPage({
         <MentorScriptsList
           preloadedLearnerWithScripts={preloadedLearnerWithScripts}
         />
-      </div>
-        </div>
       </div>
     </div>
   );

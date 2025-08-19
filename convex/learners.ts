@@ -583,7 +583,9 @@ export const sendInvitationEmail = internalAction({
     }
 
     // Create invitation URL
-    const baseUrl = process.env.SITE_URL || "http://localhost:3000";
+    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000";
     const invitationUrl = `${baseUrl}/invitation/${args.token}`;
 
     // Send email using Resend
@@ -671,7 +673,9 @@ export const sendAccessNotificationEmail = internalAction({
       throw new Error("Learner not found");
     }
 
-    const baseUrl = process.env.SITE_URL || "http://localhost:3000";
+    const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000";
     const invitationUrl = `${baseUrl}/invitation/${args.token}`;
 
     // Send email using Resend

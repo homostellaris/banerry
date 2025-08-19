@@ -53,20 +53,15 @@ export default function MentorsList({ learnerId }: MentorsListProps) {
       <CardContent>
         <div className="space-y-2">
           {mentors.map((mentor) => (
-            <div 
-              key={mentor._id} 
+            <div
+              key={mentor._id}
               className="flex items-center gap-2 p-2 rounded-md bg-gray-50"
             >
               <div className="rounded-full bg-blue-100 p-1">
                 <User className="h-3 w-3 text-blue-700" />
               </div>
               <div className="flex-1">
-                <div className="font-medium">
-                  {mentor.name || "Unknown User"}
-                </div>
-                <div className="text-sm text-gray-600">
-                  {mentor.email}
-                </div>
+                <div className="text-sm text-gray-600">{mentor.email}</div>
               </div>
               {mentors.length > 1 && (
                 <Button
