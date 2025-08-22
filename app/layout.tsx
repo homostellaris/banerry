@@ -1,4 +1,6 @@
 import { VoiceProvider } from "@/app/_tts/voice-context";
+import { TimerProvider } from "@/app/_common/timer-context";
+import { FloatingTimerCard } from "@/app/_common/floating-timer-card";
 import "@/app/globals.css";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -108,9 +110,12 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <VoiceProvider>
-                {children}
-                {/* <SettingsMenu /> */}
-                <Analytics />
+                <TimerProvider>
+                  {children}
+                  <FloatingTimerCard />
+                  {/* <SettingsMenu /> */}
+                  <Analytics />
+                </TimerProvider>
               </VoiceProvider>
               <Toaster position="top-center" />
             </ThemeProvider>
