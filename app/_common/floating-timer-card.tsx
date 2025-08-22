@@ -45,12 +45,12 @@ export function FloatingTimerCard() {
       case "top-left":
         return { x: 20, y: 60 };
       case "top-right":
-        return { x: viewportWidth - cardWidth - 20, y: 60 };
+        return { x: viewportWidth - cardWidth, y: 60 };
       case "bottom-left":
-        return { x: 20, y: viewportHeight - cardHeight };
+        return { x: 20, y: viewportHeight - cardHeight - 8 };
       case "bottom-right":
         return {
-          x: viewportWidth - cardWidth - 20,
+          x: viewportWidth - cardWidth,
           y: viewportHeight - cardHeight - 80,
         };
     }
@@ -241,7 +241,7 @@ export function FloatingTimerCard() {
     <Card
       ref={cardRef}
       className={cn(
-        "fixed z-50 w-48 shadow-lg cursor-pointer select-none transition-transform hover:scale-105",
+        "fixed z-50 shadow-lg cursor-pointer select-none transition-transform hover:scale-105",
         isDragging ? "cursor-grabbing scale-105" : "cursor-grab",
         state === "completed" && "bg-green-50 border-green-200"
       )}
@@ -255,7 +255,7 @@ export function FloatingTimerCard() {
       onClick={handleCardClick}
     >
       <CardContent className="p-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-6">
           <Clock className="h-4 w-4 text-purple-700" />
           <div className={cn("text-lg font-mono font-bold", getTimerColor())}>
             {formatTime(timeLeft)}
