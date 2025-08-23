@@ -161,26 +161,29 @@ export function FloatingTimerCard() {
 
   // Touch events
   const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
     const touch = e.touches[0];
     handleStart(touch.clientX, touch.clientY);
   };
 
   const handleTouchMove = useCallback(
     (e: TouchEvent) => {
-      e.preventDefault();
+      if (hasDragged) {
+        e.preventDefault();
+      }
       const touch = e.touches[0];
       handleMove(touch.clientX, touch.clientY);
     },
-    [handleMove]
+    [handleMove, hasDragged]
   );
 
   const handleTouchEnd = useCallback(
     (e: TouchEvent) => {
-      e.preventDefault();
+      if (hasDragged) {
+        e.preventDefault();
+      }
       handleEnd();
     },
-    [handleEnd]
+    [handleEnd, hasDragged]
   );
 
   // Add global event listeners for drag
