@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from "react";
 
 type TimerState = "idle" | "running" | "paused" | "completed";
 type AudioState = "unknown" | "enabled" | "blocked" | "permission-needed";
@@ -11,27 +19,27 @@ interface TimerContextType {
   seconds: number;
   setMinutes: (minutes: number) => void;
   setSeconds: (seconds: number) => void;
-  
+
   // Timer state
   timeLeft: number;
   totalTime: number;
   state: TimerState;
   progress: number;
-  
+
   // Audio state
   audioState: AudioState;
   notificationPermission: NotificationPermission;
-  
+
   // Timer controls
-  startTimer: () => Promise<void>;
+  startTimer: (duration?: number) => Promise<void>;
   pauseTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
   setPresetTimer: (mins: number, secs?: number) => void;
-  
+
   // Audio controls
   testAudio: () => Promise<void>;
-  
+
   // Utility functions
   formatTime: (totalSeconds: number) => string;
   getTimerColor: () => string;
@@ -181,9 +189,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     }
   }, [audioState, notificationPermission, playCompletionSound]);
 
-  const startTimer = async () => {
+  const startTimer = async (duration?: number) => {
     if (state === "idle") {
-      const total = minutes * 60 + seconds;
+      const total = duration || minutes * 60 + seconds;
       if (total === 0) return;
       setTotalTime(total);
       setTimeLeft(total);
@@ -315,7 +323,8 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("timer-state", JSON.stringify(stateToSave));
   }, [minutes, seconds]);
 
-  const progress = totalTime > 0 ? ((totalTime - timeLeft) / totalTime) * 100 : 0;
+  const progress =
+    totalTime > 0 ? ((totalTime - timeLeft) / totalTime) * 100 : 0;
 
   const value: TimerContextType = {
     minutes,
@@ -339,7 +348,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     getAudioStatus,
   };
 
-  return <TimerContext.Provider value={value}>{children}</TimerContext.Provider>;
+  return (
+    <TimerContext.Provider value={value}>{children}</TimerContext.Provider>
+  );
 }
 
 export function useTimer() {

@@ -1,5 +1,5 @@
 import Navbar from "@/app/_common/navbar";
-import { BookOpen, Calendar, Clock, Volume2 } from "lucide-react";
+import ElevenLabsWidget from "@/app/_tts/elevenlabs-widget";
 import Script from "next/script";
 import { PropsWithChildren } from "react";
 
@@ -19,8 +19,10 @@ export default async function LearnerPassphraseLayout({
         async
         type="text/javascript"
       ></Script>
-      {/* @ts-expect-error: because I said so */}
-      <elevenlabs-convai agent-id="agent_01jxr34ba0esfs9gp69ar7b3vq"></elevenlabs-convai>
+      <ElevenLabsWidget
+        agentId="agent_01jxr34ba0esfs9gp69ar7b3vq"
+        baseUrl={`/learner/${passphrase}`}
+      />
       {children}
     </>
   );

@@ -1,7 +1,7 @@
-import { BookOpen, Calendar, Clock, Volume2 } from "lucide-react";
 import Script from "next/script";
 import { PropsWithChildren } from "react";
 import Navbar from "../_common/navbar";
+import ElevenLabsWidget from "../_tts/elevenlabs-widget";
 
 export default function Layout({ children }: PropsWithChildren) {
   return (
@@ -12,8 +12,10 @@ export default function Layout({ children }: PropsWithChildren) {
         async
         type="text/javascript"
       ></Script>
-      {/* @ts-expect-error: because I said so */}
-      <elevenlabs-convai agent-id="agent_01k0qbvbr9fm0tmxc6a1szqs6k"></elevenlabs-convai>
+      <ElevenLabsWidget
+        agentId="agent_01k0qbvbr9fm0tmxc6a1szqs6k"
+        baseUrl={"/mentor"}
+      />
       {children}
     </>
   );
