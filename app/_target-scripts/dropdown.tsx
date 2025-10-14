@@ -1,9 +1,10 @@
 "use client";
 
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { MoreVertical, Edit3, Trash2 } from "lucide-react";
+import { MoreVertical, Edit3, Trash2, CheckCircle } from "lucide-react";
 import DeleteTargetScriptButton from "./delete-target-script-button";
 import EditTargetScriptDialog from "./edit-target-script-dialog";
+import MarkAsLearnedButton from "./mark-as-learned-button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +20,7 @@ export function Dropdown({
 }: {
   targetScript: Doc<"targetScripts">;
 }) {
-  const [dialog, setDialog] = useState<"edit" | "delete" | null>();
+  const [dialog, setDialog] = useState<"edit" | "delete" | "markAsLearned" | null>();
 
   return (
     <Dialog
@@ -33,6 +34,15 @@ export function Dropdown({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.preventDefault();
+              setDialog("markAsLearned");
+            }}
+          >
+            <CheckCircle className="mr-2 h-4 w-4" />
+            Mark as learned
+          </DropdownMenuItem>
           <DialogTrigger asChild>
             <DropdownMenuItem
               onClick={(e) => {
@@ -63,6 +73,11 @@ export function Dropdown({
           targetScript={targetScript}
         />
       )}
+      <MarkAsLearnedButton
+        dialogue={targetScript.dialogue}
+        state={[dialog === "markAsLearned", () => setDialog(undefined)]}
+        targetScriptId={targetScript._id}
+      />
       <DeleteTargetScriptButton
         dialogue={targetScript.dialogue}
         state={[dialog === "delete", () => setDialog(undefined)]}

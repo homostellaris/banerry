@@ -123,3 +123,26 @@ export const count = query({
     return targetScripts.length;
   },
 });
+
+export const markAsLearned = mutation({
+  args: {
+    id: v.id("targetScripts"),
+  },
+  returns: v.id("scripts"),
+  handler: async (ctx, args) => {
+    const targetScript = await ctx.db.get(args.id);
+    if (!targetScript) {
+      throw new Error("Target script not found");
+    }
+
+    const scriptId = await ctx.db.insert("scripts", {
+      dialogue: targetScript.dialogue,
+      parentheticals: targetScript.parentheticals,
+      learnerId: targetScript.learnerId,
+    });
+
+    await ctx.db.delete(args.id);
+
+    return scriptId;
+  },
+});
