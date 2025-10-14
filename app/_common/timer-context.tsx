@@ -107,8 +107,12 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const formatTime = (totalSeconds: number) => {
-    const mins = Math.floor(totalSeconds / 60);
-    const secs = totalSeconds % 60;
+    if (!Number.isFinite(totalSeconds)) {
+      return "00:00";
+    }
+    const safeSeconds = Math.max(0, Math.floor(totalSeconds));
+    const mins = Math.floor(safeSeconds / 60);
+    const secs = safeSeconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
@@ -191,8 +195,10 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
   const startTimer = async (duration?: number) => {
     if (state === "idle") {
-      const total = duration || minutes * 60 + seconds;
-      if (total === 0) return;
+      const total = (duration && Number.isFinite(duration) && duration > 0) 
+        ? duration 
+        : minutes * 60 + seconds;
+      if (total === 0 || !Number.isFinite(total)) return;
       setTotalTime(total);
       setTimeLeft(total);
 
@@ -309,8 +315,12 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
-        if (parsed.minutes !== undefined) setMinutes(parsed.minutes);
-        if (parsed.seconds !== undefined) setSeconds(parsed.seconds);
+        if (parsed.minutes !== undefined && Number.isFinite(parsed.minutes) && parsed.minutes >= 0) {
+          setMinutes(parsed.minutes);
+        }
+        if (parsed.seconds !== undefined && Number.isFinite(parsed.seconds) && parsed.seconds >= 0) {
+          setSeconds(parsed.seconds);
+        }
       } catch (error) {
         console.log("Failed to load saved timer state:", error);
       }
