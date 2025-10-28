@@ -28,8 +28,8 @@ export default function Navigation({ basePath }: { basePath: string }) {
       exact: false,
     },
     {
-      name: "Sounds",
-      href: `${basePath}/soundboard`,
+      name: "Canvas",
+      href: `${basePath}/canvas`,
       icon: Volume2,
       exact: false,
     },
