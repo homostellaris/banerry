@@ -40,4 +40,18 @@ export default defineSchema({
     dialogue: v.string(),
     parentheticals: v.string(),
   }).index("by_learner", ["learnerId"]),
+  boards: defineTable({
+    learnerId: v.id("learners"),
+    name: v.string(),
+    columns: v.array(
+      v.object({
+        title: v.string(),
+        image: v.optional(v.string()), // Base64 encoded image
+        prompt: v.optional(v.string()), // Original prompt used to generate the image
+        timerMinutes: v.optional(v.number()), // Timer duration in minutes
+        isActive: v.boolean(), // Whether this column is currently active/highlighted
+      })
+    ),
+    isActive: v.boolean(), // Whether this board is currently being used
+  }).index("by_learner", ["learnerId"]),
 });
