@@ -1,14 +1,55 @@
-import { Calendar } from "lucide-react";
+"use client"
 
-export default async function BoardPage({
+import { useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { SavedBoardsCarousel } from "@/app/_boards/saved-boards-carousel"
+import { NowNextThenBoard } from "@/app/_boards/now-next-then-board"
+import { useState, useEffect } from "react"
+import { Id } from "@/convex/_generated/dataModel"
+
+export default function BoardPage({
   params,
 }: {
-  params: Promise<{ passphrase: string }>;
+  params: Promise<{ passphrase: string }>
 }) {
-  const { passphrase } = await params;
+  const [passphrase, setPassphrase] = useState<string>("")
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  useEffect(() => {
+    params.then(p => setPassphrase(p.passphrase))
+  }, [params])
+
+  // Get learner by passphrase
+  const learner = useQuery(api.learners.getLearnerByPassphrase, 
+    passphrase ? { passphrase } : "skip"
+  )
+
+  // Get boards for this learner
+  const boards = useQuery(api.boards.getBoards, 
+    learner?._id ? { learnerId: learner._id } : "skip"
+  )
+
+  // Get active board
+  const activeBoard = useQuery(api.boards.getActiveBoard,
+    learner?._id ? { learnerId: learner._id } : "skip"
+  )
+
+  const handleBoardUpdate = () => {
+    setRefreshKey(prev => prev + 1)
+  }
+
+  if (!learner) {
+    return (
+      <div className="container mx-auto p-4 max-w-4xl">
+        <div className="text-center">
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="container mx-auto p-4 max-w-6xl">
       <header className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-purple-700 mb-2">
           Now, Next, Then Board
@@ -16,18 +57,21 @@ export default async function BoardPage({
         <p className="text-gray-600">Visual planning and organization</p>
       </header>
 
-      <div className="flex items-center justify-center min-h-[400px] bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
-        <div className="text-center">
-          <Calendar className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
-            Coming Soon
-          </h2>
-          <p className="text-gray-500 max-w-md">
-            The Now, Next, Then board will help you organize and visualize your
-            daily activities and transitions.
-          </p>
-        </div>
-      </div>
+      {/* Saved Boards Carousel */}
+      {boards && (
+        <SavedBoardsCarousel
+          boards={boards}
+          learnerId={learner._id}
+          onBoardSelect={handleBoardUpdate}
+        />
+      )}
+
+      {/* Active Board */}
+      <NowNextThenBoard
+        board={activeBoard || undefined}
+        learnerId={learner._id}
+        onBoardUpdate={handleBoardUpdate}
+      />
     </div>
-  );
+  )
 }

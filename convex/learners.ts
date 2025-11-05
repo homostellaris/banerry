@@ -114,6 +114,52 @@ export const list = query({
   },
 });
 
+export const getLearnersByMentor = query({
+  args: { mentorId: v.id("users") },
+  returns: v.array(
+    v.object({
+      _id: v.id("learners"),
+      _creationTime: v.number(),
+      name: v.string(),
+      bio: v.optional(v.string()),
+      passphrase: v.string(),
+    })
+  ),
+  handler: async (ctx, args) => {
+    const learnerMentorRelationships = await ctx.db
+      .query("learnerMentorRelationships")
+      .withIndex("by_mentor", (q) => q.eq("mentorId", args.mentorId))
+      .collect();
+    const learners = await Promise.all(
+      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId))
+    );
+
+    return learners.filter((learner) => learner !== null) as Array<
+      Doc<"learners">
+    >;
+  },
+});
+
+export const getLearnerByPassphrase = query({
+  args: { passphrase: v.string() },
+  returns: v.union(
+    v.object({
+      _id: v.id("learners"),
+      _creationTime: v.number(),
+      name: v.string(),
+      bio: v.optional(v.string()),
+      passphrase: v.string(),
+    }),
+    v.null()
+  ),
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("learners")
+      .withIndex("by_passphrase", (q) => q.eq("passphrase", args.passphrase))
+      .unique();
+  },
+});
+
 export const del = mutation({
   args: {
     learnerId: v.id("learners"),
