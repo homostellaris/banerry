@@ -24,8 +24,11 @@ export default function HomePage() {
               <h1 className="text-6xl md:text-7xl font-bold text-purple-700 mb-4">
                 Banerry
               </h1>
-              <p className="text-2xl md:text-3xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-3xl md:text-4xl font-semibold text-gray-800 mb-4">
                 Communication assistance for gestalt language processors
+              </p>
+              <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Helping learners and mentors bridge understanding through meaningful scripts
               </p>
             </div>
 
