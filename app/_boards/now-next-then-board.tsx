@@ -7,15 +7,31 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Camera, Clock, Mic, Plus, Timer, Volume2 } from "lucide-react"
 import { generateImage } from "@/app/_tts/image-generation"
-import { useMutation } from "convex/react"
+import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
 import { toast } from "sonner"
 
+function StorageImage({ storageId, alt, className }: { storageId: Id<"_storage">, alt: string, className: string }) {
+  const imageUrl = useQuery(api.boards.getImageUrl, { storageId })
+
+  if (!imageUrl) {
+    return (
+      <div className={className}>
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+        </div>
+      </div>
+    )
+  }
+
+  return <img src={imageUrl} alt={alt} className={className} />
+}
+
 interface BoardColumn {
   id: string
   title: string
-  imageUrl?: string
+  imageStorageId?: Id<"_storage">
   imagePrompt?: string
   timerDuration?: number
   position: number
@@ -33,9 +49,10 @@ interface NowNextThenBoardProps {
   board?: Board
   learnerId: Id<"learners">
   onBoardUpdate?: () => void
+  readOnly?: boolean
 }
 
-export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThenBoardProps) {
+export function NowNextThenBoard({ board, learnerId, onBoardUpdate, readOnly = false }: NowNextThenBoardProps) {
   const [isGenerating, setIsGenerating] = useState<string | null>(null)
   const [promptInput, setPromptInput] = useState("")
   const [activeColumn, setActiveColumn] = useState<string>("now")
@@ -44,15 +61,16 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
   const updateColumnImage = useMutation(api.boards.updateColumnImage)
   const updateColumnTimer = useMutation(api.boards.updateColumnTimer)
   const createBoard = useMutation(api.boards.createBoard)
+  const generateUploadUrl = useMutation(api.boards.generateUploadUrl)
 
   // Create default board if none exists
-  const currentBoard = board || {
+  const currentBoard: Board = board || {
     _id: undefined as any,
     name: "My Board",
     columns: [
-      { id: "now", title: "Now", position: 0 },
-      { id: "next", title: "Next", position: 1 },
-      { id: "then", title: "Then", position: 2 },
+      { id: "now", title: "Now", position: 0, imageStorageId: undefined, imagePrompt: undefined, timerDuration: undefined },
+      { id: "next", title: "Next", position: 1, imageStorageId: undefined, imagePrompt: undefined, timerDuration: undefined },
+      { id: "then", title: "Then", position: 2, imageStorageId: undefined, imagePrompt: undefined, timerDuration: undefined },
     ],
     isActive: true,
     createdAt: Date.now(),
@@ -65,10 +83,10 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
     }
 
     setIsGenerating(columnId)
-    
+
     try {
       const result = await generateImage(prompt)
-      
+
       if (result.success) {
         // Create board if it doesn't exist
         let boardId = currentBoard._id
@@ -80,16 +98,27 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
           })
         }
 
-        // Convert base64 to data URL
-        const imageUrl = `data:image/png;base64,${result.imageData}`
-        
+        // Convert base64 to blob
+        const base64Response = await fetch(`data:image/png;base64,${result.imageData}`)
+        const blob = await base64Response.blob()
+
+        // Get upload URL and upload the image
+        const uploadUrl = await generateUploadUrl()
+        const uploadResponse = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": blob.type },
+          body: blob,
+        })
+
+        const { storageId } = await uploadResponse.json()
+
         await updateColumnImage({
           boardId,
           columnId,
-          imageUrl,
+          imageStorageId: storageId,
           imagePrompt: prompt,
         })
-        
+
         toast.success("Image generated successfully!")
         onBoardUpdate?.()
       } else {
@@ -139,14 +168,14 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
     setIsListening(true)
     setActiveColumn(columnId)
 
-    const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition
     const recognition = new SpeechRecognition()
-    
+
     recognition.continuous = false
     recognition.interimResults = false
     recognition.lang = 'en-US'
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript
       setPromptInput(transcript)
       setIsListening(false)
@@ -166,21 +195,21 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
 
   return (
     <div className="space-y-6">
-      {/* Board Header */}
       <div className="text-center">
         <h2 className="text-3xl font-bold text-purple-700 mb-2">{currentBoard.name}</h2>
-        <p className="text-gray-600">Tap on a section to generate an image</p>
+        {!readOnly && <p className="text-gray-600">Tap on a section to generate an image</p>}
       </div>
 
-      {/* Board Columns */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {currentBoard.columns
           .sort((a, b) => a.position - b.position)
           .map((column) => (
-            <Card 
-              key={column.id} 
-              className={`relative transition-all duration-300 hover:shadow-lg ${
-                activeColumn === column.id ? 'ring-2 ring-purple-500 shadow-lg' : ''
+            <Card
+              key={column.id}
+              className={`relative transition-all duration-300 ${
+                !readOnly && 'hover:shadow-lg'
+              } ${
+                activeColumn === column.id && !readOnly ? 'ring-2 ring-purple-500 shadow-lg' : ''
               }`}
             >
               <CardHeader className="pb-3">
@@ -196,15 +225,16 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
               </CardHeader>
               
               <CardContent className="space-y-4">
-                {/* Image Display Area */}
-                <div 
-                  className="relative aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 hover:border-purple-400 cursor-pointer transition-colors"
-                  onClick={() => setActiveColumn(column.id)}
+                <div
+                  className={`relative aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 transition-colors ${
+                    !readOnly ? 'hover:border-purple-400 cursor-pointer' : ''
+                  }`}
+                  onClick={() => !readOnly && setActiveColumn(column.id)}
                 >
-                  {column.imageUrl ? (
-                    <img 
-                      src={column.imageUrl} 
-                      alt={column.imagePrompt || "Generated image"} 
+                  {column.imageStorageId ? (
+                    <StorageImage
+                      storageId={column.imageStorageId}
+                      alt={column.imagePrompt || "Generated image"}
                       className="w-full h-full object-cover rounded-lg"
                     />
                   ) : (
@@ -226,8 +256,7 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
                   )}
                 </div>
 
-                {/* Input Controls */}
-                {activeColumn === column.id && (
+                {!readOnly && activeColumn === column.id && (
                   <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
                     <div className="flex gap-2">
                       <Input
@@ -268,7 +297,6 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
                       </Button>
                     </div>
 
-                    {/* Timer Controls */}
                     <div className="flex gap-1">
                       {[1, 5, 10, 15].map((minutes) => (
                         <Button
@@ -286,10 +314,9 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
                   </div>
                 )}
 
-                {/* Show prompt if image exists */}
                 {column.imagePrompt && (
                   <p className="text-xs text-gray-500 text-center italic">
-                    "{column.imagePrompt}"
+                    &quot;{column.imagePrompt}&quot;
                   </p>
                 )}
               </CardContent>
@@ -297,13 +324,14 @@ export function NowNextThenBoard({ board, learnerId, onBoardUpdate }: NowNextThe
           ))}
       </div>
 
-      {/* Add Column Button */}
-      <div className="text-center">
-        <Button variant="outline" className="w-full max-w-xs">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Column
-        </Button>
-      </div>
+      {!readOnly && (
+        <div className="text-center">
+          <Button variant="outline" className="w-full max-w-xs">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Column
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

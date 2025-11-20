@@ -159,7 +159,7 @@ export default function Timer() {
             <div className="flex flex-wrap gap-2 justify-center">
               {state === "idle" && (
                 <Button
-                  onClick={startTimer}
+                  onClick={() => startTimer()}
                   disabled={minutes === 0 && seconds === 0}
                   className="bg-green-600 hover:bg-green-700 text-white"
                   size="lg"
@@ -182,7 +182,7 @@ export default function Timer() {
 
               {state === "paused" && (
                 <Button
-                  onClick={startTimer}
+                  onClick={() => startTimer()}
                   className="bg-green-600 hover:bg-green-700 text-white"
                   size="lg"
                 >

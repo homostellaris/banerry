@@ -5,12 +5,13 @@ export const getBoards = query({
   args: { learnerId: v.id("learners") },
   returns: v.array(v.object({
     _id: v.id("boards"),
+    _creationTime: v.number(),
     learnerId: v.id("learners"),
     name: v.string(),
     columns: v.array(v.object({
       id: v.string(),
       title: v.string(),
-      imageUrl: v.optional(v.string()),
+      imageStorageId: v.optional(v.id("_storage")),
       imagePrompt: v.optional(v.string()),
       timerDuration: v.optional(v.number()),
       position: v.number(),
@@ -31,12 +32,13 @@ export const getActiveBoard = query({
   args: { learnerId: v.id("learners") },
   returns: v.union(v.object({
     _id: v.id("boards"),
+    _creationTime: v.number(),
     learnerId: v.id("learners"),
     name: v.string(),
     columns: v.array(v.object({
       id: v.string(),
       title: v.string(),
-      imageUrl: v.optional(v.string()),
+      imageStorageId: v.optional(v.id("_storage")),
       imagePrompt: v.optional(v.string()),
       timerDuration: v.optional(v.number()),
       position: v.number(),
@@ -61,7 +63,7 @@ export const createBoard = mutation({
     columns: v.optional(v.array(v.object({
       id: v.string(),
       title: v.string(),
-      imageUrl: v.optional(v.string()),
+      imageStorageId: v.optional(v.id("_storage")),
       imagePrompt: v.optional(v.string()),
       timerDuration: v.optional(v.number()),
       position: v.number(),
@@ -106,7 +108,7 @@ export const updateBoard = mutation({
       columns: v.optional(v.array(v.object({
         id: v.string(),
         title: v.string(),
-        imageUrl: v.optional(v.string()),
+        imageStorageId: v.optional(v.id("_storage")),
         imagePrompt: v.optional(v.string()),
         timerDuration: v.optional(v.number()),
         position: v.number(),
@@ -146,6 +148,27 @@ export const deleteBoard = mutation({
   returns: v.null(),
   handler: async (ctx, args) => {
     await ctx.db.delete(args.boardId);
+    return null;
+  },
+});
+
+export const renameBoard = mutation({
+  args: {
+    boardId: v.id("boards"),
+    name: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.boardId, { name: args.name });
+    return null;
+  },
+});
+
+export const generateUploadUrl = mutation({
+  args: {},
+  returns: v.string(),
+  handler: async (ctx) => {
+    return await ctx.storage.generateUploadUrl();
   },
 });
 
@@ -153,7 +176,7 @@ export const updateColumnImage = mutation({
   args: {
     boardId: v.id("boards"),
     columnId: v.string(),
-    imageUrl: v.string(),
+    imageStorageId: v.id("_storage"),
     imagePrompt: v.string(),
   },
   returns: v.null(),
@@ -165,11 +188,19 @@ export const updateColumnImage = mutation({
 
     const updatedColumns = board.columns.map(column =>
       column.id === args.columnId
-        ? { ...column, imageUrl: args.imageUrl, imagePrompt: args.imagePrompt }
+        ? { ...column, imageStorageId: args.imageStorageId, imagePrompt: args.imagePrompt }
         : column
     );
 
     await ctx.db.patch(args.boardId, { columns: updatedColumns });
+  },
+});
+
+export const getImageUrl = query({
+  args: { storageId: v.id("_storage") },
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId);
   },
 });
 

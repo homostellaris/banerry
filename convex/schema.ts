@@ -46,7 +46,7 @@ export default defineSchema({
     columns: v.array(v.object({
       id: v.string(),
       title: v.string(),
-      imageUrl: v.optional(v.string()),
+      imageStorageId: v.optional(v.id("_storage")),
       imagePrompt: v.optional(v.string()),
       timerDuration: v.optional(v.number()),
       position: v.number(),
