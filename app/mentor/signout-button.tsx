@@ -8,7 +8,7 @@ export function SignOutButton() {
   return (
     <Authenticated>
       <button
-        className="bg-slate-200 dark:bg-slate-800 text-foreground rounded-md px-2 py-1"
+        className="bg-slate-200 dark:bg-slate-800 text-foreground rounded-full px-3 py-1 text-sm"
         onClick={() => void signOut()}
       >
         Sign out

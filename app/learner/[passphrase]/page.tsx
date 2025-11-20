@@ -23,10 +23,6 @@ export default async function LearnerPage({
 
   return (
     <div className="container mx-auto p-4 max-w-4xl space-y-6">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-purple-700 mb-2">My Scripts</h1>
-      </header>
-
       <QuickWords />
 
       {learnerWithScripts?.targetScripts &&

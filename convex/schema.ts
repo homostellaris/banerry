@@ -40,4 +40,18 @@ export default defineSchema({
     dialogue: v.string(),
     parentheticals: v.string(),
   }).index("by_learner", ["learnerId"]),
+  boards: defineTable({
+    learnerId: v.id("learners"),
+    name: v.string(),
+    columns: v.array(v.object({
+      id: v.string(),
+      title: v.string(),
+      imageStorageId: v.optional(v.id("_storage")),
+      imagePrompt: v.optional(v.string()),
+      timerDuration: v.optional(v.number()),
+      position: v.number(),
+    })),
+    isActive: v.boolean(),
+    createdAt: v.number(),
+  }).index("by_learner", ["learnerId"]).index("by_learner_active", ["learnerId", "isActive"]),
 });

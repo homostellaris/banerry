@@ -16,8 +16,8 @@ export default function Navigation({ basePath }: { basePath: string }) {
       exact: true,
     },
     {
-      name: "Board",
-      href: `${basePath}/board`,
+      name: "Boards",
+      href: `${basePath}/boards`,
       icon: Calendar,
       exact: false,
     },
