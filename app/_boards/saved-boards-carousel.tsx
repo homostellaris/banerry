@@ -98,7 +98,11 @@ export function SavedBoardsCarousel({
     }
   };
 
-  const handleDeleteBoard = async (boardId: Id<"boards">, boardName: string, e: React.MouseEvent) => {
+  const handleDeleteBoard = async (
+    boardId: Id<"boards">,
+    boardName: string,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
 
     if (!confirm(`Are you sure you want to delete "${boardName}"?`)) {
@@ -114,7 +118,11 @@ export function SavedBoardsCarousel({
     }
   };
 
-  const handleRenameBoard = async (boardId: Id<"boards">, currentName: string, e: React.MouseEvent) => {
+  const handleRenameBoard = async (
+    boardId: Id<"boards">,
+    currentName: string,
+    e: React.MouseEvent
+  ) => {
     e.stopPropagation();
 
     const newName = prompt("Enter new board name:", currentName);
@@ -177,61 +185,58 @@ export function SavedBoardsCarousel({
                   }`}
                   onClick={() => handleSelectBoard(board)}
                 >
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between gap-2">
-                      <h4 className="font-medium truncate flex-1">
-                        {board.name}
-                      </h4>
-                      {!readOnly && (
-                        <div className="flex gap-1">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7"
-                            onClick={(e) => handleRenameBoard(board._id, board.name, e)}
-                          >
-                            <Pencil className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
-                            onClick={(e) => handleDeleteBoard(board._id, board.name, e)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-1">
-                      {board.columns
-                        .sort((a, b) => a.position - b.position)
-                        .map((column) => (
-                          <div key={column.id} className="aspect-square">
-                            {column.imageStorageId ? (
-                              <StorageImagePreview
-                                storageId={column.imageStorageId}
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gray-100 rounded border flex items-center justify-center">
-                                <Calendar className="h-3 w-3 text-gray-400" />
-                              </div>
-                            )}
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <h4 className="font-medium truncate flex-1">
+                          {board.name}
+                        </h4>
+                        {!readOnly && (
+                          <div className="flex gap-1">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7"
+                              onClick={(e) =>
+                                handleRenameBoard(board._id, board.name, e)
+                              }
+                            >
+                              <Pencil className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
+                              onClick={(e) =>
+                                handleDeleteBoard(board._id, board.name, e)
+                              }
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
                           </div>
-                        ))}
-                    </div>
+                        )}
+                      </div>
 
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>{board.columns.length} columns</span>
-                      <span>
-                        {new Date(board.createdAt).toLocaleDateString()}
-                      </span>
+                      <div className="grid grid-cols-3 gap-1">
+                        {board.columns
+                          .sort((a, b) => a.position - b.position)
+                          .map((column) => (
+                            <div key={column.id} className="aspect-square">
+                              {column.imageStorageId ? (
+                                <StorageImagePreview
+                                  storageId={column.imageStorageId}
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-gray-100 rounded border flex items-center justify-center">
+                                  <Calendar className="h-3 w-3 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
               </div>
             </CarouselItem>
           ))}
