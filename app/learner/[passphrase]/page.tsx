@@ -1,10 +1,4 @@
-import ReactiveScriptsList from "@/app/_scripts/reactive-scripts-list";
-import ReactiveTargetScriptsList from "@/app/_target-scripts/reactive-target-scripts-list";
-import QuickWords from "@/app/_common/quick-words";
-import { api } from "@/convex/_generated/api";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { preloadQuery } from "convex/nextjs";
-import { preloadedQueryResult } from "convex/nextjs";
+import { redirect } from "next/navigation";
 
 export default async function LearnerPage({
   params,
@@ -12,29 +6,5 @@ export default async function LearnerPage({
   params: Promise<{ passphrase: string }>;
 }) {
   const { passphrase } = await params;
-  const preloadedLearnerWithScripts = await preloadQuery(
-    api.learners.getByPassphrase,
-    {
-      passphrase,
-    }
-  );
-
-  const learnerWithScripts = preloadedQueryResult(preloadedLearnerWithScripts);
-
-  return (
-    <div className="container mx-auto p-4 max-w-4xl space-y-6">
-      <QuickWords />
-
-      {learnerWithScripts?.targetScripts &&
-        learnerWithScripts.targetScripts.length > 0 && (
-          <ReactiveTargetScriptsList
-            preloadedLearnerWithScripts={preloadedLearnerWithScripts}
-          />
-        )}
-
-      <ReactiveScriptsList
-        preloadedLearnerWithScripts={preloadedLearnerWithScripts}
-      />
-    </div>
-  );
+  redirect(`/learner/${passphrase}/scripts`);
 }
