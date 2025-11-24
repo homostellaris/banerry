@@ -20,7 +20,7 @@ export default function ReactiveScriptsList({
     <div className="grid gap-6">
       {learnerWithScripts.scripts.map((script) => (
         <Link
-          href={`/learner/${learnerWithScripts.passphrase}/script/${script._id}`}
+          href={`/learner/${learnerWithScripts.passphrase}/scripts/${script._id}`}
           key={script._id}
           className="block"
         >
