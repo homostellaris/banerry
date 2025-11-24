@@ -13,10 +13,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useParams } from "next/navigation";
 
 export default function MentorBoardPage() {
+  const { id: selectedLearnerId } = useParams();
   const user = useQuery(api.auth.currentUser);
-  const [selectedLearnerId, setSelectedLearnerId] = useState<string>("");
   const [refreshKey, setRefreshKey] = useState(0);
 
   // Get learners for this mentor
@@ -53,45 +54,18 @@ export default function MentorBoardPage() {
 
   return (
     <div className="container mx-auto p-4 max-w-6xl">
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Select Learner</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Select
-            onValueChange={setSelectedLearnerId}
-            value={selectedLearnerId}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Choose a learner to view their boards" />
-            </SelectTrigger>
-            <SelectContent>
-              {learners?.map((learner) => (
-                <SelectItem key={learner._id} value={learner._id}>
-                  {learner.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
-      {selectedLearnerId && (
-        <>
-          {boards && (
-            <SavedBoardsCarousel
-              boards={boards}
-              learnerId={selectedLearnerId as any}
-              onBoardSelect={handleBoardUpdate}
-            />
-          )}
-          <NowNextThenBoard
-            board={activeBoard || undefined}
-            learnerId={selectedLearnerId as any}
-            onBoardUpdate={handleBoardUpdate}
-          />
-        </>
+      {boards && (
+        <SavedBoardsCarousel
+          boards={boards}
+          learnerId={selectedLearnerId as any}
+          onBoardSelect={handleBoardUpdate}
+        />
       )}
+      <NowNextThenBoard
+        board={activeBoard || undefined}
+        learnerId={selectedLearnerId as any}
+        onBoardUpdate={handleBoardUpdate}
+      />
     </div>
   );
 }

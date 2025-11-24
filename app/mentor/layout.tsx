@@ -1,12 +1,10 @@
 import Script from "next/script";
 import { PropsWithChildren } from "react";
-import Navbar from "../_common/navbar";
 import ElevenLabsWidget from "../_tts/elevenlabs-widget";
 
-export default function Layout({ children }: PropsWithChildren) {
+export default async function Layout({ children }: PropsWithChildren) {
   return (
     <>
-      <Navbar basePath="/mentor" showHome />
       <Script
         src="https://unpkg.com/@elevenlabs/convai-widget-embed"
         async

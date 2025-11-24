@@ -5,13 +5,26 @@ import { BookOpen, Calendar, Clock, Palette } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Navigation({ basePath }: { basePath: string }) {
+type NavigationItem = {
+  name: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact: boolean;
+};
+
+export default function Navigation({
+  basePath,
+  additionalItems = [],
+}: {
+  basePath: string;
+  additionalItems?: NavigationItem[];
+}) {
   const pathname = usePathname();
 
   const items = [
     {
       name: "Scripts",
-      href: basePath,
+      href: `${basePath}/scripts`,
       icon: BookOpen,
       exact: true,
     },
@@ -33,6 +46,7 @@ export default function Navigation({ basePath }: { basePath: string }) {
       icon: Palette,
       exact: false,
     },
+    ...additionalItems,
   ];
 
   return (

@@ -1,5 +1,7 @@
-import Navbar from "@/app/_common/navbar";
+import Header from "@/app/_common/navbar";
+import Navigation from "@/app/_common/navigation";
 import ElevenLabsWidget from "@/app/_tts/elevenlabs-widget";
+import { SignOutButton } from "@/app/mentor/signout-button";
 import Script from "next/script";
 import { PropsWithChildren } from "react";
 
@@ -13,7 +15,12 @@ export default async function LearnerPassphraseLayout({
 
   return (
     <>
-      <Navbar basePath={`/learner/${passphrase}`} />
+      <Header>
+        <div className="mx-auto">
+          <Navigation basePath={`/learner/${passphrase}`} />
+        </div>
+        <SignOutButton />
+      </Header>
       <Script
         src="https://unpkg.com/@elevenlabs/convai-widget-embed"
         async
