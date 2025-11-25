@@ -7,6 +7,9 @@ import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
+// Prevent image generation timing out
+export const maxDuration = 60;
+
 export default function MentorBoardPage() {
   const { id: selectedLearnerId } = useParams();
   const user = useQuery(api.auth.currentUser);
