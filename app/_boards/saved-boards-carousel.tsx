@@ -12,7 +12,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import { Calendar, Pencil, Plus, Trash2 } from "lucide-react";
+import { Columns3, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 function StorageImagePreview({ storageId }: { storageId: Id<"_storage"> }) {
@@ -145,7 +145,7 @@ export function SavedBoardsCarousel({
         <Card className="border-dashed">
           <CardContent className="flex items-center justify-center py-8">
             <div className="text-center">
-              <Calendar className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+              <Columns3 className="h-8 w-8 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-500 mb-3">No saved boards yet</p>
               {!readOnly && (
                 <Button onClick={handleCreateNewBoard} size="sm">
@@ -228,7 +228,7 @@ export function SavedBoardsCarousel({
                                 />
                               ) : (
                                 <div className="w-full h-full bg-gray-100 rounded border flex items-center justify-center">
-                                  <Calendar className="h-3 w-3 text-gray-400" />
+                                  <Columns3 className="h-3 w-3 text-gray-400" />
                                 </div>
                               )}
                             </div>

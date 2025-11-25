@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { BookOpen, Calendar, Clock, Palette } from "lucide-react";
+import { BookOpen, Clock, Columns3, Palette } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -31,7 +31,7 @@ export default function Navigation({
     {
       name: "Boards",
       href: `${basePath}/boards`,
-      icon: Calendar,
+      icon: Columns3,
       exact: false,
     },
     {
