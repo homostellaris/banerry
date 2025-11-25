@@ -28,7 +28,7 @@ export default async function MentorLearnerPage({
   if (learnerWithScripts === null) notFound();
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl sp  ace-y-6">
+    <div className="container mx-auto p-4 max-w-4xl space-y-6">
       <div className="flex flex-wrap items-center gap-2">
         <AddScriptForm learnerId={id as Id<"learners">} />
         <AddTargetScriptForm learnerId={id as Id<"learners">} />
