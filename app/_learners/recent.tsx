@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Anchor from "../_common/anchor";
 
 export default function RecentLearners() {
   const [passphrase, setPassphrase] = useState<string | null>(null);

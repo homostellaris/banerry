@@ -1,11 +1,10 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { SavedBoardsCarousel } from "@/app/_boards/saved-boards-carousel";
 import { NowNextThenBoard } from "@/app/_boards/now-next-then-board";
-import { useState, useEffect } from "react";
-import { Id } from "@/convex/_generated/dataModel";
+import { SavedBoardsCarousel } from "@/app/_boards/saved-boards-carousel";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
+import { useEffect, useState } from "react";
 
 export default function BoardPage({
   params,

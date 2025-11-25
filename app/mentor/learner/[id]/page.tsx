@@ -1,11 +1,7 @@
-import AddScriptForm from "@/app/_scripts/add-script-form";
-import AddTargetScriptForm from "@/app/_target-scripts/add-target-script-form";
-import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
-import MentorTargetScriptsList from "@/app/_target-scripts/mentor-target-scripts-list";
-import LearnerUrlDisplay from "@/app/learner/learner-url-display";
-import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
-import ShareLearnerForm from "@/app/mentor/share-learner-form";
-import MentorsList from "@/app/mentor/mentors-list";
+import DeleteLearnerButton from "@/app/mentor/_components/delete-learner-button";
+import LearnerUrlDisplay from "@/app/mentor/_components/learner-url-display";
+import MentorsList from "@/app/mentor/_components/mentors-list";
+import ShareLearnerForm from "@/app/mentor/_components/share-learner-form";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
@@ -52,10 +48,7 @@ export default async function MentorLearnerPage({
         />
       </div>
 
-      <LearnerUrlDisplay
-        name={learnerWithScripts.name}
-        passphrase={learnerWithScripts.passphrase}
-      />
+      <LearnerUrlDisplay passphrase={learnerWithScripts.passphrase} />
 
       <div className="space-y-4">
         <MentorsList learnerId={id as Id<"learners">} />

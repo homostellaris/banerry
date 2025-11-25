@@ -6,7 +6,7 @@ import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import LearnerPicker from "../../_components/learner-picker";
 import { Id } from "@/convex/_generated/dataModel";
 import Navigation from "@/app/_common/navigation";
-import { SignOutButton } from "../../signout-button";
+import { SignOutButton } from "../../_components/signout-button";
 
 export default async function Layout({
   children,

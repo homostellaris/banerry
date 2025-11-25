@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +9,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -57,7 +55,8 @@ export default function MarkAsLearnedButton({
           <AlertDialogTitle>Mark as Learned</AlertDialogTitle>
           <AlertDialogDescription>
             Are you sure you want to mark the target script &quot;{dialogue}
-            &quot; as learned? This will move it to your regular scripts and free up a target script slot.
+            &quot; as learned? This will move it to your regular scripts and
+            free up a target script slot.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

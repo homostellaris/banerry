@@ -1,7 +1,7 @@
 import Header from "@/app/_common/navbar";
 import Navigation from "@/app/_common/navigation";
 import ElevenLabsWidget from "@/app/_tts/elevenlabs-widget";
-import { SignOutButton } from "@/app/mentor/signout-button";
+import { SignOutButton } from "@/app/mentor/_components/signout-button";
 import Script from "next/script";
 import { PropsWithChildren } from "react";
 

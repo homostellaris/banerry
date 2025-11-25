@@ -2,7 +2,7 @@
 
 import { api } from "@/convex/_generated/api";
 import { Preloaded, usePreloadedQuery } from "convex/react";
-import LearnerCard from "../learner/learner-card";
+import LearnerCard from "./learner-card";
 
 export default function Learners({
   preloadedLearners,

@@ -28,7 +28,8 @@ export default function HomePage() {
                 Communication assistance for gestalt language processors
               </p>
               <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Helping learners and mentors bridge understanding through meaningful scripts
+                Helping learners and mentors bridge understanding through
+                meaningful scripts
               </p>
             </div>
 
@@ -57,7 +58,8 @@ export default function HomePage() {
                   Text-to-Speech
                 </h3>
                 <p className="text-gray-600">
-                  High-quality audio playback with customizable voices, making communication accessible and natural
+                  High-quality audio playback with customizable voices, making
+                  communication accessible and natural
                 </p>
               </div>
 
@@ -67,7 +69,8 @@ export default function HomePage() {
                   Works Offline
                 </h3>
                 <p className="text-gray-600">
-                  Progressive Web App that works anywhere, anytime—even without an internet connection
+                  Progressive Web App that works anywhere, anytime—even without
+                  an internet connection
                 </p>
               </div>
 
@@ -77,19 +80,24 @@ export default function HomePage() {
                   Mentor Support
                 </h3>
                 <p className="text-gray-600">
-                  Connect mentors with learners to build contextual understanding and meaningful communication
+                  Connect mentors with learners to build contextual
+                  understanding and meaningful communication
                 </p>
               </div>
             </div>
 
-            {/* What is Gestalt Language Processing */}
             <div className="pt-12 pb-8">
               <div className="bg-purple-100 p-8 rounded-lg max-w-3xl mx-auto">
                 <h2 className="text-2xl font-bold text-purple-900 mb-4">
                   What is Gestalt Language Processing?
                 </h2>
                 <p className="text-gray-700 leading-relaxed text-lg">
-                  Some people learn language in chunks or "scripts"—whole phrases picked up from conversations, media, or experiences. Banerry helps decode these scripts by providing context and meaning, making communication clearer for both learners and those supporting them.
+                  Some people learn language in chunks or
+                  &quot;scripts&quot;—whole phrases picked up from
+                  conversations, media, or experiences. Banerry helps decode
+                  these scripts by providing context and meaning, making
+                  communication clearer for both learners and those supporting
+                  them.
                 </p>
               </div>
             </div>

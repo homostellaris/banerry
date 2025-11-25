@@ -1,19 +1,11 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { SavedBoardsCarousel } from "@/app/_boards/saved-boards-carousel";
 import { NowNextThenBoard } from "@/app/_boards/now-next-then-board";
-import { useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SavedBoardsCarousel } from "@/app/_boards/saved-boards-carousel";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function MentorBoardPage() {
   const { id: selectedLearnerId } = useParams();

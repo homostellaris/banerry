@@ -1,13 +1,12 @@
-import AddLearnerForm from "@/app/mentor/add-learner-form";
+import AddLearnerForm from "@/app/mentor/_components/add-learner-form";
 import { api } from "@/convex/_generated/api";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { preloadQuery } from "convex/nextjs";
-import Learners from "./learners";
-import Header from "../_common/header";
-import Navigation from "../_common/navigation";
-import Link from "next/link";
 import { Home } from "lucide-react";
-import { SignOutButton } from "./signout-button";
+import Link from "next/link";
+import Header from "../_common/header";
+import Learners from "./_components/learners";
+import { SignOutButton } from "./_components/signout-button";
 
 export default async function MentorPage() {
   const preloadedLearners = await preloadQuery(

@@ -14,6 +14,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
+import Image from "next/image";
 
 function StorageImagePreview({ storageId }: { storageId: Id<"_storage"> }) {
   const imageUrl = useQuery(api.boards.getImageUrl, { storageId });
@@ -27,7 +28,7 @@ function StorageImagePreview({ storageId }: { storageId: Id<"_storage"> }) {
   }
 
   return (
-    <img
+    <Image
       src={imageUrl}
       alt="Board preview"
       className="w-full h-full object-cover rounded border"

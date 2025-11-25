@@ -2,8 +2,6 @@ import AddScriptForm from "@/app/_scripts/add-script-form";
 import MentorScriptsList from "@/app/_scripts/mentor-scripts-list";
 import AddTargetScriptForm from "@/app/_target-scripts/add-target-script-form";
 import MentorTargetScriptsList from "@/app/_target-scripts/mentor-target-scripts-list";
-import DeleteLearnerButton from "@/app/mentor/delete-learner-button";
-import ShareLearnerForm from "@/app/mentor/share-learner-form";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";

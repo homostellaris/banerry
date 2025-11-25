@@ -4,7 +4,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { fetchQuery } from "convex/nextjs";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import MitigationsSection from "./mitigation-section";
+import MitigationsSection from "./_components/mitigation-section";
 
 export default async function ScriptPage({
   params,

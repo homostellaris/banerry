@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,12 +9,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
-import { Trash2 } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -28,7 +25,6 @@ interface DeleteScriptButtonProps {
 export default function DeleteScriptButton({
   scriptId,
   state,
-  children,
 }: DeleteScriptButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const deleteScript = useMutation(api.scripts.remove);

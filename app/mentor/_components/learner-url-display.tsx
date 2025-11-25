@@ -6,10 +6,8 @@ import { Check, Copy, ExternalLink } from "lucide-react";
 import { useState } from "react";
 
 export default function LearnerUrlDisplay({
-  name,
   passphrase,
 }: {
-  name: string;
   passphrase: string;
 }) {
   const [copied, setCopied] = useState(false);
