@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -9,12 +9,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Calendar, Plus, Pencil, Trash2 } from "lucide-react";
-import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { Calendar, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import Image from "next/image";
 
 function StorageImagePreview({ storageId }: { storageId: Id<"_storage"> }) {
   const imageUrl = useQuery(api.boards.getImageUrl, { storageId });
@@ -28,7 +27,7 @@ function StorageImagePreview({ storageId }: { storageId: Id<"_storage"> }) {
   }
 
   return (
-    <Image
+    <img
       src={imageUrl}
       alt="Board preview"
       className="w-full h-full object-cover rounded border"

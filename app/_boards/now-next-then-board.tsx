@@ -34,7 +34,7 @@ function StorageImage({
     );
   }
 
-  return <Image src={imageUrl} alt={alt} className={className} />;
+  return <img src={imageUrl} alt={alt} className={className} />;
 }
 
 interface BoardColumn {
@@ -351,7 +351,7 @@ export function NowNextThenBoard({
                       </Button>
                     </div>
 
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 flex-wrap">
                       {[1, 5, 10, 15].map((minutes) => (
                         <Button
                           key={minutes}
@@ -366,12 +366,6 @@ export function NowNextThenBoard({
                       ))}
                     </div>
                   </div>
-                )}
-
-                {column.imagePrompt && (
-                  <p className="text-xs text-gray-500 text-center italic">
-                    &quot;{column.imagePrompt}&quot;
-                  </p>
                 )}
               </CardContent>
             </Card>
