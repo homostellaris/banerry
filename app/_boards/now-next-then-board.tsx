@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Camera, Clock, Mic, Plus, Timer, Volume2 } from "lucide-react";
 import { generateImage } from "@/app/_tts/image-generation";
-import { useMutation, useQuery } from "convex/react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { Camera, Clock, Mic, Plus, Timer, Volume2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
-import Image from "next/image";
 
 function StorageImage({
   storageId,
@@ -71,55 +70,10 @@ export function NowNextThenBoard({
   const [promptInput, setPromptInput] = useState("");
   const [activeColumn, setActiveColumn] = useState<string>("now");
   const [isListening, setIsListening] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
 
   const updateColumnImage = useMutation(api.boards.updateColumnImage);
   const updateColumnTimer = useMutation(api.boards.updateColumnTimer);
-  const createBoard = useMutation(api.boards.createBoard);
   const generateUploadUrl = useMutation(api.boards.generateUploadUrl);
-
-  const handleCreateBoard = async () => {
-    setIsCreating(true);
-    try {
-      await createBoard({
-        learnerId,
-        name: "My Board",
-        columns: [
-          {
-            id: "now",
-            title: "Now",
-            position: 0,
-            imageStorageId: undefined,
-            imagePrompt: undefined,
-            timerDuration: undefined,
-          },
-          {
-            id: "next",
-            title: "Next",
-            position: 1,
-            imageStorageId: undefined,
-            imagePrompt: undefined,
-            timerDuration: undefined,
-          },
-          {
-            id: "then",
-            title: "Then",
-            position: 2,
-            imageStorageId: undefined,
-            imagePrompt: undefined,
-            timerDuration: undefined,
-          },
-        ],
-      });
-      toast.success("Board created successfully!");
-      onBoardUpdate?.();
-    } catch (error) {
-      console.error("Error creating board:", error);
-      toast.error("Failed to create board");
-    } finally {
-      setIsCreating(false);
-    }
-  };
 
   const handleGenerateImage = async (columnId: string, prompt: string) => {
     if (!board) {

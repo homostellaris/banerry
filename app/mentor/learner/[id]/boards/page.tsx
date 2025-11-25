@@ -12,11 +12,6 @@ export default function MentorBoardPage() {
   const user = useQuery(api.auth.currentUser);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const learners = useQuery(
-    api.learners.getLearnersByMentor,
-    user ? { mentorId: user._id } : "skip"
-  );
-
   const boards = useQuery(
     api.boards.getBoards,
     selectedLearnerId ? { learnerId: selectedLearnerId as any } : "skip"
