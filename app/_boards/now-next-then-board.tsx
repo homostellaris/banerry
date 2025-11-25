@@ -71,47 +71,62 @@ export function NowNextThenBoard({
   const [promptInput, setPromptInput] = useState("");
   const [activeColumn, setActiveColumn] = useState<string>("now");
   const [isListening, setIsListening] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const updateColumnImage = useMutation(api.boards.updateColumnImage);
   const updateColumnTimer = useMutation(api.boards.updateColumnTimer);
   const createBoard = useMutation(api.boards.createBoard);
   const generateUploadUrl = useMutation(api.boards.generateUploadUrl);
 
-  // Create default board if none exists
-  const currentBoard: Board = board || {
-    _id: undefined as any,
-    name: "My Board",
-    columns: [
-      {
-        id: "now",
-        title: "Now",
-        position: 0,
-        imageStorageId: undefined,
-        imagePrompt: undefined,
-        timerDuration: undefined,
-      },
-      {
-        id: "next",
-        title: "Next",
-        position: 1,
-        imageStorageId: undefined,
-        imagePrompt: undefined,
-        timerDuration: undefined,
-      },
-      {
-        id: "then",
-        title: "Then",
-        position: 2,
-        imageStorageId: undefined,
-        imagePrompt: undefined,
-        timerDuration: undefined,
-      },
-    ],
-    isActive: true,
-    createdAt: Date.now(),
+  const handleCreateBoard = async () => {
+    setIsCreating(true);
+    try {
+      await createBoard({
+        learnerId,
+        name: "My Board",
+        columns: [
+          {
+            id: "now",
+            title: "Now",
+            position: 0,
+            imageStorageId: undefined,
+            imagePrompt: undefined,
+            timerDuration: undefined,
+          },
+          {
+            id: "next",
+            title: "Next",
+            position: 1,
+            imageStorageId: undefined,
+            imagePrompt: undefined,
+            timerDuration: undefined,
+          },
+          {
+            id: "then",
+            title: "Then",
+            position: 2,
+            imageStorageId: undefined,
+            imagePrompt: undefined,
+            timerDuration: undefined,
+          },
+        ],
+      });
+      toast.success("Board created successfully!");
+      onBoardUpdate?.();
+    } catch (error) {
+      console.error("Error creating board:", error);
+      toast.error("Failed to create board");
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   const handleGenerateImage = async (columnId: string, prompt: string) => {
+    if (!board) {
+      toast.error("Please create a board first");
+      return;
+    }
+
     if (!prompt.trim()) {
       toast.error("Please enter a prompt for image generation");
       return;
@@ -123,23 +138,11 @@ export function NowNextThenBoard({
       const result = await generateImage(prompt);
 
       if (result.success) {
-        // Create board if it doesn't exist
-        let boardId = currentBoard._id;
-        if (!boardId) {
-          boardId = await createBoard({
-            learnerId,
-            name: "My Board",
-            columns: currentBoard.columns,
-          });
-        }
-
-        // Convert base64 to blob
         const base64Response = await fetch(
           `data:image/png;base64,${result.imageData}`
         );
         const blob = await base64Response.blob();
 
-        // Get upload URL and upload the image
         const uploadUrl = await generateUploadUrl();
         const uploadResponse = await fetch(uploadUrl, {
           method: "POST",
@@ -150,7 +153,7 @@ export function NowNextThenBoard({
         const { storageId } = await uploadResponse.json();
 
         await updateColumnImage({
-          boardId,
+          boardId: board._id,
           columnId,
           imageStorageId: storageId,
           imagePrompt: prompt,
@@ -171,26 +174,16 @@ export function NowNextThenBoard({
   };
 
   const handleSetTimer = async (columnId: string, minutes: number) => {
-    if (!currentBoard._id) {
-      // Create board first
-      const boardId = await createBoard({
-        learnerId,
-        name: "My Board",
-        columns: currentBoard.columns,
-      });
-
-      await updateColumnTimer({
-        boardId,
-        columnId,
-        timerDuration: minutes * 60,
-      });
-    } else {
-      await updateColumnTimer({
-        boardId: currentBoard._id,
-        columnId,
-        timerDuration: minutes * 60,
-      });
+    if (!board) {
+      toast.error("Please create a board first");
+      return;
     }
+
+    await updateColumnTimer({
+      boardId: board._id,
+      columnId,
+      timerDuration: minutes * 60,
+    });
 
     toast.success(`Timer set for ${minutes} minute(s)`);
     onBoardUpdate?.();
@@ -235,11 +228,13 @@ export function NowNextThenBoard({
     recognition.start();
   };
 
+  if (!board) return null;
+
   return (
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-purple-700 mb-2">
-          {currentBoard.name}
+          {board.name}
         </h2>
         {!readOnly && (
           <p className="text-gray-600">Tap on a section to generate an image</p>
@@ -247,7 +242,7 @@ export function NowNextThenBoard({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {currentBoard.columns
+        {board.columns
           .sort((a, b) => a.position - b.position)
           .map((column) => (
             <Card
