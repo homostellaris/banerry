@@ -1,11 +1,9 @@
+import Navigation from "@/app/_common/navigation";
+import { Id } from "@/convex/_generated/dataModel";
+import { Home } from "lucide-react";
+import Link from "next/link";
 import { PropsWithChildren } from "react";
 import Header from "../../../_common/navbar";
-import { preloadQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
-import LearnerPicker from "../../_components/learner-picker";
-import { Id } from "@/convex/_generated/dataModel";
-import Navigation from "@/app/_common/navigation";
 import { SignOutButton } from "../../_components/signout-button";
 
 export default async function Layout({
@@ -15,24 +13,14 @@ export default async function Layout({
   params: Promise<{ passphrase: string; id: Id<"learners"> }>;
 }>) {
   const { id } = await params;
-  const preloadedLearners = await preloadQuery(
-    api.learners.list,
-    {},
-    {
-      token: await convexAuthNextjsToken(),
-    }
-  );
 
   return (
     <>
       <Header>
-        <LearnerPicker
-          preloadedLearners={preloadedLearners}
-          selectedLearnerId={id}
-        />
-        <div className="mx-auto">
-          <Navigation basePath={`/mentor/learner/${id}`} />
-        </div>
+        <Link href="/mentor">
+          <Home className="h-6 w-6 text-purple-700" />
+        </Link>
+        <Navigation basePath={`/mentor/learner/${id}`} />
         <SignOutButton />
       </Header>
       {children}
