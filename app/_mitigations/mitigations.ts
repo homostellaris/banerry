@@ -44,8 +44,9 @@ export async function generateMitigations(
     // Read the prompt template from the markdown file
     const promptPath = path.join(
       process.cwd(),
-      "prompts",
-      "mitigate-script.md"
+      "app",
+      "_mitigations",
+      "prompt.md"
     );
     const promptTemplate = fs.readFileSync(promptPath, "utf8");
 

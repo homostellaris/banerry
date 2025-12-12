@@ -1,15 +1,16 @@
 "use client";
 
-import { generateImage } from "@/app/_tts/image-generation";
+import { generateImage, ImageStyle } from "@/app/_image-generation/image-generation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
-import { Camera, Clock, Mic, Plus, Timer, Volume2 } from "lucide-react";
-import { useState } from "react";
+import { Camera, Clock, Mic, Palette, Plus, Timer, Volume2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 function StorageImage({
@@ -60,6 +61,12 @@ interface NowNextThenBoardProps {
   readOnly?: boolean;
 }
 
+const STYLE_OPTIONS: Array<{ value: ImageStyle; label: string; description: string }> = [
+  { value: "studio-ghibli", label: "Studio Ghibli", description: "Digital art with vibrant colors and soft lighting" },
+  { value: "play-doh", label: "Play-Doh", description: "Soft tactile textures with vibrant colors" },
+  { value: "ladybird", label: "Ladybird Books", description: "Classic 1960s British illustration style" },
+];
+
 export function NowNextThenBoard({
   board,
   learnerId,
@@ -70,6 +77,19 @@ export function NowNextThenBoard({
   const [promptInput, setPromptInput] = useState("");
   const [activeColumn, setActiveColumn] = useState<string>("now");
   const [isListening, setIsListening] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<ImageStyle>("studio-ghibli");
+
+  useEffect(() => {
+    const savedStyle = localStorage.getItem("board-image-style");
+    if (savedStyle && ["studio-ghibli", "play-doh", "ladybird"].includes(savedStyle)) {
+      setSelectedStyle(savedStyle as ImageStyle);
+    }
+  }, []);
+
+  const handleStyleChange = (style: ImageStyle) => {
+    setSelectedStyle(style);
+    localStorage.setItem("board-image-style", style);
+  };
 
   const updateColumnImage = useMutation(api.boards.updateColumnImage);
   const updateColumnTimer = useMutation(api.boards.updateColumnTimer);
@@ -89,7 +109,7 @@ export function NowNextThenBoard({
     setIsGenerating(columnId);
 
     try {
-      const result = await generateImage(prompt);
+      const result = await generateImage(prompt, "1024x1024", selectedStyle);
 
       if (result.success) {
         const base64Response = await fetch(
@@ -194,6 +214,25 @@ export function NowNextThenBoard({
           <p className="text-gray-600">Tap on a section to generate an image</p>
         )}
       </div>
+
+      {!readOnly && (
+        <div className="flex items-center justify-center gap-2">
+          <Palette className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">Image Style:</span>
+          <Select value={selectedStyle} onValueChange={handleStyleChange}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {STYLE_OPTIONS.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {board.columns

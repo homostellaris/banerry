@@ -1,11 +1,16 @@
 "use server";
 
+import fs from "fs";
+import path from "path";
+
+export type ImageStyle = "studio-ghibli" | "play-doh" | "ladybird";
+
 export async function generateImage(
   prompt: string,
-  size: "1024x1024" | "1024x1792" | "1792x1024" = "1024x1024"
+  size: "1024x1024" | "1024x1792" | "1792x1024" = "1024x1024",
+  style: ImageStyle = "studio-ghibli"
 ) {
   try {
-    // Check if API key is available
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       return {
@@ -15,7 +20,6 @@ export async function generateImage(
       };
     }
 
-    // Validate inputs
     if (!prompt) {
       return {
         success: false,
@@ -23,7 +27,6 @@ export async function generateImage(
       };
     }
 
-    // Validate size parameter
     const validSizes = ["1024x1024", "1024x1792", "1792x1024"];
     if (!validSizes.includes(size)) {
       return {
@@ -32,11 +35,20 @@ export async function generateImage(
       };
     }
 
-    const enhancedPrompt = `
-      Create an image for use in one column of a now, next, then board;
-      a tool for visual communication. The image should therefore be clear,
-      bold, visually uncluttered, and clearly convey the following: ${prompt}
-    `;
+    const stylePromptPath = path.join(
+      process.cwd(),
+      "app",
+      "_image-generation",
+      "styles",
+      style,
+      "prompt.md"
+    );
+    const stylePromptTemplate = fs.readFileSync(stylePromptPath, "utf8");
+
+    const enhancedPrompt = stylePromptTemplate.replace(
+      "{{USER_PROMPT}}",
+      prompt
+    );
 
     console.log(`Generating image for prompt: "${prompt}" with size: ${size}`);
 
