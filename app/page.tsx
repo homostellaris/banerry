@@ -51,7 +51,18 @@ export default function HomePage() {
             </div>
 
             {/* Key Features */}
-            <div className="grid md:grid-cols-3 gap-8 pt-12 text-left">
+            <div className="grid lg:grid-cols-3 gap-8 pt-12 text-left">
+              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                <div className="text-4xl mb-3">📋</div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  Now Next Then Boards
+                </h3>
+                <p className="text-gray-600">
+                  Visual schedules with AI-generated images to help organize
+                  activities into clear, understandable sequences
+                </p>
+              </div>
+
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-3">🗣️</div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">
@@ -60,17 +71,6 @@ export default function HomePage() {
                 <p className="text-gray-600">
                   High-quality audio playback with customizable voices, making
                   communication accessible and natural
-                </p>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-3">📱</div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  Works Offline
-                </h3>
-                <p className="text-gray-600">
-                  Progressive Web App that works anywhere, anytime—even without
-                  an internet connection
                 </p>
               </div>
 
@@ -99,6 +99,61 @@ export default function HomePage() {
                   communication clearer for both learners and those supporting
                   them.
                 </p>
+              </div>
+            </div>
+
+            <div className="pt-8 pb-8">
+              <div className="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+                <h2 className="text-2xl font-bold text-purple-900 mb-4 text-center">
+                  Now Next Then Boards
+                </h2>
+                <p className="text-gray-700 leading-relaxed text-lg text-center mb-6">
+                  Visual schedules that break down activities into simple,
+                  sequential steps with AI-generated images in delightful art
+                  styles.
+                </p>
+                <div className="grid md:grid-cols-3 gap-6 text-center">
+                  <div className="p-4">
+                    <div className="text-3xl font-bold text-purple-600 mb-2">
+                      Now
+                    </div>
+                    <p className="text-gray-600">
+                      What&apos;s happening right now
+                    </p>
+                  </div>
+                  <div className="p-4">
+                    <div className="text-3xl font-bold text-purple-600 mb-2">
+                      Next
+                    </div>
+                    <p className="text-gray-600">What comes after this</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="text-3xl font-bold text-purple-600 mb-2">
+                      Then
+                    </div>
+                    <p className="text-gray-600">What happens at the end</p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-2">
+                      <span className="text-purple-500">✓</span>
+                      AI-generated images
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-purple-500">✓</span>
+                      Multiple art styles
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-purple-500">✓</span>
+                      Voice input
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-purple-500">✓</span>
+                      Built-in timers
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
