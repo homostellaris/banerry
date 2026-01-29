@@ -1,14 +1,13 @@
 "use server";
 
-import fs from "fs";
-import path from "path";
+import { stylePrompts } from "./prompts";
 
 export type ImageStyle = "studio-ghibli" | "play-doh" | "ladybird";
 
 export async function generateImage(
   prompt: string,
   size: "1024x1024" | "1024x1792" | "1792x1024" = "1024x1024",
-  style: ImageStyle = "studio-ghibli"
+  style: ImageStyle = "studio-ghibli",
 ) {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
@@ -35,19 +34,11 @@ export async function generateImage(
       };
     }
 
-    const stylePromptPath = path.join(
-      process.cwd(),
-      "app",
-      "_image-generation",
-      "styles",
-      style,
-      "prompt.md"
-    );
-    const stylePromptTemplate = fs.readFileSync(stylePromptPath, "utf8");
+    const stylePromptTemplate = stylePrompts[style];
 
     const enhancedPrompt = stylePromptTemplate.replace(
       "{{USER_PROMPT}}",
-      prompt
+      prompt,
     );
 
     console.log(`Generating image for prompt: "${prompt}" with size: ${size}`);
@@ -68,7 +59,7 @@ export async function generateImage(
           quality: "standard",
           response_format: "b64_json",
         }),
-      }
+      },
     );
 
     if (!response.ok) {
