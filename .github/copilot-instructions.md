@@ -40,7 +40,7 @@ Banerry is a communication assistance Progressive Web App (PWA) for gestalt lang
 - **Frontend only**: `npm run dev:frontend` - starts in ~1.5 seconds
 - **Full development**: `npm run dev` - runs frontend and Convex backend in parallel
 - **CONVEX SETUP**: Backend requires authentication setup but frontend works independently
-- **ACCESS**: http://localhost:3000
+- **ACCESS**: http://localhost:6604
 
 ### Linting and Code Quality
 
@@ -53,7 +53,7 @@ Banerry is a communication assistance Progressive Web App (PWA) for gestalt lang
 
 - **NO FORMAL TEST FRAMEWORK**: No Jest, Cypress, or other testing tools configured
 - **MANUAL VALIDATION REQUIRED**: Always test user scenarios after making changes:
-  1. Navigate to homepage (http://localhost:3000)
+  1. Navigate to homepage (http://localhost:6604)
   2. Test PWA install prompt functionality
   3. Click "Mentor" button to verify authentication flow (redirects to /signin)
   4. Click "Learner" button to test learner flow
@@ -162,7 +162,7 @@ Before considering any change complete:
 1. **Run full build**: `npm run build` (25 seconds)
 2. **Start dev server**: `npm run dev:frontend` (1.5 seconds)
 3. **Test core functionality**:
-   - Homepage loads at http://localhost:3000
+   - Homepage loads at http://localhost:6604
    - PWA install prompt appears and works
    - Mentor button redirects to authentication
    - Learner button shows learner interface
@@ -749,7 +749,7 @@ export const listMessages = query({
       channelId: v.id("channels"),
       authorId: v.optional(v.id("users")),
       content: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const messages = await ctx.db
@@ -827,7 +827,7 @@ export const loadContext = internalQuery({
     v.object({
       role: v.union(v.literal("user"), v.literal("assistant")),
       content: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const channel = await ctx.db.get(args.channelId);

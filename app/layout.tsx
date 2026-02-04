@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000"
+      : "http://localhost:6604",
   ),
   alternates: {
     canonical: "/",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000",
+      : "http://localhost:6604",
     title: "Banerry",
     description: "Communication assistance for gestalt language processors.",
     siteName: "Banerry",

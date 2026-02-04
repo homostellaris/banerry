@@ -86,6 +86,51 @@ export const create = mutation({
   },
 });
 
+export const updateProfile = mutation({
+  args: {
+    learnerId: v.id("learners"),
+    bio: v.optional(v.string()),
+    avatarStorageId: v.optional(v.id("_storage")),
+    avatarPrompt: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await ensureLearnerRelationship(ctx, args.learnerId);
+
+    await ctx.db.patch(args.learnerId, {
+      bio: args.bio,
+      avatarStorageId: args.avatarStorageId,
+      avatarPrompt: args.avatarPrompt,
+    });
+
+    return null;
+  },
+});
+
+export const getAvatarUrl = query({
+  args: {
+    learnerId: v.id("learners"),
+  },
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx, args) => {
+    const learner = await ctx.db.get(args.learnerId);
+    if (!learner || !learner.avatarStorageId) {
+      return null;
+    }
+    return await ctx.storage.getUrl(learner.avatarStorageId);
+  },
+});
+
+export const getStorageUrl = query({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx, args) => {
+    return await ctx.storage.getUrl(args.storageId);
+  },
+});
+
 export const list = query({
   args: {},
   returns: v.array(
@@ -94,8 +139,10 @@ export const list = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
-    })
+    }),
   ),
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
@@ -105,7 +152,7 @@ export const list = query({
       .withIndex("by_mentor", (q) => q.eq("mentorId", userId))
       .collect();
     const learners = await Promise.all(
-      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId))
+      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId)),
     );
 
     return learners.filter((learner) => learner !== null) as Array<
@@ -122,8 +169,10 @@ export const getLearnersByMentor = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     const learnerMentorRelationships = await ctx.db
@@ -131,7 +180,7 @@ export const getLearnersByMentor = query({
       .withIndex("by_mentor", (q) => q.eq("mentorId", args.mentorId))
       .collect();
     const learners = await Promise.all(
-      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId))
+      learnerMentorRelationships.map((r) => ctx.db.get(r.learnerId)),
     );
 
     return learners.filter((learner) => learner !== null) as Array<
@@ -148,9 +197,11 @@ export const getLearnerByPassphrase = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     return await ctx.db
@@ -211,9 +262,11 @@ export const get = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     await ensureLearnerRelationship(ctx, args.learnerId);
@@ -231,6 +284,8 @@ export const getWithScripts = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
       scripts: v.array(
         v.object({
@@ -239,7 +294,7 @@ export const getWithScripts = query({
           dialogue: v.string(),
           parentheticals: v.string(),
           learnerId: v.id("learners"),
-        })
+        }),
       ),
       targetScripts: v.array(
         v.object({
@@ -248,10 +303,10 @@ export const getWithScripts = query({
           dialogue: v.string(),
           parentheticals: v.string(),
           learnerId: v.id("learners"),
-        })
+        }),
       ),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     await ensureLearnerRelationship(ctx, args.learnerId);
@@ -288,6 +343,8 @@ export const getByPassphrase = query({
       _creationTime: v.number(),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
       scripts: v.array(
         v.object({
@@ -296,7 +353,7 @@ export const getByPassphrase = query({
           dialogue: v.string(),
           parentheticals: v.string(),
           learnerId: v.id("learners"),
-        })
+        }),
       ),
       targetScripts: v.array(
         v.object({
@@ -305,10 +362,10 @@ export const getByPassphrase = query({
           dialogue: v.string(),
           parentheticals: v.string(),
           learnerId: v.id("learners"),
-        })
+        }),
       ),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     const learner = await ctx.db
@@ -347,9 +404,11 @@ export const validate = query({
       _id: v.id("learners"),
       name: v.string(),
       bio: v.optional(v.string()),
+      avatarStorageId: v.optional(v.id("_storage")),
+      avatarPrompt: v.optional(v.string()),
       passphrase: v.string(),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     const learner = await ctx.db
@@ -425,7 +484,7 @@ export const share = mutation({
           learnerId: args.learnerId,
           mentorId: targetUser._id,
           invitingMentorId: userId,
-        }
+        },
       );
 
       return {
@@ -532,7 +591,7 @@ export const getMentors = query({
       phone: v.optional(v.string()),
       phoneVerificationTime: v.optional(v.number()),
       isAnonymous: v.optional(v.boolean()),
-    })
+    }),
   ),
   handler: async (ctx, args) => {
     await ensureLearnerRelationship(ctx, args.learnerId);
@@ -543,7 +602,7 @@ export const getMentors = query({
       .collect();
 
     const mentors = await Promise.all(
-      relationships.map((r) => ctx.db.get(r.mentorId))
+      relationships.map((r) => ctx.db.get(r.mentorId)),
     );
 
     return mentors.filter((mentor) => mentor !== null) as Array<Doc<"users">>;
@@ -621,7 +680,7 @@ export const sendInvitationEmail = internalAction({
       internal.learners.getUserDetails,
       {
         userId: args.invitingMentorId,
-      }
+      },
     );
 
     if (!learner || !invitingMentor) {
@@ -631,7 +690,7 @@ export const sendInvitationEmail = internalAction({
     // Create invitation URL
     const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000";
+      : "http://localhost:6604";
     const invitationUrl = `${baseUrl}/invitation/${args.token}`;
 
     // Send email using Resend
@@ -652,7 +711,7 @@ export const sendInvitationEmail = internalAction({
 
     if (error) {
       throw new Error(
-        `Failed to send invitation email: ${JSON.stringify(error)}`
+        `Failed to send invitation email: ${JSON.stringify(error)}`,
       );
     }
 
@@ -669,7 +728,7 @@ export const getLearnerDetails = internalQuery({
       name: v.string(),
       bio: v.optional(v.string()),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     const learner = await ctx.db.get(args.learnerId);
@@ -690,7 +749,7 @@ export const getUserDetails = internalQuery({
       name: v.optional(v.string()),
       email: v.optional(v.string()),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
@@ -721,7 +780,7 @@ export const sendAccessNotificationEmail = internalAction({
 
     const baseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000";
+      : "http://localhost:6604";
     const invitationUrl = `${baseUrl}/invitation/${args.token}`;
 
     // Send email using Resend
@@ -741,7 +800,7 @@ export const sendAccessNotificationEmail = internalAction({
 
     if (error) {
       throw new Error(
-        `Failed to send access notification email: ${JSON.stringify(error)}`
+        `Failed to send access notification email: ${JSON.stringify(error)}`,
       );
     }
 
@@ -830,7 +889,7 @@ export const getInvitation = query({
       status: v.union(
         v.literal("pending"),
         v.literal("accepted"),
-        v.literal("expired")
+        v.literal("expired"),
       ),
       learner: v.object({
         name: v.string(),
@@ -842,7 +901,7 @@ export const getInvitation = query({
       }),
       token: v.string(),
     }),
-    v.null()
+    v.null(),
   ),
   handler: async (ctx, args) => {
     const invitation = await ctx.db
@@ -1096,7 +1155,7 @@ function createAccessNotificationEmailTemplate({
 
 async function ensureLearnerRelationship(
   ctx: QueryCtx,
-  learnerId: Id<"learners">
+  learnerId: Id<"learners">,
 ) {
   const userId = await ensureAuthenticated(ctx);
   const learnerMentorRelationship = await ctx.db

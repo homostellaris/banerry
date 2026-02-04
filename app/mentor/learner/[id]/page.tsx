@@ -1,4 +1,5 @@
 import DeleteLearnerButton from "@/app/mentor/_components/delete-learner-button";
+import LearnerProfileEditor from "@/app/mentor/_components/learner-profile-editor";
 import LearnerUrlDisplay from "@/app/mentor/_components/learner-url-display";
 import MentorsList from "@/app/mentor/_components/mentors-list";
 import ShareLearnerForm from "@/app/mentor/_components/share-learner-form";
@@ -33,9 +34,6 @@ export default async function MentorLearnerPage({
         <h1 className="text-4xl font-bold text-purple-700">
           {learnerWithScripts.name}
         </h1>
-        {learnerWithScripts.bio && (
-          <p className="text-gray-600 max-w-2xl">{learnerWithScripts.bio}</p>
-        )}
       </header>
       <div className="flex flex-wrap items-center gap-2">
         <ShareLearnerForm
@@ -49,6 +47,14 @@ export default async function MentorLearnerPage({
       </div>
 
       <LearnerUrlDisplay passphrase={learnerWithScripts.passphrase} />
+
+      <LearnerProfileEditor
+        learnerId={id as Id<"learners">}
+        learnerName={learnerWithScripts.name}
+        initialBio={learnerWithScripts.bio}
+        initialAvatarStorageId={learnerWithScripts.avatarStorageId}
+        initialAvatarPrompt={learnerWithScripts.avatarPrompt}
+      />
 
       <div className="space-y-4">
         <MentorsList learnerId={id as Id<"learners">} />

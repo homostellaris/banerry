@@ -20,6 +20,10 @@ export default function BoardPage({
     api.learners.getLearnerByPassphrase,
     passphrase ? { passphrase } : "skip"
   );
+  const avatarUrl = useQuery(
+    api.learners.getAvatarUrl,
+    learner?._id ? { learnerId: learner._id } : "skip"
+  );
   const boards = useQuery(
     api.boards.getBoards,
     learner?._id ? { learnerId: learner._id } : "skip"
@@ -56,6 +60,8 @@ export default function BoardPage({
       <NowNextThenBoard
         board={activeBoard || undefined}
         learnerId={learner._id}
+        avatarImageUrl={avatarUrl}
+        avatarPrompt={learner.avatarPrompt}
         onBoardUpdate={handleBoardUpdate}
         readOnly={true}
       />
