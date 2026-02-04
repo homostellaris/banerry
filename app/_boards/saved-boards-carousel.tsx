@@ -50,6 +50,7 @@ interface Board {
   columns: BoardColumn[];
   isActive: boolean;
   createdAt: number;
+  generationPrompt?: string;
 }
 
 interface SavedBoardsCarouselProps {
@@ -57,6 +58,14 @@ interface SavedBoardsCarouselProps {
   learnerId: Id<"learners">;
   onBoardSelect?: (board: Board) => void;
   readOnly?: boolean;
+}
+
+function getPreviewGridClasses(columnCount: number): string {
+  if (columnCount <= 1) return "grid-cols-1";
+  if (columnCount === 2) return "grid-cols-2";
+  if (columnCount === 3) return "grid-cols-3";
+  if (columnCount === 4) return "grid-cols-4";
+  return "grid-cols-3";
 }
 
 export function SavedBoardsCarousel({
@@ -173,54 +182,63 @@ export function SavedBoardsCarousel({
 
       <Carousel className="w-full">
         <CarouselContent className="-ml-2 md:-ml-4">
-          {boards.map((board) => (
-            <CarouselItem
-              key={board._id}
-              className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
-            >
-              <div className={board.isActive ? "p-0.5" : ""}>
-                <Card
-                  className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-                    board.isActive ? "ring-2 ring-purple-500 shadow-lg" : ""
-                  }`}
-                  onClick={() => handleSelectBoard(board)}
-                >
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between gap-2">
-                        <h4 className="font-medium truncate flex-1">
-                          {board.name}
-                        </h4>
-                        {!readOnly && (
-                          <div className="flex gap-1">
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-7 w-7"
-                              onClick={(e) =>
-                                handleRenameBoard(board._id, board.name, e)
-                              }
-                            >
-                              <Pencil className="h-3 w-3" />
-                            </Button>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
-                              onClick={(e) =>
-                                handleDeleteBoard(board._id, board.name, e)
-                              }
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
+          {boards.map((board) => {
+            const sortedColumns = [...board.columns].sort(
+              (a, b) => a.position - b.position
+            );
+            const previewColumns = sortedColumns.slice(0, 6);
+            const hasMoreColumns = sortedColumns.length > 6;
 
-                      <div className="grid grid-cols-3 gap-1">
-                        {board.columns
-                          .sort((a, b) => a.position - b.position)
-                          .map((column) => (
+            return (
+              <CarouselItem
+                key={board._id}
+                className="pl-2 md:pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+              >
+                <div className={board.isActive ? "p-0.5" : ""}>
+                  <Card
+                    className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+                      board.isActive ? "ring-2 ring-purple-500 shadow-lg" : ""
+                    }`}
+                    onClick={() => handleSelectBoard(board)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="font-medium truncate flex-1">
+                            {board.name}
+                          </h4>
+                          {!readOnly && (
+                            <div className="flex gap-1">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7"
+                                onClick={(e) =>
+                                  handleRenameBoard(board._id, board.name, e)
+                                }
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={(e) =>
+                                  handleDeleteBoard(board._id, board.name, e)
+                                }
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+
+                        <div
+                          className={`grid gap-1 ${getPreviewGridClasses(
+                            previewColumns.length
+                          )}`}
+                        >
+                          {previewColumns.map((column) => (
                             <div key={column.id} className="aspect-square">
                               {column.imageStorageId ? (
                                 <StorageImagePreview
@@ -233,13 +251,20 @@ export function SavedBoardsCarousel({
                               )}
                             </div>
                           ))}
+                        </div>
+
+                        {hasMoreColumns && (
+                          <p className="text-xs text-muted-foreground text-center">
+                            +{sortedColumns.length - 6} more
+                          </p>
+                        )}
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </CarouselItem>
-          ))}
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
 
         {boards.length > 3 && (

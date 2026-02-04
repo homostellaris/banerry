@@ -1,24 +1,29 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 
+const columnValidator = v.object({
+  id: v.string(),
+  title: v.string(),
+  imageStorageId: v.optional(v.id("_storage")),
+  imagePrompt: v.optional(v.string()),
+  timerDuration: v.optional(v.number()),
+  position: v.number(),
+});
+
+const boardValidator = v.object({
+  _id: v.id("boards"),
+  _creationTime: v.number(),
+  learnerId: v.id("learners"),
+  name: v.string(),
+  columns: v.array(columnValidator),
+  isActive: v.boolean(),
+  createdAt: v.number(),
+  generationPrompt: v.optional(v.string()),
+});
+
 export const getBoards = query({
   args: { learnerId: v.id("learners") },
-  returns: v.array(v.object({
-    _id: v.id("boards"),
-    _creationTime: v.number(),
-    learnerId: v.id("learners"),
-    name: v.string(),
-    columns: v.array(v.object({
-      id: v.string(),
-      title: v.string(),
-      imageStorageId: v.optional(v.id("_storage")),
-      imagePrompt: v.optional(v.string()),
-      timerDuration: v.optional(v.number()),
-      position: v.number(),
-    })),
-    isActive: v.boolean(),
-    createdAt: v.number(),
-  })),
+  returns: v.array(boardValidator),
   handler: async (ctx, args) => {
     return await ctx.db
       .query("boards")
@@ -30,22 +35,7 @@ export const getBoards = query({
 
 export const getActiveBoard = query({
   args: { learnerId: v.id("learners") },
-  returns: v.union(v.object({
-    _id: v.id("boards"),
-    _creationTime: v.number(),
-    learnerId: v.id("learners"),
-    name: v.string(),
-    columns: v.array(v.object({
-      id: v.string(),
-      title: v.string(),
-      imageStorageId: v.optional(v.id("_storage")),
-      imagePrompt: v.optional(v.string()),
-      timerDuration: v.optional(v.number()),
-      position: v.number(),
-    })),
-    isActive: v.boolean(),
-    createdAt: v.number(),
-  }), v.null()),
+  returns: v.union(boardValidator, v.null()),
   handler: async (ctx, args) => {
     return await ctx.db
       .query("boards")
@@ -60,34 +50,23 @@ export const createBoard = mutation({
   args: {
     learnerId: v.id("learners"),
     name: v.string(),
-    columns: v.optional(v.array(v.object({
-      id: v.string(),
-      title: v.string(),
-      imageStorageId: v.optional(v.id("_storage")),
-      imagePrompt: v.optional(v.string()),
-      timerDuration: v.optional(v.number()),
-      position: v.number(),
-    }))),
+    columns: v.optional(v.array(columnValidator)),
   },
   returns: v.id("boards"),
   handler: async (ctx, args) => {
-    // Deactivate any existing active boards
     const activeBoard = await ctx.db
       .query("boards")
-      .withIndex("by_learner_active", (q) => 
+      .withIndex("by_learner_active", (q) =>
         q.eq("learnerId", args.learnerId).eq("isActive", true)
       )
       .first();
-    
+
     if (activeBoard) {
       await ctx.db.patch(activeBoard._id, { isActive: false });
     }
 
-    // Create default columns if none provided
     const defaultColumns = args.columns || [
-      { id: "now", title: "Now", position: 0 },
-      { id: "next", title: "Next", position: 1 },
-      { id: "then", title: "Then", position: 2 },
+      { id: "column-1", title: "Step 1", position: 0 },
     ];
 
     return await ctx.db.insert("boards", {
@@ -105,19 +84,89 @@ export const updateBoard = mutation({
     boardId: v.id("boards"),
     updates: v.object({
       name: v.optional(v.string()),
-      columns: v.optional(v.array(v.object({
-        id: v.string(),
-        title: v.string(),
-        imageStorageId: v.optional(v.id("_storage")),
-        imagePrompt: v.optional(v.string()),
-        timerDuration: v.optional(v.number()),
-        position: v.number(),
-      }))),
+      columns: v.optional(v.array(columnValidator)),
+      generationPrompt: v.optional(v.string()),
     }),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await ctx.db.patch(args.boardId, args.updates);
+    return null;
+  },
+});
+
+export const addColumn = mutation({
+  args: {
+    boardId: v.id("boards"),
+    title: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.boardId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+
+    const position = board.columns.length;
+    const columnNumber = position + 1;
+    const newColumn = {
+      id: `column-${Date.now()}`,
+      title: args.title || `Step ${columnNumber}`,
+      position,
+    };
+
+    await ctx.db.patch(args.boardId, {
+      columns: [...board.columns, newColumn],
+    });
+    return null;
+  },
+});
+
+export const deleteColumn = mutation({
+  args: {
+    boardId: v.id("boards"),
+    columnId: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.boardId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+
+    const filteredColumns = board.columns.filter(
+      (column) => column.id !== args.columnId
+    );
+
+    const reindexedColumns = filteredColumns.map((column, index) => ({
+      ...column,
+      position: index,
+    }));
+
+    await ctx.db.patch(args.boardId, { columns: reindexedColumns });
+    return null;
+  },
+});
+
+export const updateColumnTitle = mutation({
+  args: {
+    boardId: v.id("boards"),
+    columnId: v.string(),
+    title: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.boardId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+
+    const updatedColumns = board.columns.map((column) =>
+      column.id === args.columnId ? { ...column, title: args.title } : column
+    );
+
+    await ctx.db.patch(args.boardId, { columns: updatedColumns });
+    return null;
   },
 });
 
@@ -224,5 +273,52 @@ export const updateColumnTimer = mutation({
     );
 
     await ctx.db.patch(args.boardId, { columns: updatedColumns });
+  },
+});
+
+export const updateAllColumnImages = mutation({
+  args: {
+    boardId: v.id("boards"),
+    columnImages: v.array(
+      v.object({
+        columnId: v.string(),
+        title: v.string(),
+        imageStorageId: v.id("_storage"),
+        imagePrompt: v.string(),
+      })
+    ),
+    boardName: v.optional(v.string()),
+    generationPrompt: v.optional(v.string()),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.boardId);
+    if (!board) {
+      throw new Error("Board not found");
+    }
+
+    const newColumns = args.columnImages.map((img, index) => ({
+      id: img.columnId,
+      title: img.title,
+      imageStorageId: img.imageStorageId,
+      imagePrompt: img.imagePrompt,
+      position: index,
+    }));
+
+    const updates: {
+      columns: typeof newColumns;
+      name?: string;
+      generationPrompt?: string;
+    } = { columns: newColumns };
+
+    if (args.boardName) {
+      updates.name = args.boardName;
+    }
+    if (args.generationPrompt) {
+      updates.generationPrompt = args.generationPrompt;
+    }
+
+    await ctx.db.patch(args.boardId, updates);
+    return null;
   },
 });

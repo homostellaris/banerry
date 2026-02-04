@@ -10,6 +10,8 @@ export default defineSchema({
   learners: defineTable({
     name: v.string(),
     bio: v.optional(v.string()),
+    avatarStorageId: v.optional(v.id("_storage")),
+    avatarPrompt: v.optional(v.string()),
     passphrase: v.string(),
   }).index("by_passphrase", ["passphrase"]),
   learnerMentorRelationships: defineTable({
@@ -53,5 +55,6 @@ export default defineSchema({
     })),
     isActive: v.boolean(),
     createdAt: v.number(),
+    generationPrompt: v.optional(v.string()),
   }).index("by_learner", ["learnerId"]).index("by_learner_active", ["learnerId", "isActive"]),
 });

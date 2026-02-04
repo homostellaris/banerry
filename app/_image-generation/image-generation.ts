@@ -1,130 +1,158 @@
 "use server";
 
-import { stylePrompts } from "./prompts";
+import { parseBoardPrompt, ParsedBoardPrompt } from "./parse-board-prompt";
+import { generateImageWithGemini } from "./gemini";
 
-export type ImageStyle = "studio-ghibli" | "play-doh" | "ladybird";
+export type ImageStyle = "studio-ghibli" | "play-doh" | "ladybird" | "symbols";
+
+export type GenerationProgress = {
+  step: "parsing" | "generating";
+  currentColumnIndex?: number;
+  totalColumns?: number;
+  completedColumns: number;
+};
+
+export type BoardImageResult = {
+  columnId: string;
+  title: string;
+  imageData: string;
+  prompt: string;
+};
+
+export type GenerateBoardImagesResult =
+  | {
+      success: true;
+      boardName: string;
+      images: BoardImageResult[];
+      parsedPrompt: ParsedBoardPrompt;
+    }
+  | {
+      success: false;
+      error: string;
+      partialImages?: BoardImageResult[];
+    };
 
 export async function generateImage(
   prompt: string,
   size: "1024x1024" | "1024x1792" | "1792x1024" = "1024x1024",
   style: ImageStyle = "studio-ghibli",
+  referenceImage?: string,
 ) {
-  try {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      return {
-        success: false,
-        error:
-          "OpenAI API key is not configured. Please add your OPENAI_API_KEY to the environment variables.",
-      };
-    }
+  console.log(`Generating image for prompt: "${prompt}" with style: ${style}${referenceImage ? " (with reference)" : ""}`);
 
-    if (!prompt) {
-      return {
-        success: false,
-        error: "Prompt is required for image generation",
-      };
-    }
+  const result = await generateImageWithGemini(prompt, style, referenceImage);
 
-    const validSizes = ["1024x1024", "1024x1792", "1792x1024"];
-    if (!validSizes.includes(size)) {
-      return {
-        success: false,
-        error: `Size must be one of: ${validSizes.join(", ")}`,
-      };
-    }
+  if (!result.success) {
+    return result;
+  }
 
-    const stylePromptTemplate = stylePrompts[style];
+  return {
+    success: true as const,
+    imageData: result.imageData,
+    originalPrompt: prompt,
+    size: size,
+  };
+}
 
-    const enhancedPrompt = stylePromptTemplate.replace(
-      "{{USER_PROMPT}}",
-      prompt,
-    );
+function buildEnhancedPrompt(
+  basePrompt: string,
+  avatarDescription: string | undefined,
+  styleConsistency: string,
+  style: ImageStyle,
+  hasReferenceImage: boolean
+): string {
+  let enhanced = basePrompt;
 
-    console.log(`Generating image for prompt: "${prompt}" with size: ${size}`);
+  if (hasReferenceImage && style !== "symbols") {
+    enhanced = `Using the character from the reference image as the main character, generate an image of them: ${enhanced}`;
+  } else if (avatarDescription && style !== "symbols") {
+    enhanced = `The main character is: ${avatarDescription}. ${enhanced}`;
+  }
 
-    const response = await fetch(
-      "https://api.openai.com/v1/images/generations",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "dall-e-3",
-          prompt: enhancedPrompt,
-          n: 1,
-          size: size,
-          quality: "standard",
-          response_format: "b64_json",
-        }),
-      },
-    );
+  if (styleConsistency) {
+    enhanced = `${enhanced} ${styleConsistency}`;
+  }
 
-    if (!response.ok) {
-      let errorMessage = `OpenAI API error: ${response.status}`;
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.error?.message || errorMessage;
-      } catch {
-        // If we can't parse the error response, use the status
-      }
+  if (hasReferenceImage) {
+    enhanced += " The character must match the reference image exactly - same appearance, clothing, and style.";
+  } else {
+    enhanced += " Ensure this exact character appears consistently.";
+  }
 
-      console.error("OpenAI API error:", errorMessage);
+  enhanced += " Do not add any text, words, or labels to the image.";
 
-      if (response.status === 401) {
-        return {
-          success: false,
-          error:
-            "Invalid OpenAI API key. Please check your OPENAI_API_KEY environment variable.",
-        };
-      }
+  return enhanced;
+}
 
-      if (response.status === 429) {
-        return {
-          success: false,
-          error: "OpenAI API rate limit exceeded. Please try again later.",
-        };
-      }
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-      return {
-        success: false,
-        error: errorMessage,
-      };
-    }
+export async function generateBoardImages(
+  userPrompt: string,
+  style: ImageStyle = "studio-ghibli",
+  avatarDescription?: string,
+  avatarImage?: string
+): Promise<GenerateBoardImagesResult> {
+  const parseResult = await parseBoardPrompt(userPrompt, avatarDescription);
 
-    // Get the response data
-    const responseData = await response.json();
-
-    if (
-      !responseData.data ||
-      !responseData.data[0] ||
-      !responseData.data[0].b64_json
-    ) {
-      return {
-        success: false,
-        error: "Invalid response from OpenAI API",
-      };
-    }
-
-    console.log("Image generated successfully");
-
-    return {
-      success: true,
-      imageData: responseData.data[0].b64_json,
-      revisedPrompt: responseData.data[0].revised_prompt,
-      originalPrompt: prompt,
-      size: size,
-    };
-  } catch (error) {
-    console.error("Image generation error:", error);
-
-    const errorMessage = error instanceof Error ? error.message : String(error);
-
+  if (!parseResult.success) {
     return {
       success: false,
-      error: errorMessage,
+      error: parseResult.error,
     };
   }
+
+  const { data: parsedPrompt } = parseResult;
+  const images: BoardImageResult[] = [];
+
+  const hasReferenceImage = !!avatarImage && style !== "symbols";
+  const effectiveAvatarDescription =
+    style === "symbols" ? undefined : (avatarDescription ?? parsedPrompt.characterDescription);
+
+  for (let i = 0; i < parsedPrompt.columns.length; i++) {
+    const column = parsedPrompt.columns[i];
+    const columnId = `column-${Date.now()}-${i}`;
+
+    const enhancedPrompt = buildEnhancedPrompt(
+      column.prompt,
+      effectiveAvatarDescription,
+      parsedPrompt.styleConsistency,
+      style,
+      hasReferenceImage
+    );
+
+    const result = await generateImage(
+      enhancedPrompt,
+      "1024x1024",
+      style,
+      hasReferenceImage ? avatarImage : undefined
+    );
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: `Failed to generate image for "${column.title}": ${result.error}`,
+        partialImages: images,
+      };
+    }
+
+    images.push({
+      columnId,
+      title: column.title,
+      imageData: result.imageData!,
+      prompt: enhancedPrompt,
+    });
+
+    if (i < parsedPrompt.columns.length - 1) {
+      await delay(1000);
+    }
+  }
+
+  return {
+    success: true,
+    boardName: parsedPrompt.boardName,
+    images,
+    parsedPrompt,
+  };
 }
