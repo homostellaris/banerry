@@ -14,7 +14,7 @@
 		"format": "prettier app/ components/ hooks/ lib/ types/ public/",
 		"unit": "bun test",
 		"integration": "cypress run",
-		"test": "pnpm typecheck && pnpm lint && pnpm unit && pnpm integration",
+		"test": "bun typecheck && bun lint && bun unit && bun integration",
 		"build": "next build",
 		"start": "next start"
 	},
