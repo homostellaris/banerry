@@ -12,10 +12,10 @@ export default async function ScriptLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ passphrase: string; id: Id<"scripts"> }>;
+  params: Promise<{ passphrase: string; id: string }>;
 }) {
   const { passphrase, id } = await params;
-  const script = await fetchQuery(api.scripts.get, { id });
+  const script = await fetchQuery(api.scripts.get, { id: id as Id<"scripts"> });
   if (script === null) notFound();
 
   return (

@@ -1,5 +1,4 @@
 import Navigation from "@/app/_common/navigation";
-import { Id } from "@/convex/_generated/dataModel";
 import { Home } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
@@ -10,7 +9,7 @@ export default async function Layout({
   children,
   params,
 }: PropsWithChildren<{
-  params: Promise<{ passphrase: string; id: Id<"learners"> }>;
+  params: Promise<{ id: string }>;
 }>) {
   const { id } = await params;
 
