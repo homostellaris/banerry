@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Target, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -53,11 +54,15 @@ export default function AddTargetScriptForm({
         return;
       }
 
-      // Reset form and close dialog
+      posthog.capture("target_script_created", {
+        has_parentheticals: parentheticals.trim().length > 0,
+      });
+
       setDialogue("");
       setParentheticals("");
       setIsOpen(false);
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to create target script:", error);
     } finally {
       setIsSubmitting(false);

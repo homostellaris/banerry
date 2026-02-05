@@ -15,6 +15,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Trash2, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -37,8 +38,10 @@ export default function DeleteLearnerButton({
     setIsDeleting(true);
     try {
       await deleteLearner({ learnerId });
+      posthog.capture("learner_deleted");
       router.push("/mentor");
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to delete learner:", error);
     } finally {
       setIsDeleting(false);

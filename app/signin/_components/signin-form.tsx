@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -37,8 +38,12 @@ export default function SignInForm() {
               email: emailValue,
             });
 
+            posthog.capture("sign_in_otp_requested", {
+              email: emailValue,
+            });
             setShowOtpModal(true);
           } catch (error) {
+            posthog.captureException(error);
             toast.error("Error", {
               description:
                 "Failed to send verification code. Please try again.",
@@ -92,9 +97,14 @@ export default function SignInForm() {
                   redirectTo: "/mentor",
                 });
 
+                posthog.identify(email, { email });
+                posthog.capture("sign_in_completed", {
+                  email,
+                });
                 toast.success("Successfully signed in!");
                 setShowOtpModal(false);
               } catch (error) {
+                posthog.captureException(error);
                 toast.error("Error", {
                   description: "Invalid verification code. Please try again.",
                 });

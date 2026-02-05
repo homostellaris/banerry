@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Volume2, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useVoice } from "@/app/_tts/voice-context";
 import { useCachedTTS } from "@/app/_tts/use-cached-tts";
 
@@ -14,7 +15,10 @@ export default function AudioButton({ text }: AudioButtonProps) {
   const { speak, isLoading, error } = useCachedTTS();
 
   const playAudio = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking the button
+    e.preventDefault();
+    posthog.capture("audio_played", {
+      voice: selectedVoice,
+    });
     speak(text, selectedVoice);
   };
 

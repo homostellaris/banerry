@@ -14,6 +14,7 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { Camera, Clock, Loader2, Mic, Palette, Pencil, Plus, Sparkles, Timer, Trash2, Volume2, Info, Check, X } from "lucide-react";
+import posthog from "posthog-js";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -424,10 +425,15 @@ export function NowNextThenBoard({
         generationPrompt: boardPrompt,
       });
 
+      posthog.capture("board_generated", {
+        column_count: columnImages.length,
+        style: selectedStyle,
+      });
       toast.success("All images generated successfully!");
       setBoardPrompt("");
       onBoardUpdate?.();
     } catch (error) {
+      posthog.captureException(error);
       console.error("Error generating all images:", error);
       toast.error("Failed to generate images");
     } finally {

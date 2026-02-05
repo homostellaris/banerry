@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -43,11 +44,15 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
         learnerId: learnerId,
       });
 
-      // Reset form and close dialog
+      posthog.capture("script_created", {
+        has_parentheticals: parentheticals.trim().length > 0,
+      });
+
       setDialogue("");
       setParentheticals("");
       setIsOpen(false);
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to create script:", error);
     } finally {
       setIsSubmitting(false);

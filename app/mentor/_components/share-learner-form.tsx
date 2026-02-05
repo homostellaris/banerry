@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Share, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
@@ -43,6 +44,9 @@ export default function ShareLearnerForm({ learnerId, learnerName }: ShareLearne
       });
 
       if (result.success) {
+        posthog.capture("learner_shared", {
+          is_invitation: result.isInvitation,
+        });
         if (result.isInvitation) {
           toast.success(result.message, {
             description: "They will receive an email with instructions to join.",
@@ -51,13 +55,13 @@ export default function ShareLearnerForm({ learnerId, learnerName }: ShareLearne
         } else {
           toast.success(result.message);
         }
-        // Reset form and close dialog
         setEmail("");
         setIsOpen(false);
       } else {
         toast.error(result.message);
       }
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to share learner:", error);
       toast.error("Failed to share learner. Please try again.");
     } finally {

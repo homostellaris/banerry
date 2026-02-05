@@ -7,6 +7,7 @@ import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2, CheckCircle, XCircle, Clock, User } from "lucide-react";
+import posthog from "posthog-js";
 import { toast } from "sonner";
 
 export default function InvitationPage() {
@@ -26,8 +27,8 @@ export default function InvitationPage() {
       const result = await acceptInvitation({ token });
       
       if (result.success) {
+        posthog.capture("invitation_accepted");
         toast.success(result.message);
-        // Redirect to the learner page
         if (result.learnerId) {
           router.push(`/mentor/learner/${result.learnerId}`);
         } else {
@@ -37,6 +38,7 @@ export default function InvitationPage() {
         toast.error(result.message);
       }
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to accept invitation:", error);
       toast.error("Failed to accept invitation. Please try again.");
     } finally {

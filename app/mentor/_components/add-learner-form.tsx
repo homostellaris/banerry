@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
+import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -37,11 +38,15 @@ export default function AddLearnerForm() {
         bio: bio.trim() || undefined,
       });
 
-      // Reset form and close dialog
+      posthog.capture("learner_created", {
+        has_bio: bio.trim().length > 0,
+      });
+
       setName("");
       setBio("");
       setIsOpen(false);
     } catch (error) {
+      posthog.captureException(error);
       console.error("Failed to create learner:", error);
     } finally {
       setIsSubmitting(false);

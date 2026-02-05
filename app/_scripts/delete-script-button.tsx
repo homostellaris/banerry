@@ -13,6 +13,7 @@ import {
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useMutation } from "convex/react";
+import posthog from "posthog-js";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -33,8 +34,10 @@ export default function DeleteScriptButton({
     try {
       setIsDeleting(true);
       await deleteScript({ id: scriptId });
+      posthog.capture("script_deleted");
       toast.success("Script deleted successfully");
     } catch (error) {
+      posthog.captureException(error);
       console.error("Error deleting script:", error);
       toast.error("Failed to delete script");
     } finally {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, X } from "lucide-react";
+import posthog from "posthog-js";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -31,12 +32,14 @@ export default function PWAInstall() {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallPrompt(true);
+      posthog.capture("pwa_install_prompted");
     };
 
     const appInstalledHandler = () => {
       setIsInstalled(true);
       setShowInstallPrompt(false);
       setDeferredPrompt(null);
+      posthog.capture("pwa_installed");
     };
 
     window.addEventListener("beforeinstallprompt", handler);
