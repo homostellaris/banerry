@@ -1,158 +1,163 @@
-"use server";
+'use server'
 
-import { parseBoardPrompt, ParsedBoardPrompt } from "./parse-board-prompt";
-import { generateImageWithGemini } from "./gemini";
+import { parseBoardPrompt, ParsedBoardPrompt } from './parse-board-prompt'
+import { generateImageWithGemini } from './gemini'
 
-export type ImageStyle = "studio-ghibli" | "play-doh" | "ladybird" | "symbols";
+export type ImageStyle = 'studio-ghibli' | 'play-doh' | 'ladybird' | 'symbols'
 
 export type GenerationProgress = {
-  step: "parsing" | "generating";
-  currentColumnIndex?: number;
-  totalColumns?: number;
-  completedColumns: number;
-};
+	step: 'parsing' | 'generating'
+	currentColumnIndex?: number
+	totalColumns?: number
+	completedColumns: number
+}
 
 export type BoardImageResult = {
-  columnId: string;
-  title: string;
-  imageData: string;
-  prompt: string;
-};
+	columnId: string
+	title: string
+	imageData: string
+	prompt: string
+}
 
 export type GenerateBoardImagesResult =
-  | {
-      success: true;
-      boardName: string;
-      images: BoardImageResult[];
-      parsedPrompt: ParsedBoardPrompt;
-    }
-  | {
-      success: false;
-      error: string;
-      partialImages?: BoardImageResult[];
-    };
+	| {
+			success: true
+			boardName: string
+			images: BoardImageResult[]
+			parsedPrompt: ParsedBoardPrompt
+	  }
+	| {
+			success: false
+			error: string
+			partialImages?: BoardImageResult[]
+	  }
 
 export async function generateImage(
-  prompt: string,
-  size: "1024x1024" | "1024x1792" | "1792x1024" = "1024x1024",
-  style: ImageStyle = "studio-ghibli",
-  referenceImage?: string,
+	prompt: string,
+	size: '1024x1024' | '1024x1792' | '1792x1024' = '1024x1024',
+	style: ImageStyle = 'studio-ghibli',
+	referenceImageUrl?: string,
 ) {
-  console.log(`Generating image for prompt: "${prompt}" with style: ${style}${referenceImage ? " (with reference)" : ""}`);
+	console.log(
+		`Generating image for prompt: "${prompt}" with style: ${style}${referenceImageUrl ? ' (with reference)' : ''}`,
+	)
 
-  const result = await generateImageWithGemini(prompt, style, referenceImage);
+	const result = await generateImageWithGemini(prompt, style, referenceImageUrl)
 
-  if (!result.success) {
-    return result;
-  }
+	if (!result.success) {
+		return result
+	}
 
-  return {
-    success: true as const,
-    imageData: result.imageData,
-    originalPrompt: prompt,
-    size: size,
-  };
+	return {
+		success: true as const,
+		imageData: result.imageData,
+		originalPrompt: prompt,
+		size: size,
+	}
 }
 
 function buildEnhancedPrompt(
-  basePrompt: string,
-  avatarDescription: string | undefined,
-  styleConsistency: string,
-  style: ImageStyle,
-  hasReferenceImage: boolean
+	basePrompt: string,
+	avatarDescription: string | undefined,
+	styleConsistency: string,
+	style: ImageStyle,
+	hasReferenceImage: boolean,
 ): string {
-  let enhanced = basePrompt;
+	let enhanced = basePrompt
 
-  if (hasReferenceImage && style !== "symbols") {
-    enhanced = `Using the character from the reference image as the main character, generate an image of them: ${enhanced}`;
-  } else if (avatarDescription && style !== "symbols") {
-    enhanced = `The main character is: ${avatarDescription}. ${enhanced}`;
-  }
+	if (hasReferenceImage && style !== 'symbols') {
+		enhanced = `Using the character from the reference image as the main character, generate an image of them: ${enhanced}`
+	} else if (avatarDescription && style !== 'symbols') {
+		enhanced = `The main character is: ${avatarDescription}. ${enhanced}`
+	}
 
-  if (styleConsistency) {
-    enhanced = `${enhanced} ${styleConsistency}`;
-  }
+	if (styleConsistency) {
+		enhanced = `${enhanced} ${styleConsistency}`
+	}
 
-  if (hasReferenceImage) {
-    enhanced += " The character must match the reference image exactly - same appearance, clothing, and style.";
-  } else {
-    enhanced += " Ensure this exact character appears consistently.";
-  }
+	if (hasReferenceImage) {
+		enhanced +=
+			' The character must match the reference image exactly - same appearance, clothing, and style.'
+	} else {
+		enhanced += ' Ensure this exact character appears consistently.'
+	}
 
-  enhanced += " Do not add any text, words, or labels to the image.";
+	enhanced += ' Do not add any text, words, or labels to the image.'
 
-  return enhanced;
+	return enhanced
 }
 
 function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+	return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 export async function generateBoardImages(
-  userPrompt: string,
-  style: ImageStyle = "studio-ghibli",
-  avatarDescription?: string,
-  avatarImage?: string
+	userPrompt: string,
+	style: ImageStyle = 'studio-ghibli',
+	avatarDescription?: string,
+	avatarImageUrl?: string,
 ): Promise<GenerateBoardImagesResult> {
-  const parseResult = await parseBoardPrompt(userPrompt, avatarDescription);
+	const parseResult = await parseBoardPrompt(userPrompt, avatarDescription)
 
-  if (!parseResult.success) {
-    return {
-      success: false,
-      error: parseResult.error,
-    };
-  }
+	if (!parseResult.success) {
+		return {
+			success: false,
+			error: parseResult.error,
+		}
+	}
 
-  const { data: parsedPrompt } = parseResult;
-  const images: BoardImageResult[] = [];
+	const { data: parsedPrompt } = parseResult
+	const images: BoardImageResult[] = []
 
-  const hasReferenceImage = !!avatarImage && style !== "symbols";
-  const effectiveAvatarDescription =
-    style === "symbols" ? undefined : (avatarDescription ?? parsedPrompt.characterDescription);
+	const hasReferenceImage = !!avatarImageUrl && style !== 'symbols'
+	const effectiveAvatarDescription =
+		style === 'symbols'
+			? undefined
+			: (avatarDescription ?? parsedPrompt.characterDescription)
 
-  for (let i = 0; i < parsedPrompt.columns.length; i++) {
-    const column = parsedPrompt.columns[i];
-    const columnId = `column-${Date.now()}-${i}`;
+	for (let i = 0; i < parsedPrompt.columns.length; i++) {
+		const column = parsedPrompt.columns[i]
+		const columnId = `column-${Date.now()}-${i}`
 
-    const enhancedPrompt = buildEnhancedPrompt(
-      column.prompt,
-      effectiveAvatarDescription,
-      parsedPrompt.styleConsistency,
-      style,
-      hasReferenceImage
-    );
+		const enhancedPrompt = buildEnhancedPrompt(
+			column.prompt,
+			effectiveAvatarDescription,
+			parsedPrompt.styleConsistency,
+			style,
+			hasReferenceImage,
+		)
 
-    const result = await generateImage(
-      enhancedPrompt,
-      "1024x1024",
-      style,
-      hasReferenceImage ? avatarImage : undefined
-    );
+		const result = await generateImage(
+			enhancedPrompt,
+			'1024x1024',
+			style,
+			hasReferenceImage ? avatarImageUrl : undefined,
+		)
 
-    if (!result.success) {
-      return {
-        success: false,
-        error: `Failed to generate image for "${column.title}": ${result.error}`,
-        partialImages: images,
-      };
-    }
+		if (!result.success) {
+			return {
+				success: false,
+				error: `Failed to generate image for "${column.title}": ${result.error}`,
+				partialImages: images,
+			}
+		}
 
-    images.push({
-      columnId,
-      title: column.title,
-      imageData: result.imageData!,
-      prompt: enhancedPrompt,
-    });
+		images.push({
+			columnId,
+			title: column.title,
+			imageData: result.imageData!,
+			prompt: enhancedPrompt,
+		})
 
-    if (i < parsedPrompt.columns.length - 1) {
-      await delay(1000);
-    }
-  }
+		if (i < parsedPrompt.columns.length - 1) {
+			await delay(1000)
+		}
+	}
 
-  return {
-    success: true,
-    boardName: parsedPrompt.boardName,
-    images,
-    parsedPrompt,
-  };
+	return {
+		success: true,
+		boardName: parsedPrompt.boardName,
+		images,
+		parsedPrompt,
+	}
 }

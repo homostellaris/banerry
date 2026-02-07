@@ -76,25 +76,6 @@ const STYLE_OPTIONS: Array<{ value: ImageStyle; label: string; description: stri
   { value: "symbols", label: "Symbols (AAC)", description: "Simple AAC-style symbols" },
 ];
 
-async function fetchImageAsBase64(url: string): Promise<string | null> {
-  try {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        const base64Data = base64.split(",")[1];
-        resolve(base64Data);
-      };
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    return null;
-  }
-}
-
 function getGridClasses(columnCount: number): string {
   if (columnCount <= 1) return "grid-cols-1 max-w-sm mx-auto";
   if (columnCount === 2) return "grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto";
@@ -119,7 +100,6 @@ export function NowNextThenBoard({
   const [selectedStyle, setSelectedStyle] = useState<ImageStyle>("studio-ghibli");
   const [boardPrompt, setBoardPrompt] = useState("");
   const [isGeneratingAll, setIsGeneratingAll] = useState(false);
-  const [avatarBase64, setAvatarBase64] = useState<string | null>(null);
   const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
 
@@ -131,14 +111,6 @@ export function NowNextThenBoard({
       setSelectedStyle(savedStyle as ImageStyle);
     }
   }, []);
-
-  useEffect(() => {
-    if (avatarImageUrl) {
-      fetchImageAsBase64(avatarImageUrl).then(setAvatarBase64);
-    } else {
-      setAvatarBase64(null);
-    }
-  }, [avatarImageUrl]);
 
   const handleStyleChange = (style: ImageStyle) => {
     setSelectedStyle(style);
@@ -171,7 +143,7 @@ export function NowNextThenBoard({
         prompt,
         "1024x1024",
         selectedStyle,
-        selectedStyle !== "symbols" ? (avatarBase64 ?? undefined) : undefined
+        selectedStyle !== "symbols" ? (avatarImageUrl ?? undefined) : undefined
       );
 
       if (result.success) {
@@ -350,12 +322,12 @@ export function NowNextThenBoard({
     setIsGeneratingAll(true);
 
     try {
-      const effectiveAvatarBase64 = selectedStyle === "symbols" ? undefined : (avatarBase64 ?? undefined);
+      const effectiveAvatarImageUrl = selectedStyle === "symbols" ? undefined : (avatarImageUrl ?? undefined);
       const result = await generateBoardImages(
         boardPrompt,
         selectedStyle,
         avatarPrompt,
-        effectiveAvatarBase64
+        effectiveAvatarImageUrl
       );
 
       if (!result.success) {
@@ -458,7 +430,7 @@ export function NowNextThenBoard({
           <Palette className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">Image Style:</span>
           <Select value={selectedStyle} onValueChange={handleStyleChange}>
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-[200px]" data-testid="style-selector">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -492,11 +464,13 @@ export function NowNextThenBoard({
             }}
             disabled={isGeneratingAll}
             className="flex-1"
+            data-testid="batch-prompt-input"
           />
           <Button
             onClick={handleGenerateAllImages}
             disabled={!boardPrompt.trim() || isGeneratingAll}
             className="bg-purple-600 hover:bg-purple-700"
+            data-testid="batch-generate-button"
           >
             {isGeneratingAll ? (
               <>
@@ -584,6 +558,7 @@ export function NowNextThenBoard({
                           handleStartEditTitle(column.id, column.title);
                         }
                       }}
+                      data-testid="column-title"
                     >
                       {column.title}
                     </CardTitle>
@@ -619,6 +594,7 @@ export function NowNextThenBoard({
                   !readOnly ? "hover:border-purple-400 cursor-pointer" : ""
                 }`}
                 onClick={() => !readOnly && setActiveColumn(column.id)}
+                data-testid="column-image-area"
               >
                 {column.imageStorageId ? (
                   <StorageImage
@@ -662,6 +638,7 @@ export function NowNextThenBoard({
                         }
                       }}
                       className="flex-1"
+                      data-testid="column-prompt-input"
                     />
                     <Button
                       size="icon"
@@ -688,6 +665,7 @@ export function NowNextThenBoard({
                       }
                       className="flex-1"
                       size="sm"
+                      data-testid="generate-image-button"
                     >
                       <Camera className="h-4 w-4 mr-2" />
                       Generate Image
@@ -702,6 +680,7 @@ export function NowNextThenBoard({
                         size="sm"
                         onClick={() => handleSetTimer(column.id, minutes)}
                         className="flex-1 text-xs"
+                        data-testid={`timer-button-${minutes}`}
                       >
                         <Timer className="h-3 w-3 mr-1" />
                         {minutes}m
@@ -717,7 +696,7 @@ export function NowNextThenBoard({
 
       {!readOnly && (
         <div className="text-center">
-          <Button variant="outline" onClick={handleAddColumn}>
+          <Button variant="outline" onClick={handleAddColumn} data-testid="add-column-button">
             <Plus className="h-4 w-4 mr-2" />
             Add Column
           </Button>
