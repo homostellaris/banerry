@@ -9,6 +9,7 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
 	ui_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
 	capture_exceptions: true,
 	debug: process.env.NODE_ENV === 'development',
+	defaults: '2025-11-30',
 	...(hasConsent
 		? { persistence: 'localStorage+cookie' }
 		: { cookieless_mode: 'always' as const }),
