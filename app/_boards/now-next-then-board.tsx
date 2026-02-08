@@ -1,9 +1,8 @@
 "use client";
 
-import {
-  generateImage,
-  generateBoardImages,
+import type {
   ImageStyle,
+  GenerateBoardImagesResult,
 } from "@/app/_image-generation/image-generation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -139,12 +138,16 @@ export function NowNextThenBoard({
     setIsGenerating(columnId);
 
     try {
-      const result = await generateImage(
-        prompt,
-        "1024x1024",
-        selectedStyle,
-        selectedStyle !== "symbols" ? (avatarImageUrl ?? undefined) : undefined
-      );
+      const result = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          size: "1024x1024",
+          style: selectedStyle,
+          referenceImageUrl: selectedStyle !== "symbols" ? (avatarImageUrl ?? undefined) : undefined,
+        }),
+      }).then(r => r.json());
 
       if (result.success) {
         const base64Response = await fetch(
@@ -323,12 +326,16 @@ export function NowNextThenBoard({
 
     try {
       const effectiveAvatarImageUrl = selectedStyle === "symbols" ? undefined : (avatarImageUrl ?? undefined);
-      const result = await generateBoardImages(
-        boardPrompt,
-        selectedStyle,
-        avatarPrompt,
-        effectiveAvatarImageUrl
-      );
+      const result: GenerateBoardImagesResult = await fetch("/api/generate-board-images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userPrompt: boardPrompt,
+          style: selectedStyle,
+          avatarDescription: avatarPrompt,
+          avatarImageUrl: effectiveAvatarImageUrl,
+        }),
+      }).then(r => r.json());
 
       if (!result.success) {
         toast.error(result.error);
