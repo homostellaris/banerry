@@ -503,7 +503,7 @@ export function NowNextThenBoard({
 					>
 						<SelectTrigger
 							className="w-[200px]"
-							data-testid="style-selector"
+							data-name="style-selector"
 						>
 							<SelectValue />
 						</SelectTrigger>
@@ -543,13 +543,13 @@ export function NowNextThenBoard({
 						}}
 						disabled={isGeneratingAll}
 						className="flex-1"
-						data-testid="batch-prompt-input"
+						data-name="batch-prompt-input"
 					/>
 					<Button
 						onClick={handleGenerateAllImages}
 						disabled={!boardPrompt.trim() || isGeneratingAll}
 						className="bg-purple-600 hover:bg-purple-700"
-						data-testid="batch-generate-button"
+						data-name="batch-generate-button"
 					>
 						{isGeneratingAll ? (
 							<>
@@ -637,7 +637,7 @@ export function NowNextThenBoard({
 													handleStartEditTitle(column.id, column.title)
 												}
 											}}
-											data-testid="column-title"
+											data-name="column-title"
 										>
 											{column.title}
 										</CardTitle>
@@ -676,7 +676,7 @@ export function NowNextThenBoard({
 									!readOnly ? 'hover:border-purple-400 cursor-pointer' : ''
 								}`}
 								onClick={() => !readOnly && setActiveColumn(column.id)}
-								data-testid="column-image-area"
+								data-name="column-image-area"
 							>
 								{column.imageStorageId ? (
 									<StorageImage
@@ -720,7 +720,7 @@ export function NowNextThenBoard({
 												}
 											}}
 											className="flex-1"
-											data-testid="column-prompt-input"
+											data-name="column-prompt-input"
 										/>
 										<Button
 											size="icon"
@@ -747,7 +747,7 @@ export function NowNextThenBoard({
 											}
 											className="flex-1"
 											size="sm"
-											data-testid="generate-image-button"
+											data-name="generate-image-button"
 										>
 											<Camera className="h-4 w-4 mr-2" />
 											Generate Image
@@ -762,7 +762,7 @@ export function NowNextThenBoard({
 												size="sm"
 												onClick={() => handleSetTimer(column.id, minutes)}
 												className="flex-1 text-xs"
-												data-testid={`timer-button-${minutes}`}
+												data-name={`timer-button-${minutes}`}
 											>
 												<Timer className="h-3 w-3 mr-1" />
 												{minutes}m
@@ -781,7 +781,7 @@ export function NowNextThenBoard({
 					<Button
 						variant="outline"
 						onClick={handleAddColumn}
-						data-testid="add-column-button"
+						data-name="add-column-button"
 					>
 						<Plus className="h-4 w-4 mr-2" />
 						Add Column

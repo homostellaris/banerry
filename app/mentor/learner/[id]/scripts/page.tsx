@@ -41,16 +41,9 @@ export default async function MentorLearnerPage({
 						({learnerWithScripts.targetScripts.length}/3)
 					</span>
 				</h2>
-				{learnerWithScripts.targetScripts.length > 0 ? (
-					<MentorTargetScriptsList
-						preloadedLearnerWithScripts={preloadedLearnerWithScripts}
-					/>
-				) : (
-					<p className="text-gray-600 italic">
-						No target scripts yet. Add up to 3 scripts that you want the learner
-						to work towards.
-					</p>
-				)}
+				<MentorTargetScriptsList
+					preloadedLearnerWithScripts={preloadedLearnerWithScripts}
+				/>
 			</div>
 
 			<div className="space-y-4">

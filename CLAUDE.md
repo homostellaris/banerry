@@ -10,10 +10,14 @@ Banerry is a communication assistance app for gestalt language processors. It's 
 
 ## Development Commands
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run lint` - Run ESLint linter
-- `npm start` - Start production server
+- `bun dev` - Start development server
+- `bun run build` - Build for production
+- `bun lint` - Run ESLint linter
+- `bun start` - Start production server
+- `bun integration` - Run Cypress tests
+- `bun test` - Run all checks (typecheck, lint, unit, integration)
+
+Always use `bun` / `bunx` as the package runner — never `npm` / `npx`.
 
 ## Architecture
 

@@ -1,6 +1,6 @@
-// cypress/support/e2e.ts
-// Import commands.js using ES2015 syntax:
-import './commands';
+import './commands'
 
-// Alternatively you can use CommonJS syntax:
-// require('./commands')
+before(() => {
+	cy.task('resetCypressUsers')
+	cy.task('clearVerificationCodes')
+})

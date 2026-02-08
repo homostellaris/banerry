@@ -31,6 +31,15 @@ export default function MentorTargetScriptsList({
 		// router.push(`/learner/${learnerWithScripts.passphrase}/target-script/${targetScriptId}`);
 	}
 
+	if (learnerWithScripts.targetScripts.length === 0) {
+		return (
+			<p className="text-gray-600 italic">
+				No target scripts yet. Add up to 3 scripts that you want the learner to
+				work towards.
+			</p>
+		)
+	}
+
 	return (
 		<div className="grid gap-4">
 			{learnerWithScripts.targetScripts.map(targetScript => (

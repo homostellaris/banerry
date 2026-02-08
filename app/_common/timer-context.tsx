@@ -229,7 +229,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 		setTimeLeft(0)
 		setTotalTime(0)
 		setMinutes(0)
-		setSeconds(10)
+		setSeconds(0)
 	}
 
 	const setPresetTimer = (mins: number, secs: number = 0) => {

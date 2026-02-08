@@ -160,6 +160,7 @@ export function SavedBoardsCarousel({
 								<Button
 									onClick={handleCreateNewBoard}
 									size="sm"
+									data-name="create-first-board-button"
 								>
 									<Plus className="h-4 w-4 mr-2" />
 									Create Your First Board
@@ -180,6 +181,7 @@ export function SavedBoardsCarousel({
 						onClick={handleCreateNewBoard}
 						size="sm"
 						variant="outline"
+						data-name="new-board-button"
 					>
 						<Plus className="h-4 w-4 mr-2" />
 						New Board
@@ -207,6 +209,7 @@ export function SavedBoardsCarousel({
 											board.isActive ? 'ring-2 ring-purple-500 shadow-lg' : ''
 										}`}
 										onClick={() => handleSelectBoard(board)}
+										data-name="board-card"
 									>
 										<CardContent className="p-4">
 											<div className="space-y-3">

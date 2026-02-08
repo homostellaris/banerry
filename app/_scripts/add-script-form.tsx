@@ -70,7 +70,10 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
 			onOpenChange={setIsOpen}
 		>
 			<DialogTrigger asChild>
-				<Button className="flex items-center gap-2">
+				<Button
+					className="flex items-center gap-2"
+					data-name="add-script-button"
+				>
 					<Plus className="h-4 w-4" />
 					Add Script
 				</Button>
@@ -91,6 +94,7 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
 							onChange={e => setDialogue(e.target.value)}
 							placeholder="Enter the script text..."
 							required
+							data-name="script-dialogue-input"
 						/>
 					</div>
 					<div className="space-y-2">
@@ -101,6 +105,7 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
 							onChange={e => setParentheticals(e.target.value)}
 							placeholder="Add context about when and how this script is used..."
 							rows={3}
+							data-name="script-parentheticals-input"
 						/>
 					</div>
 					<DialogFooter>
@@ -115,6 +120,7 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
 						<Button
 							type="submit"
 							disabled={!dialogue.trim() || isSubmitting}
+							data-name="create-script-submit"
 						>
 							{isSubmitting ? (
 								<>

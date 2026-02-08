@@ -15,6 +15,7 @@ import type * as learners from "../learners.js";
 import type * as resendOtp from "../resendOtp.js";
 import type * as scripts from "../scripts.js";
 import type * as targetScripts from "../targetScripts.js";
+import type * as testing from "../testing.js";
 
 import type {
   ApiFromModules,
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   resendOtp: typeof resendOtp;
   scripts: typeof scripts;
   targetScripts: typeof targetScripts;
+  testing: typeof testing;
 }>;
 
 /**
