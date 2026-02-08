@@ -9,6 +9,7 @@ export function SignOutButton() {
 
   const handleSignOut = () => {
     posthog.capture("sign_out_clicked");
+    localStorage.removeItem("posthog_consent");
     posthog.reset();
     void signOut();
   };

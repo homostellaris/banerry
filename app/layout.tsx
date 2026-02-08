@@ -1,6 +1,7 @@
 import { VoiceProvider } from "@/app/_tts/voice-context";
 import { TimerProvider } from "@/app/_common/timer-context";
 import { FloatingTimerCard } from "@/app/_common/floating-timer-card";
+import PostHogClientProvider from "@/app/_posthog/provider";
 import "@/app/globals.css";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -102,24 +103,26 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#7c3aed" />
         <body className={inter.className}>
-          <ConvexClientProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <VoiceProvider>
-                <TimerProvider>
-                  {children}
-                  <FloatingTimerCard />
-                  {/* <SettingsMenu /> */}
-                  <Analytics />
-                </TimerProvider>
-              </VoiceProvider>
-              <Toaster position="top-center" />
-            </ThemeProvider>
-          </ConvexClientProvider>
+          <PostHogClientProvider>
+            <ConvexClientProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="light"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <VoiceProvider>
+                  <TimerProvider>
+                    {children}
+                    <FloatingTimerCard />
+                    {/* <SettingsMenu /> */}
+                    <Analytics />
+                  </TimerProvider>
+                </VoiceProvider>
+                <Toaster position="top-center" />
+              </ThemeProvider>
+            </ConvexClientProvider>
+          </PostHogClientProvider>
         </body>
       </html>
     </ConvexAuthNextjsServerProvider>

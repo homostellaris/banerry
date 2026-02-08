@@ -1,15 +1,17 @@
 import posthog from 'posthog-js'
 
+const hasConsent =
+	typeof window !== 'undefined' &&
+	localStorage.getItem('posthog_consent') === 'true'
+
 posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
 	api_host: '/ingest',
-	capture_performance: {
-		web_vitals: false, // Doesn't work with cookieless mode
-	},
-	cookieless_mode: 'always',
 	ui_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
-	defaults: '2025-11-30',
 	capture_exceptions: true,
 	debug: process.env.NODE_ENV === 'development',
+	...(hasConsent
+		? { persistence: 'localStorage+cookie' }
+		: { cookieless_mode: 'always' as const }),
 })
 
 console.debug('instrumentation client loaded')

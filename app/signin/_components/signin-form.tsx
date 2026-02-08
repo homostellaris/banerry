@@ -62,6 +62,9 @@ export default function SignInForm() {
             required
             disabled={isLoading}
           />
+          <p className="text-xs text-muted-foreground">
+            By signing in, you agree to our use of cookies for analytics.
+          </p>
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
@@ -97,6 +100,11 @@ export default function SignInForm() {
                   redirectTo: "/mentor",
                 });
 
+                localStorage.setItem("posthog_consent", "true");
+                posthog.set_config({
+                  cookieless_mode: undefined,
+                  persistence: "localStorage+cookie",
+                });
                 posthog.identify(email, { email });
                 posthog.capture("sign_in_completed", {
                   email,
