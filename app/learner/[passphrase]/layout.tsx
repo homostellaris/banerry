@@ -2,6 +2,8 @@ import Header from "@/app/_common/navbar";
 import Navigation from "@/app/_common/navigation";
 import ElevenLabsWidget from "@/app/_tts/elevenlabs-widget";
 import { SignOutButton } from "@/app/mentor/_components/signout-button";
+import { Home } from "lucide-react";
+import Link from "next/link";
 import Script from "next/script";
 import { PropsWithChildren } from "react";
 
@@ -16,9 +18,10 @@ export default async function LearnerPassphraseLayout({
   return (
     <>
       <Header>
-        <div className="mx-auto">
-          <Navigation basePath={`/learner/${passphrase}`} />
-        </div>
+        <Link href="/learner">
+          <Home className="h-6 w-6 text-purple-700" />
+        </Link>
+        <Navigation basePath={`/learner/${passphrase}`} />
         <SignOutButton />
       </Header>
       <Script
