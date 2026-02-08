@@ -61,7 +61,6 @@ export default function ShareLearnerForm({ learnerId, learnerName }: ShareLearne
         toast.error(result.message);
       }
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to share learner:", error);
       toast.error("Failed to share learner. Please try again.");
     } finally {

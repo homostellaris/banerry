@@ -412,7 +412,6 @@ export function NowNextThenBoard({
       setBoardPrompt("");
       onBoardUpdate?.();
     } catch (error) {
-      posthog.captureException(error);
       console.error("Error generating all images:", error);
       toast.error("Failed to generate images");
     } finally {

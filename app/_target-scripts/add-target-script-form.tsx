@@ -62,7 +62,6 @@ export default function AddTargetScriptForm({
       setParentheticals("");
       setIsOpen(false);
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to create target script:", error);
     } finally {
       setIsSubmitting(false);

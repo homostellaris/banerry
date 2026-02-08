@@ -38,7 +38,6 @@ export default function DeleteLearnerButton({
       posthog.capture("learner_deleted");
       window.location.href = "/mentor";
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to delete learner:", error);
     } finally {
       setIsDeleting(false);

@@ -37,7 +37,6 @@ export default function DeleteScriptButton({
       posthog.capture("script_deleted");
       toast.success("Script deleted successfully");
     } catch (error) {
-      posthog.captureException(error);
       console.error("Error deleting script:", error);
       toast.error("Failed to delete script");
     } finally {

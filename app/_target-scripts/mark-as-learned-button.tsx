@@ -38,7 +38,6 @@ export default function MarkAsLearnedButton({
       posthog.capture("target_script_marked_learned");
       toast.success("Target script marked as learned!");
     } catch (error) {
-      posthog.captureException(error);
       console.error("Error marking target script as learned:", error);
       toast.error("Failed to mark target script as learned");
     } finally {

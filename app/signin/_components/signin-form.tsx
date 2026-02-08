@@ -43,7 +43,6 @@ export default function SignInForm() {
             });
             setShowOtpModal(true);
           } catch (error) {
-            posthog.captureException(error);
             toast.error("Error", {
               description:
                 "Failed to send verification code. Please try again.",
@@ -112,7 +111,6 @@ export default function SignInForm() {
                 toast.success("Successfully signed in!");
                 setShowOtpModal(false);
               } catch (error) {
-                posthog.captureException(error);
                 toast.error("Error", {
                   description: "Invalid verification code. Please try again.",
                 });

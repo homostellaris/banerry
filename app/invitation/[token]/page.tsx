@@ -38,7 +38,6 @@ export default function InvitationPage() {
         toast.error(result.message);
       }
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to accept invitation:", error);
       toast.error("Failed to accept invitation. Please try again.");
     } finally {

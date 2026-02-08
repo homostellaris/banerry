@@ -52,7 +52,6 @@ export default function AddScriptForm({ learnerId }: AddScriptFormProps) {
       setParentheticals("");
       setIsOpen(false);
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to create script:", error);
     } finally {
       setIsSubmitting(false);

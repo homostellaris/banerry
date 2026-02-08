@@ -49,7 +49,6 @@ export default function AddLearnerForm() {
       setIsOpen(false);
       router.push(`/mentor/learner/${learnerId}`);
     } catch (error) {
-      posthog.captureException(error);
       console.error("Failed to create learner:", error);
     } finally {
       setIsSubmitting(false);
