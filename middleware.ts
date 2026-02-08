@@ -1,26 +1,31 @@
+import { NextResponse } from 'next/server'
 import {
-  convexAuthNextjsMiddleware,
-  createRouteMatcher,
-  nextjsMiddlewareRedirect,
-} from "@convex-dev/auth/nextjs/server";
+	convexAuthNextjsMiddleware,
+	createRouteMatcher,
+	nextjsMiddlewareRedirect,
+} from '@convex-dev/auth/nextjs/server'
 
-const isSignInPage = createRouteMatcher(["/signin"]);
-const isProtectedRoute = createRouteMatcher(["/mentor", "/mentor/(.*)"]);
+const isSignInPage = createRouteMatcher(['/signin'])
+const isProtectedRoute = createRouteMatcher(['/mentor', '/mentor/(.*)'])
+const isProtectedApiRoute = createRouteMatcher(['/api/(.*)'])
 
 export default convexAuthNextjsMiddleware(
-  async (request, { convexAuth }) => {
-    if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
-      return nextjsMiddlewareRedirect(request, "/mentor");
-    }
-    if (isProtectedRoute(request) && !(await convexAuth.isAuthenticated())) {
-      return nextjsMiddlewareRedirect(request, "/signin");
-    }
-  },
-  { cookieConfig: { maxAge: 60 * 60 * 24 * 30 } }
-);
+	async (request, { convexAuth }) => {
+		if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
+			return nextjsMiddlewareRedirect(request, '/mentor')
+		}
+		if (isProtectedApiRoute(request) && !(await convexAuth.isAuthenticated())) {
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+		}
+		if (isProtectedRoute(request) && !(await convexAuth.isAuthenticated())) {
+			return nextjsMiddlewareRedirect(request, '/signin')
+		}
+	},
+	{ cookieConfig: { maxAge: 60 * 60 * 24 * 30 } },
+)
 
 export const config = {
-  // The following matcher runs middleware on all routes
-  // except static assets.
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+	// The following matcher runs middleware on all routes
+	// except static assets.
+	matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+}
