@@ -19,8 +19,6 @@ import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useRouter } from "next/navigation";
-
 interface DeleteLearnerButtonProps {
   learnerId: Id<"learners">;
   learnerName: string;
@@ -31,7 +29,6 @@ export default function DeleteLearnerButton({
   learnerName,
 }: DeleteLearnerButtonProps) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const router = useRouter();
   const deleteLearner = useMutation(api.learners.del);
 
   const handleDelete = async () => {
@@ -39,7 +36,7 @@ export default function DeleteLearnerButton({
     try {
       await deleteLearner({ learnerId });
       posthog.capture("learner_deleted");
-      router.push("/mentor");
+      window.location.href = "/mentor";
     } catch (error) {
       posthog.captureException(error);
       console.error("Failed to delete learner:", error);

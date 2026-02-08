@@ -18,6 +18,7 @@ import { Plus, Loader2 } from "lucide-react";
 import posthog from "posthog-js";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 
 export default function AddLearnerForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function AddLearnerForm() {
   const [bio, setBio] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const router = useRouter();
   const createLearner = useMutation(api.learners.create);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +35,7 @@ export default function AddLearnerForm() {
 
     setIsSubmitting(true);
     try {
-      await createLearner({
+      const learnerId = await createLearner({
         name: name.trim(),
         bio: bio.trim() || undefined,
       });
@@ -45,6 +47,7 @@ export default function AddLearnerForm() {
       setName("");
       setBio("");
       setIsOpen(false);
+      router.push(`/mentor/learner/${learnerId}`);
     } catch (error) {
       posthog.captureException(error);
       console.error("Failed to create learner:", error);
