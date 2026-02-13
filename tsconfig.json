@@ -38,6 +38,7 @@
   "exclude": [
     "node_modules",
     "app/sw.ts", // TODO: Fix the types
-    "cypress"
+    "cypress",
+    "scripts"
   ]
 }
