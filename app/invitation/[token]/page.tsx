@@ -111,35 +111,6 @@ export default function InvitationPage() {
 		)
 	}
 
-	if (invitation.status === 'expired') {
-		return (
-			<div className="min-h-screen flex items-center justify-center p-4">
-				<Card className="max-w-md w-full">
-					<CardHeader className="text-center">
-						<div className="mx-auto w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
-							<Clock className="h-6 w-6 text-yellow-600" />
-						</div>
-						<CardTitle>Invitation Expired</CardTitle>
-						<CardDescription>
-							This invitation has expired. Please contact{' '}
-							{invitation.invitingMentor.name ||
-								invitation.invitingMentor.email}{' '}
-							for a new invitation.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Button
-							onClick={() => router.push('/signin')}
-							className="w-full"
-						>
-							Go to Sign In
-						</Button>
-					</CardContent>
-				</Card>
-			</div>
-		)
-	}
-
 	if (invitation.status === 'accepted') {
 		return (
 			<div className="min-h-screen flex items-center justify-center p-4">

@@ -17,10 +17,7 @@ import { useMutation, useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import { Id } from '@/convex/_generated/dataModel'
 import { toast } from 'sonner'
-import {
-	generateImage,
-	ImageStyle,
-} from '@/app/_image-generation/image-generation'
+import { ImageStyle } from '@/app/_image-generation/image-generation'
 
 interface LearnerProfileEditorProps {
 	learnerId: Id<'learners'>
@@ -97,7 +94,15 @@ export default function LearnerProfileEditor({
 		try {
 			const fullPrompt = `Full-body portrait of ${avatarPrompt}. Standing in a neutral pose, front-facing, clear and well-lit, simple plain background. The character should be clearly visible from head to toe.`
 
-			const result = await generateImage(fullPrompt, '1024x1024', avatarStyle)
+			const result = await fetch('/api/generate-image', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					prompt: fullPrompt,
+					size: '1024x1024',
+					style: avatarStyle,
+				}),
+			}).then(r => r.json())
 
 			if (!result.success) {
 				toast.error(result.error || 'Failed to generate avatar')
@@ -165,6 +170,7 @@ export default function LearnerProfileEditor({
 						onChange={e => setBio(e.target.value)}
 						placeholder="Interests, preferences, helpful context..."
 						rows={3}
+						data-name="bio-input"
 					/>
 					<p className="text-sm text-muted-foreground">
 						General information about the learner (interests, preferences, etc.)
@@ -187,6 +193,7 @@ export default function LearnerProfileEditor({
 										src={displayAvatarUrl}
 										alt="Avatar"
 										className="w-full h-full object-cover"
+										data-name="avatar-preview"
 									/>
 								) : (
 									<div className="text-center text-gray-400">
@@ -204,7 +211,10 @@ export default function LearnerProfileEditor({
 									value={avatarStyle}
 									onValueChange={value => setAvatarStyle(value as ImageStyle)}
 								>
-									<SelectTrigger id="avatarStyle">
+									<SelectTrigger
+										id="avatarStyle"
+										data-name="avatar-style-select"
+									>
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
@@ -233,6 +243,7 @@ export default function LearnerProfileEditor({
 									onChange={e => setAvatarPrompt(e.target.value)}
 									placeholder="e.g., 7-year-old boy with short brown hair, brown eyes, wearing a green dinosaur t-shirt and khaki shorts"
 									rows={2}
+									data-name="avatar-prompt-input"
 								/>
 							</div>
 
@@ -241,6 +252,7 @@ export default function LearnerProfileEditor({
 								disabled={!avatarPrompt.trim() || isGeneratingAvatar}
 								variant="outline"
 								className="w-full"
+								data-name="generate-avatar-button"
 							>
 								{isGeneratingAvatar ? (
 									<>
@@ -271,6 +283,7 @@ export default function LearnerProfileEditor({
 					<Button
 						onClick={handleSave}
 						disabled={!hasChanges || isSaving}
+						data-name="save-profile-button"
 					>
 						{isSaving ? (
 							<>

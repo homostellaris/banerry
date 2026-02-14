@@ -28,6 +28,7 @@ export default function LearnerCard({ learner }: LearnerCardProps) {
 		<Link
 			href={`/mentor/learner/${learner._id}`}
 			className="block"
+			data-name="learner-card"
 		>
 			<Card className="overflow-hidden border-2 border-blue-200 shadow-md hover:shadow-lg transition-shadow h-full">
 				<CardHeader className="pb-3">

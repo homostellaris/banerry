@@ -67,7 +67,10 @@ export default function AddLearnerForm() {
 			onOpenChange={setIsOpen}
 		>
 			<DialogTrigger asChild>
-				<Button className="flex items-center gap-2">
+				<Button
+					className="flex items-center gap-2"
+					data-name="add-learner-button"
+				>
 					<Plus className="h-4 w-4" />
 					Add Learner
 				</Button>
@@ -88,6 +91,7 @@ export default function AddLearnerForm() {
 							onChange={e => setName(e.target.value)}
 							placeholder="Enter learner's name"
 							required
+							data-name="learner-name-input"
 						/>
 					</div>
 					<div className="space-y-2">
@@ -98,6 +102,7 @@ export default function AddLearnerForm() {
 							onChange={e => setBio(e.target.value)}
 							placeholder="Tell us about this learner..."
 							rows={3}
+							data-name="learner-bio-input"
 						/>
 					</div>
 					<DialogFooter>
@@ -112,6 +117,7 @@ export default function AddLearnerForm() {
 						<Button
 							type="submit"
 							disabled={!name.trim() || isSubmitting}
+							data-name="create-learner-submit"
 						>
 							{isSubmitting ? (
 								<>

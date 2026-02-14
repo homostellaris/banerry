@@ -1,42 +1,46 @@
-// cypress/support/commands.ts
 /// <reference types="cypress" />
 
-// Custom commands for Banerry testing
+Cypress.Commands.add('signIn', (email: string) => {
+	const otp = Cypress.env('OTP_OVERRIDE')
+	if (!otp) {
+		throw new Error('CYPRESS_OTP_OVERRIDE env var must be set')
+	}
 
-Cypress.Commands.add('signIn', (email: string, name?: string) => {
-  // Basic sign-in helper - can be extended based on auth flow
-  cy.visit('/signin');
-  
-  // Check if we're already signed in
-  cy.get('body').then(($body) => {
-    if ($body.find('[data-testid="sign-in-form"]').length === 0) {
-      // Already signed in, continue
-      return;
-    }
-    
-    // Fill sign-in form
-    cy.get('[data-testid="email-input"]').type(email);
-    if (name) {
-      cy.get('[data-testid="name-input"]').type(name);
-    }
-    cy.get('[data-testid="sign-in-button"]').click();
-    
-    // Wait for redirect or success
-    cy.url().should('not.include', '/signin');
-  });
-});
+	cy.session(
+		email,
+		() => {
+			cy.visit('/signin')
+			cy.getByName('email-input').type(email)
+			cy.getByName('send-code-button').click()
+
+			cy.getByName('otp-input').should('be.visible').type(otp)
+			cy.getByName('verify-button').click()
+
+			cy.url({ timeout: 10000 }).should('include', '/mentor')
+		},
+		{
+			validate() {
+				cy.visit('/mentor')
+				cy.url().should('include', '/mentor')
+			},
+		},
+	)
+})
 
 Cypress.Commands.add('createLearner', (name: string, bio?: string) => {
-  cy.visit('/mentor');
-  cy.get('[data-testid="create-learner-button"]').click();
-  cy.get('[data-testid="learner-name-input"]').type(name);
-  if (bio) {
-    cy.get('[data-testid="learner-bio-input"]').type(bio);
-  }
-  cy.get('[data-testid="create-learner-submit"]').click();
-  
-  // Wait for learner to be created and return to mentor page
-  cy.url().should('include', '/mentor');
-});
+	cy.visit('/mentor')
+	cy.getByName('add-learner-button').click()
+	cy.getByName('learner-name-input').type(name)
+	if (bio) {
+		cy.getByName('learner-bio-input').type(bio)
+	}
+	cy.getByName('create-learner-submit').click()
 
-export {};
+	cy.contains(name, { timeout: 10000 }).should('be.visible')
+})
+
+Cypress.Commands.add('getByName', (name: string) => {
+	return cy.get(`[data-name="${name}"]`)
+})
+
+export {}

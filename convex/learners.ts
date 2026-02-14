@@ -146,7 +146,7 @@ export const list = query({
 	),
 	handler: async ctx => {
 		const userId = await getAuthUserId(ctx)
-		if (userId === null) throw new Error('Unauthenticated')
+		if (userId === null) return []
 		const learnerMentorRelationships = await ctx.db
 			.query('learnerMentorRelationships')
 			.withIndex('by_mentor', q => q.eq('mentorId', userId))
@@ -269,8 +269,10 @@ export const get = query({
 		v.null(),
 	),
 	handler: async (ctx, args) => {
+		const learner = await ctx.db.get(args.learnerId)
+		if (learner === null) return null
 		await ensureLearnerRelationship(ctx, args.learnerId)
-		return await ctx.db.get(args.learnerId)
+		return learner
 	},
 })
 
@@ -309,9 +311,9 @@ export const getWithScripts = query({
 		v.null(),
 	),
 	handler: async (ctx, args) => {
-		await ensureLearnerRelationship(ctx, args.learnerId)
 		const learner = await ctx.db.get(args.learnerId)
 		if (!learner) return null
+		await ensureLearnerRelationship(ctx, args.learnerId)
 
 		const scripts = await ctx.db
 			.query('scripts')
@@ -594,6 +596,9 @@ export const getMentors = query({
 		}),
 	),
 	handler: async (ctx, args) => {
+		const learner = await ctx.db.get(args.learnerId)
+		if (learner === null) return []
+
 		await ensureLearnerRelationship(ctx, args.learnerId)
 
 		const relationships = await ctx.db

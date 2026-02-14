@@ -11,12 +11,14 @@ import {
 } from '@/components/ui/dialog'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import posthog from 'posthog-js'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 export default function SignInForm() {
 	const { signIn } = useAuthActions()
+	const router = useRouter()
 	const [isLoading, setIsLoading] = useState(false)
 	const [isOtpLoading, setIsOtpLoading] = useState(false)
 	const [showOtpModal, setShowOtpModal] = useState(false)
@@ -60,6 +62,7 @@ export default function SignInForm() {
 						type="email"
 						required
 						disabled={isLoading}
+						data-name="email-input"
 					/>
 					<p className="text-xs text-muted-foreground">
 						By signing in, you agree to our use of cookies for analytics.
@@ -69,6 +72,7 @@ export default function SignInForm() {
 					type="submit"
 					className="w-full"
 					disabled={isLoading}
+					data-name="send-code-button"
 				>
 					{isLoading ? (
 						<>
@@ -103,7 +107,6 @@ export default function SignInForm() {
 								await signIn('resend-otp', {
 									email,
 									code,
-									redirectTo: '/mentor',
 								})
 
 								localStorage.setItem('posthog_consent', 'true')
@@ -117,6 +120,7 @@ export default function SignInForm() {
 								})
 								toast.success('Successfully signed in!')
 								setShowOtpModal(false)
+								router.push('/mentor')
 							} catch (error) {
 								toast.error('Error', {
 									description: 'Invalid verification code. Please try again.',
@@ -135,6 +139,7 @@ export default function SignInForm() {
 								required
 								disabled={isOtpLoading}
 								autoFocus
+								data-name="otp-input"
 							/>
 						</div>
 						<div className="flex gap-2">
@@ -151,6 +156,7 @@ export default function SignInForm() {
 								type="submit"
 								className="w-full"
 								disabled={isOtpLoading}
+								data-name="verify-button"
 							>
 								{isOtpLoading ? (
 									<>

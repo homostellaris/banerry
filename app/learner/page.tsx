@@ -107,6 +107,7 @@ export default function LearnerPage() {
 										placeholder="your-access-code"
 										className="text-center text-lg"
 										disabled={isValidating}
+										data-name="passphrase-input"
 									/>
 									<p className="text-xs text-gray-500 text-center">
 										This should be three words separated by dashes
@@ -125,6 +126,7 @@ export default function LearnerPage() {
 									className="w-full"
 									size="lg"
 									disabled={!passphrase.trim() || isValidating}
+									data-name="access-scripts-button"
 								>
 									{isValidating ? (
 										<>

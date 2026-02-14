@@ -87,6 +87,7 @@ export default function AddTargetScriptForm({
 					title={
 						isAtLimit ? 'Maximum 3 target scripts allowed' : 'Add Target Script'
 					}
+					data-name="add-target-script-button"
 				>
 					<Target className="h-4 w-4" />
 					Add Target Script{' '}
@@ -109,6 +110,7 @@ export default function AddTargetScriptForm({
 							onChange={e => setDialogue(e.target.value)}
 							placeholder="Enter the target script text..."
 							required
+							data-name="target-script-dialogue-input"
 						/>
 					</div>
 					<div className="space-y-2">
@@ -138,6 +140,7 @@ export default function AddTargetScriptForm({
 						<Button
 							type="submit"
 							disabled={!dialogue.trim() || isSubmitting || isAtLimit}
+							data-name="create-target-script-submit"
 						>
 							{isSubmitting ? (
 								<>

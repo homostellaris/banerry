@@ -50,6 +50,7 @@ export default function DeleteLearnerButton({
 				<Button
 					variant="destructive"
 					size="sm"
+					data-name="delete-learner-button"
 				>
 					<Trash2 className="h-4 w-4 mr-2" />
 					Delete Learner
@@ -76,6 +77,7 @@ export default function DeleteLearnerButton({
 						onClick={handleDelete}
 						disabled={isDeleting}
 						className="bg-red-600 hover:bg-red-700"
+						data-name="confirm-delete-learner"
 					>
 						{isDeleting ? (
 							<>
