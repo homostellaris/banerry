@@ -1,10 +1,22 @@
 import { internalMutation } from './_generated/server'
 import { v } from 'convex/values'
 
+function assertNotProduction() {
+	if (
+		process.env.VERCEL_PROJECT_PRODUCTION_URL &&
+		process.env.CONVEX_SITE_URL?.includes(
+			process.env.VERCEL_PROJECT_PRODUCTION_URL,
+		)
+	) {
+		throw new Error('Test helpers must not run against production')
+	}
+}
+
 export const clearVerificationCodes = internalMutation({
 	args: {},
 	returns: v.null(),
 	handler: async ctx => {
+		assertNotProduction()
 		const codes = await ctx.db.query('authVerificationCodes').collect()
 		for (const code of codes) {
 			await ctx.db.delete(code._id)
@@ -45,6 +57,7 @@ export const resetCypressUsers = internalMutation({
 	args: {},
 	returns: v.null(),
 	handler: async ctx => {
+		assertNotProduction()
 		const allUsers = await ctx.db.query('users').collect()
 		const cypressUsers = allUsers.filter((user: any) =>
 			user.email?.startsWith('cypress-'),

@@ -111,29 +111,6 @@ export default function InvitationPage() {
 		)
 	}
 
-	;<div className="space-y-2">
-		<p className="text-sm text-gray-600">
-			To accept this invitation, you need to sign in or create an account with
-			the email address this invitation was sent to.
-		</p>
-
-		<Button
-			onClick={handleSignInAndAccept}
-			className="w-full"
-			disabled={isAccepting}
-			data-name="sign-in-to-accept-button"
-		>
-			{isAccepting ? (
-				<>
-					<Loader2 className="h-4 w-4 mr-2 animate-spin" />
-					Processing...
-				</>
-			) : (
-				'Sign In to Accept'
-			)}
-		</Button>
-	</div>
-
 	if (invitation.status === 'accepted') {
 		return (
 			<div className="min-h-screen flex items-center justify-center p-4">

@@ -39,8 +39,3 @@ export const ResendOTP = Email({
 		}
 	},
 })
-		if (error) {
-			throw new Error(JSON.stringify(error))
-		}
-	},
-})
