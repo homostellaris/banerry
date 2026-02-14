@@ -27,4 +27,16 @@ export default defineConfig({
 		video: false,
 		screenshotOnRunFailure: false,
 	},
+	component: {
+		devServer: {
+			framework: 'next',
+			bundler: 'webpack',
+		},
+		supportFile: 'cypress/support/component.ts',
+		specPattern: 'cypress/component/**/*.cy.{ts,tsx}',
+		viewportWidth: 1280,
+		viewportHeight: 720,
+		video: false,
+		screenshotOnRunFailure: false,
+	},
 })

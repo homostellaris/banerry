@@ -13,8 +13,9 @@
 		"lint": "next lint",
 		"format": "prettier --write app/ components/ convex/ !convex/_generated/ hooks/ lib/ types/ public/",
 		"unit": "bun test",
+		"component": "cypress run --component",
 		"integration": "bun --env-file .env.test --env-file .env.test.local cypress run",
-		"test": "bun typecheck && bun lint && bun unit && bun integration",
+		"test": "bun typecheck && bun lint && bun unit && bun component && bun integration",
 		"build": "next build",
 		"start": "next start",
 		"prepare": "husky"
