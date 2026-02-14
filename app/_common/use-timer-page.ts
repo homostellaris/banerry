@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-import { usePathname } from "next/navigation";
+import { usePathname } from 'next/navigation'
 
 export function useIsTimerPage(): boolean {
-  const pathname = usePathname();
-  
-  // Check if current path ends with /timer
-  return pathname.endsWith("/timer");
+	const pathname = usePathname()
+
+	// Check if current path ends with /timer
+	return pathname.endsWith('/timer')
 }

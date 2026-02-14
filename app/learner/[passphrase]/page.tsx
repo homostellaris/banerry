@@ -1,10 +1,10 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation'
 
 export default async function LearnerPage({
-  params,
+	params,
 }: {
-  params: Promise<{ passphrase: string }>;
+	params: Promise<{ passphrase: string }>
 }) {
-  const { passphrase } = await params;
-  redirect(`/learner/${passphrase}/scripts`);
+	const { passphrase } = await params
+	redirect(`/learner/${passphrase}/scripts`)
 }

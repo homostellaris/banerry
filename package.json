@@ -11,7 +11,7 @@
 		"dev:backend": "convex dev",
 		"typecheck": "tsc",
 		"lint": "next lint",
-		"format": "prettier app/ components/ hooks/ lib/ types/ public/",
+		"format": "prettier --write app/ components/ convex/ !convex/_generated/ hooks/ lib/ types/ public/",
 		"unit": "bun test",
 		"integration": "cypress run",
 		"test": "bun typecheck && bun lint && bun unit && bun integration",

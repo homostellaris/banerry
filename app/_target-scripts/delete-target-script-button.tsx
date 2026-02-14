@@ -1,71 +1,77 @@
-"use client";
+'use client'
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
-import { useState } from "react";
-import { toast } from "sonner";
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
+import { useMutation } from 'convex/react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface DeleteTargetScriptButtonProps {
-  dialogue: string;
-  state: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  targetScriptId: Id<"targetScripts">;
+	dialogue: string
+	state: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+	targetScriptId: Id<'targetScripts'>
 }
 
 export default function DeleteTargetScriptButton({
-  dialogue,
-  state,
-  targetScriptId,
+	dialogue,
+	state,
+	targetScriptId,
 }: DeleteTargetScriptButtonProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const deleteTargetScript = useMutation(api.targetScripts.remove);
+	const [isDeleting, setIsDeleting] = useState(false)
+	const deleteTargetScript = useMutation(api.targetScripts.remove)
 
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      await deleteTargetScript({ id: targetScriptId });
-      toast.success("Target script deleted successfully");
-    } catch (error) {
-      console.error("Error deleting target script:", error);
-      toast.error("Failed to delete target script");
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+	const handleDelete = async () => {
+		try {
+			setIsDeleting(true)
+			await deleteTargetScript({ id: targetScriptId })
+			toast.success('Target script deleted successfully')
+		} catch (error) {
+			console.error('Error deleting target script:', error)
+			toast.error('Failed to delete target script')
+		} finally {
+			setIsDeleting(false)
+		}
+	}
 
-  return (
-    <AlertDialog open={state[0]} onOpenChange={state[1]}>
-      <AlertDialogContent
-        // https://github.com/radix-ui/primitives/issues/1241#issuecomment-2932189460
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          document.body.style.pointerEvents = "";
-        }}
-      >
-        <AlertDialogHeader>
-          <AlertDialogTitle>Delete Target Script</AlertDialogTitle>
-          <AlertDialogDescription>
-            Are you sure you want to delete the target script &quot;{dialogue}
-            &quot;? This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? "Deleting..." : "Delete"}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
+	return (
+		<AlertDialog
+			open={state[0]}
+			onOpenChange={state[1]}
+		>
+			<AlertDialogContent
+				// https://github.com/radix-ui/primitives/issues/1241#issuecomment-2932189460
+				onCloseAutoFocus={event => {
+					event.preventDefault()
+					document.body.style.pointerEvents = ''
+				}}
+			>
+				<AlertDialogHeader>
+					<AlertDialogTitle>Delete Target Script</AlertDialogTitle>
+					<AlertDialogDescription>
+						Are you sure you want to delete the target script &quot;{dialogue}
+						&quot;? This action cannot be undone.
+					</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<AlertDialogAction
+						onClick={handleDelete}
+						disabled={isDeleting}
+					>
+						{isDeleting ? 'Deleting...' : 'Delete'}
+					</AlertDialogAction>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
+	)
 }
