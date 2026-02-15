@@ -19,7 +19,8 @@ export const metadata: Metadata = {
 		default: 'Banerry',
 		template: '%s | Banerry',
 	},
-	description: 'Communication assistance for gestalt language processors.',
+	description:
+		'Communication assistance for visual and gestalt language learners.',
 	keywords: [
 		'PWA',
 		'Gestalt Language Processing',
@@ -49,13 +50,15 @@ export const metadata: Metadata = {
 			? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
 			: 'http://localhost:6604',
 		title: 'Banerry',
-		description: 'Communication assistance for gestalt language processors.',
+		description:
+			'Communication assistance for visual and gestalt language learners.',
 		siteName: 'Banerry',
 	},
 	twitter: {
 		card: 'summary_large_image',
 		title: 'Banerry',
-		description: 'Communication assistance for gestalt language processors.',
+		description:
+			'Communication assistance for visual and gestalt language learners.',
 		images: ['/og-image.png'],
 	},
 	appleWebApp: {

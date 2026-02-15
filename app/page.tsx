@@ -26,7 +26,8 @@ export default function HomePage() {
 								Banerry
 							</h1>
 							<p className="text-2xl md:text-3xl font-bold text-purple-800">
-								Communication assistance for people with Autism
+								Communication assistance for visual and gestalt language
+								learners
 							</p>
 						</div>
 
