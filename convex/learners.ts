@@ -42,7 +42,7 @@ const words = [
 	'flowing',
 ]
 
-const generatePassphrase = () => {
+export const generatePassphrase = () => {
 	const shuffled = [...words].sort(() => Math.random() - 0.5)
 	return shuffled.slice(0, 3).join('-')
 }

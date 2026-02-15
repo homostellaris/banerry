@@ -18,6 +18,22 @@ export default defineConfig({
 					})
 					return null
 				},
+				createTestLearner({
+					email,
+					name,
+					bio,
+				}: {
+					email: string
+					name: string
+					bio?: string
+				}) {
+					const args = JSON.stringify({ email, name, bio })
+					const result = execSync(
+						`bun convex run internal.testing.createTestLearner '${args}'`,
+						{ encoding: 'utf-8' },
+					)
+					return result.trim().replace(/^"|"$/g, '')
+				},
 			})
 		},
 		supportFile: 'cypress/support/e2e.ts',

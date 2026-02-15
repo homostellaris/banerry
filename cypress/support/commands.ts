@@ -9,14 +9,15 @@ Cypress.Commands.add('signIn', (email: string) => {
 	cy.session(
 		email,
 		() => {
-			cy.visit('/signin')
-			cy.getByName('email-input').type(email)
-			cy.getByName('send-code-button').click()
+			cy.request('POST', '/api/auth', {
+				action: 'auth:signIn',
+				args: { provider: 'resend-otp', params: { email } },
+			})
 
-			cy.getByName('otp-input').should('be.visible').type(otp)
-			cy.getByName('verify-button').click()
-
-			cy.url({ timeout: 10000 }).should('include', '/mentor')
+			cy.request('POST', '/api/auth', {
+				action: 'auth:signIn',
+				args: { provider: 'resend-otp', params: { email, code: otp } },
+			})
 		},
 		{
 			validate() {
@@ -25,18 +26,19 @@ Cypress.Commands.add('signIn', (email: string) => {
 			},
 		},
 	)
+
+	Cypress.env('CURRENT_TEST_EMAIL', email)
 })
 
 Cypress.Commands.add('createLearner', (name: string, bio?: string) => {
-	cy.visit('/mentor')
-	cy.getByName('add-learner-button').click()
-	cy.getByName('learner-name-input').type(name)
-	if (bio) {
-		cy.getByName('learner-bio-input').type(bio)
+	const email = Cypress.env('CURRENT_TEST_EMAIL')
+	if (!email) {
+		throw new Error(
+			'CURRENT_TEST_EMAIL not set — call cy.signIn() before cy.createLearner()',
+		)
 	}
-	cy.getByName('create-learner-submit').click()
 
-	cy.contains(name, { timeout: 10000 }).should('be.visible')
+	cy.task('createTestLearner', { email, name, bio })
 })
 
 Cypress.Commands.add('getByName', (name: string) => {

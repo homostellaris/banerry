@@ -1,5 +1,6 @@
 import { internalMutation } from './_generated/server'
 import { v } from 'convex/values'
+import { generatePassphrase } from './learners'
 
 function assertNotProduction() {
 	if (
@@ -52,6 +53,51 @@ async function deleteSessionAndDependents(
 	}
 	await ctx.db.delete(session._id)
 }
+
+export const createTestLearner = internalMutation({
+	args: {
+		email: v.string(),
+		name: v.string(),
+		bio: v.optional(v.string()),
+	},
+	returns: v.id('learners'),
+	handler: async (ctx, args) => {
+		assertNotProduction()
+
+		const user = await ctx.db
+			.query('users')
+			.withIndex('email', q => q.eq('email', args.email))
+			.unique()
+		if (!user) {
+			throw new Error(`No user found with email: ${args.email}`)
+		}
+
+		let passphrase = generatePassphrase()
+		let attempts = 0
+		while (attempts < 10) {
+			const existing = await ctx.db
+				.query('learners')
+				.withIndex('by_passphrase', q => q.eq('passphrase', passphrase))
+				.unique()
+			if (!existing) break
+			passphrase = generatePassphrase()
+			attempts++
+		}
+
+		const learnerId = await ctx.db.insert('learners', {
+			name: args.name,
+			bio: args.bio,
+			passphrase,
+		})
+
+		await ctx.db.insert('learnerMentorRelationships', {
+			learnerId,
+			mentorId: user._id,
+		})
+
+		return learnerId
+	},
+})
 
 export const resetCypressUsers = internalMutation({
 	args: {},
