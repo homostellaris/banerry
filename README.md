@@ -1,6 +1,6 @@
 # Banerry
 
-Communication assistance for gestalt language processors.
+Communication assistance for visual and gestalt language learners.
 
 ## Getting Started
 

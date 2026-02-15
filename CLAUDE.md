@@ -4,7 +4,7 @@
 
 ## Project Overview
 
-Banerry is a communication assistance app for gestalt language processors. It's built as a Progressive Web App (PWA) using Next.js 15 with React 19, Convex for backend/database, and Convex Auth for authentication.
+Banerry is a communication assistance app for visual and gestalt language learners. It's built as a Progressive Web App (PWA) using Next.js 15 with React 19, Convex for backend/database, and Convex Auth for authentication.
 
 ## Development Commands
 

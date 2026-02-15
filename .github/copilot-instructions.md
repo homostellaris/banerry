@@ -2,7 +2,7 @@
 
 **ALWAYS FOLLOW THESE INSTRUCTIONS FIRST.** Only search for additional context or use other tools if the information here is incomplete or incorrect.
 
-Banerry is a communication assistance Progressive Web App (PWA) for gestalt language processors. Built with Next.js 15, React 19, Convex backend, Tailwind CSS, and comprehensive accessibility features.
+Banerry is a communication assistance Progressive Web App (PWA) for visual and gestalt language learners. Built with Next.js 15, React 19, Convex backend, Tailwind CSS, and comprehensive accessibility features.
 
 ## Critical Setup Requirements
 

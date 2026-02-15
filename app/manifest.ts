@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
 	return {
 		name: 'Banerry',
 		short_name: 'Banerry',
-		description: 'Communication assistance for gestalt language processors.',
+		description:
+			'Communication assistance for visual and gestalt language learners.',
 		start_url: '/',
 		display: 'standalone',
 		background_color: '#ffffff',

@@ -1068,9 +1068,9 @@ function createInvitationEmailTemplate({
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     <strong>${inviterName}</strong> has invited you to help mentor <strong>"${learnerName}"</strong> on Banerry, 
-    a communication assistance app for gestalt language processors.
+    a communication assistance app for visual and gestalt language learners.
   </p>
-  
+
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     To accept this invitation and start collaborating:
   </p>
@@ -1127,9 +1127,9 @@ function createAccessNotificationEmailTemplate({
   
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     You now have access to help mentor <strong>"${learnerName}"</strong> on Banerry, 
-    a communication assistance app for gestalt language processors.
+    a communication assistance app for visual and gestalt language learners.
   </p>
-  
+
   <p style="font-size: 16px; line-height: 1.6; color: #374151;">
     You can start collaborating right away:
   </p>
