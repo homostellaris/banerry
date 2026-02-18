@@ -1,12 +1,14 @@
 /// <reference lib="webworker" />
 
-const CACHE_NAME = 'gestalt-v1'
+const CACHE_NAME = 'gestalt-v2'
 const STATIC_ASSETS = [
 	'/',
 	'/learner/1',
 	'/manifest.json',
 	'/icon-192x192.png',
 	'/icon-512x512.png',
+	'/icon-maskable-192x192.png',
+	'/icon-maskable-512x512.png',
 ]
 
 declare const self: ServiceWorkerGlobalScope
