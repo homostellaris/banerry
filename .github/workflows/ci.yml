@@ -10,6 +10,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
+      CYPRESS_video: 'true'
       CYPRESS_OTP_OVERRIDE: 12345678
       GOOGLE_AI_API_KEY: test-key
       STUB_APIS: 'true'
@@ -32,7 +33,7 @@ jobs:
         with:
           install: false
           component: true
-          command: bunx cypress run --component --config video=true
+          command: bunx cypress run --component
       - name: Upload component test videos
         if: failure()
         uses: actions/upload-artifact@v4
@@ -45,7 +46,7 @@ jobs:
           install: false
           start: bun dev:frontend
           wait-on: http://localhost:6604
-          command: bunx cypress run --config video=true
+          command: bunx cypress run
       - name: Upload integration test videos
         if: failure()
         uses: actions/upload-artifact@v4
