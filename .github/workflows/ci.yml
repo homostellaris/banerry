@@ -32,11 +32,23 @@ jobs:
         with:
           install: false
           component: true
-          command: bunx cypress run --component
+          command: bunx cypress run --component --config video=true
+      - name: Upload component test videos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-component-videos
+          path: cypress/videos/
       - name: Integration tests
         uses: cypress-io/github-action@v6
         with:
           install: false
           start: bun dev:frontend
           wait-on: http://localhost:6604
-          command: bunx cypress run
+          command: bunx cypress run --config video=true
+      - name: Upload integration test videos
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-integration-videos
+          path: cypress/videos/
