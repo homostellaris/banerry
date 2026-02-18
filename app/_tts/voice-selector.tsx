@@ -92,11 +92,11 @@ export default function VoiceSelector({
 				<button
 					onClick={testVoice}
 					disabled={isTestingVoice}
-					className="flex items-center gap-2 px-3 py-2 text-sm bg-purple-100 hover:bg-purple-200 disabled:opacity-50 transition-colors rounded-md"
+					className="flex items-center gap-2 px-3 py-2 text-sm bg-brand/10 hover:bg-brand/20 disabled:opacity-50 transition-colors rounded-md"
 					aria-label="Test selected voice"
 				>
 					<Volume2
-						className={`h-4 w-4 text-purple-700 ${isTestingVoice ? 'animate-pulse' : ''}`}
+						className={`h-4 w-4 text-brand ${isTestingVoice ? 'animate-pulse' : ''}`}
 					/>
 					{isTestingVoice ? 'Testing...' : 'Test Voice'}
 				</button>

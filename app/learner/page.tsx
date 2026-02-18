@@ -10,6 +10,7 @@ import { ArrowRight, Loader2, AlertCircle, Home } from 'lucide-react'
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 import Header from '../_common/header'
+import Logo from '../_common/logo'
 import Link from 'next/link'
 import RecentLearners from '../_learners/recent'
 
@@ -65,15 +66,18 @@ export default function LearnerPage() {
 			<Header>
 				<nav className="flex items-center gap-4">
 					<Link href="/">
-						<Home className="h-6 w-6 text-purple-700" />
+						<Home className="h-6 w-6 text-brand" />
 					</Link>
 					<RecentLearners />
 				</nav>
 			</Header>
-			<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
+			<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50 p-4">
 				<div className="w-full max-w-md">
 					<div className="text-center mb-8">
-						<h1 className="text-4xl font-bold text-purple-700 mb-2">
+						<div className="flex justify-center mb-4">
+							<Logo className="h-16 w-16" />
+						</div>
+						<h1 className="text-4xl font-bold text-brand mb-2">
 							Welcome to Banerry
 						</h1>
 						<p className="text-gray-600">

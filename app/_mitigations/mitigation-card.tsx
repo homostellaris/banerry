@@ -57,7 +57,7 @@ export default function MitigationCard({
 						return (
 							<span
 								key={index}
-								className="text-purple-700 font-medium"
+								className="text-brand font-medium"
 							>
 								{part}
 							</span>

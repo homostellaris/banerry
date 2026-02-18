@@ -9,10 +9,10 @@ import { Toaster } from '@/components/ui/sonner'
 import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server'
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Lexend } from 'next/font/google'
 import type React from 'react'
 
-const inter = Inter({ subsets: ['latin'] })
+const lexend = Lexend({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
 	title: {
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
 		'mobile-web-app-capable': 'yes',
 		'apple-mobile-web-app-capable': 'yes',
 		'apple-mobile-web-app-status-bar-style': 'black-translucent',
-		'msapplication-TileColor': '#7c3aed',
+		'msapplication-TileColor': '#11932F',
 		'msapplication-config': '/browserconfig.xml',
 	},
 	generator: 'v0.dev',
@@ -86,7 +86,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
 	themeColor: [
 		{ media: '(prefers-color-scheme: light)', color: '#ffffff' },
-		{ media: '(prefers-color-scheme: dark)', color: '#7c3aed' },
+		{ media: '(prefers-color-scheme: dark)', color: '#11932F' },
 	],
 	width: 'device-width',
 	initialScale: 1,
@@ -116,9 +116,9 @@ export default function RootLayout({
 				/>
 				<meta
 					name="theme-color"
-					content="#7c3aed"
+					content="#11932F"
 				/>
-				<body className={inter.className}>
+				<body className={lexend.className}>
 					<PostHogClientProvider>
 						<ConvexClientProvider>
 							<ThemeProvider

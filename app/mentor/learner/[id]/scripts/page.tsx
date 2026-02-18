@@ -35,7 +35,7 @@ export default async function MentorLearnerPage({
 			</div>
 
 			<div className="space-y-4">
-				<h2 className="text-2xl font-bold text-orange-700 flex items-center gap-2">
+				<h2 className="text-2xl font-bold text-brand-highlight flex items-center gap-2">
 					🎯 Target Scripts
 					<span className="text-sm font-normal text-gray-600">
 						({learnerWithScripts.targetScripts.length}/3)
@@ -47,7 +47,7 @@ export default async function MentorLearnerPage({
 			</div>
 
 			<div className="space-y-4">
-				<h2 className="text-2xl font-bold text-purple-700">📝 All Scripts</h2>
+				<h2 className="text-2xl font-bold text-brand">📝 All Scripts</h2>
 				<MentorScriptsList
 					preloadedLearnerWithScripts={preloadedLearnerWithScripts}
 				/>

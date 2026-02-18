@@ -22,7 +22,7 @@ export default async function ScriptLayout({
 		<div className="container mx-auto p-4 max-w-4xl">
 			<Link
 				href={`/learner/${passphrase}`}
-				className="inline-flex items-center text-xl text-purple-600 mb-6"
+				className="inline-flex items-center text-xl text-brand mb-6"
 			>
 				<ArrowLeft className="mr-2 h-5 w-5" /> Back to Scripts
 			</Link>

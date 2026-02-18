@@ -17,7 +17,7 @@ export default async function Layout({
 		<>
 			<Header>
 				<Link href="/mentor">
-					<Home className="h-6 w-6 text-purple-700" />
+					<Home className="h-6 w-6 text-brand" />
 				</Link>
 				<Navigation basePath={`/mentor/learner/${id}`} />
 				<SignOutButton />

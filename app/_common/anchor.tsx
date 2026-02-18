@@ -6,7 +6,7 @@ export default function Anchor({
 }: PropsWithChildren & JSX.IntrinsicElements['a']) {
 	return (
 		<span
-			className="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
+			className="underline text-blue-600 hover:text-blue-800 visited:text-brand"
 			{...props}
 		>
 			{children}

@@ -185,7 +185,7 @@ export default function LearnerProfileEditor({
 							<div className="w-32 h-32 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
 								{isGeneratingAvatar ? (
 									<div className="text-center">
-										<Loader2 className="h-8 w-8 animate-spin text-purple-500 mx-auto" />
+										<Loader2 className="h-8 w-8 animate-spin text-brand mx-auto" />
 										<p className="text-xs text-gray-500 mt-2">Generating...</p>
 									</div>
 								) : displayAvatarUrl ? (

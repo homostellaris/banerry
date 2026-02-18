@@ -31,7 +31,7 @@ export default async function MentorLearnerPage({
 	return (
 		<div className="container mx-auto p-4 max-w-4xl space-y-6">
 			<header>
-				<h1 className="text-4xl font-bold text-purple-700">
+				<h1 className="text-4xl font-bold text-brand">
 					{learnerWithScripts.name}
 				</h1>
 			</header>

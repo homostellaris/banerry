@@ -30,7 +30,7 @@ export default function LearnerCard({ learner }: LearnerCardProps) {
 			className="block"
 			data-name="learner-card"
 		>
-			<Card className="overflow-hidden border-2 border-blue-200 shadow-md hover:shadow-lg transition-shadow h-full">
+			<Card className="overflow-hidden border-2 border-brand/20 shadow-md hover:shadow-lg transition-shadow h-full">
 				<CardHeader className="pb-3">
 					<div className="flex items-center gap-3">
 						{avatarUrl ? (
@@ -40,8 +40,8 @@ export default function LearnerCard({ learner }: LearnerCardProps) {
 								className="h-9 w-9 rounded-full object-cover"
 							/>
 						) : (
-							<div className="rounded-full bg-blue-100 p-2">
-								<User className="h-5 w-5 text-blue-700" />
+							<div className="rounded-full bg-brand/10 p-2">
+								<User className="h-5 w-5 text-brand" />
 							</div>
 						)}
 						<CardTitle className="text-xl font-bold text-gray-800">

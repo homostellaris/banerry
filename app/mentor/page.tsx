@@ -21,7 +21,7 @@ export default async function MentorPage() {
 		<>
 			<Header>
 				<Link href="/mentor">
-					<Home className="h-6 w-6 text-purple-700" />
+					<Home className="h-6 w-6 text-brand" />
 				</Link>
 				<SignOutButton />
 			</Header>

@@ -259,7 +259,7 @@ export function FloatingTimerCard() {
 		>
 			<CardContent className="p-3">
 				<div className="flex items-center justify-between gap-6">
-					<Clock className="h-4 w-4 text-purple-700" />
+					<Clock className="h-4 w-4 text-brand" />
 					<div className={cn('text-lg font-mono font-bold', getTimerColor())}>
 						{formatTime(timeLeft)}
 					</div>

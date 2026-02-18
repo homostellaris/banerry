@@ -253,7 +253,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 		if (state === 'completed') return 'text-green-600'
 		if (state === 'running') return 'text-blue-600'
 		if (state === 'paused') return 'text-yellow-600'
-		return 'text-purple-700'
+		return 'text-brand'
 	}
 
 	const getAudioStatus = () => {

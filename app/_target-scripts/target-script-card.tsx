@@ -11,7 +11,7 @@ export default function TargetScriptCard({
 	showDropdown?: boolean
 }) {
 	return (
-		<Card className="h-full overflow-hidden border-2 border-orange-200 bg-orange-50 shadow-md hover:shadow-lg transition-shadow">
+		<Card className="h-full overflow-hidden border-2 border-brand-highlight/40 bg-brand-highlight/10 shadow-md hover:shadow-lg transition-shadow">
 			<CardContent className="h-full p-6">
 				<div className="h-full flex items-center justify-between">
 					<div className="flex items-center gap-2">

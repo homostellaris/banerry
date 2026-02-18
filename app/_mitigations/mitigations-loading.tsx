@@ -2,9 +2,9 @@ import { Loader2 } from 'lucide-react'
 
 export default function MitigationsLoading() {
 	return (
-		<div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-purple-200 rounded-lg bg-purple-50 min-h-[300px]">
-			<Loader2 className="h-16 w-16 text-purple-600 animate-spin mb-6" />
-			<p className="text-2xl font-medium text-purple-700 mb-2">
+		<div className="flex flex-col items-center justify-center py-16 border-2 border-dashed border-brand/20 rounded-lg bg-brand/5 min-h-[300px]">
+			<Loader2 className="h-16 w-16 text-brand animate-spin mb-6" />
+			<p className="text-2xl font-medium text-brand mb-2">
 				Generating variations...
 			</p>
 			<p className="text-lg text-gray-600 mb-4">
@@ -18,9 +18,9 @@ export default function MitigationsLoading() {
 			</div>
 
 			{/* Progress indicator */}
-			<div className="mt-8 w-64 bg-purple-200 rounded-full h-2">
+			<div className="mt-8 w-64 bg-brand/20 rounded-full h-2">
 				<div
-					className="bg-purple-600 h-2 rounded-full animate-pulse"
+					className="bg-brand h-2 rounded-full animate-pulse"
 					style={{ width: '60%' }}
 				></div>
 			</div>

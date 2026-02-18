@@ -19,7 +19,7 @@ export default async function LearnerPassphraseLayout({
 		<>
 			<Header>
 				<Link href="/learner">
-					<Home className="h-6 w-6 text-purple-700" />
+					<Home className="h-6 w-6 text-brand" />
 				</Link>
 				<Navigation basePath={`/learner/${passphrase}`} />
 				<SignOutButton />

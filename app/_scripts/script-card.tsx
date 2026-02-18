@@ -12,7 +12,7 @@ export default function ScriptCard({
 }) {
 	return (
 		<Card
-			className="overflow-hidden border-2 border-purple-200 shadow-md hover:shadow-lg transition-shadow"
+			className="overflow-hidden border-2 border-brand/20 shadow-md hover:shadow-lg transition-shadow"
 			data-name="script-card"
 		>
 			<CardContent className="p-6">

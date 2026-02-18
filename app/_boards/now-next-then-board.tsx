@@ -53,7 +53,7 @@ function StorageImage({
 		return (
 			<div className={className}>
 				<div className="flex items-center justify-center h-full">
-					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div>
+					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand"></div>
 				</div>
 			</div>
 		)
@@ -488,7 +488,7 @@ export function NowNextThenBoard({
 	return (
 		<div className="space-y-6">
 			<div className="text-center">
-				<h2 className="text-3xl font-bold text-purple-700 mb-2">
+				<h2 className="text-3xl font-bold text-brand mb-2">
 					{board.name}
 				</h2>
 			</div>
@@ -548,7 +548,7 @@ export function NowNextThenBoard({
 					<Button
 						onClick={handleGenerateAllImages}
 						disabled={!boardPrompt.trim() || isGeneratingAll}
-						className="bg-purple-600 hover:bg-purple-700"
+						className="bg-brand hover:bg-brand/90"
 						data-name="batch-generate-button"
 					>
 						{isGeneratingAll ? (
@@ -574,7 +574,7 @@ export function NowNextThenBoard({
 							!readOnly && 'hover:shadow-lg'
 						} ${
 							activeColumn === column.id && !readOnly
-								? 'ring-2 ring-purple-500 shadow-lg'
+								? 'ring-2 ring-brand shadow-lg'
 								: ''
 						}`}
 					>
@@ -629,7 +629,7 @@ export function NowNextThenBoard({
 										)}
 										<CardTitle
 											className={`text-center text-xl font-semibold flex-1 ${
-												!readOnly ? 'cursor-pointer hover:text-purple-600' : ''
+												!readOnly ? 'cursor-pointer hover:text-brand' : ''
 											}`}
 											onClick={e => {
 												if (!readOnly) {
@@ -673,7 +673,7 @@ export function NowNextThenBoard({
 						<CardContent className="space-y-4">
 							<div
 								className={`relative aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 transition-colors ${
-									!readOnly ? 'hover:border-purple-400 cursor-pointer' : ''
+									!readOnly ? 'hover:border-brand/40 cursor-pointer' : ''
 								}`}
 								onClick={() => !readOnly && setActiveColumn(column.id)}
 								data-name="column-image-area"

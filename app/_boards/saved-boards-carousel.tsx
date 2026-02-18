@@ -21,7 +21,7 @@ function StorageImagePreview({ storageId }: { storageId: Id<'_storage'> }) {
 	if (!imageUrl) {
 		return (
 			<div className="w-full h-full bg-gray-100 rounded border flex items-center justify-center">
-				<div className="animate-spin rounded-full h-3 w-3 border-b border-purple-500"></div>
+				<div className="animate-spin rounded-full h-3 w-3 border-b border-brand"></div>
 			</div>
 		)
 	}
@@ -206,7 +206,7 @@ export function SavedBoardsCarousel({
 								<div className={board.isActive ? 'p-0.5' : ''}>
 									<Card
 										className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-											board.isActive ? 'ring-2 ring-purple-500 shadow-lg' : ''
+											board.isActive ? 'ring-2 ring-brand shadow-lg' : ''
 										}`}
 										onClick={() => handleSelectBoard(board)}
 										data-name="board-card"

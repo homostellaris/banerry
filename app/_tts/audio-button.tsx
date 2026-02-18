@@ -27,15 +27,15 @@ export default function AudioButton({ text }: AudioButtonProps) {
 			<Button
 				variant="ghost"
 				size="icon"
-				className="rounded-full h-14 w-14 flex-shrink-0 bg-purple-100 hover:bg-purple-200"
+				className="rounded-full h-14 w-14 flex-shrink-0 bg-brand/10 hover:bg-brand/20"
 				onClick={playAudio}
 				disabled={isLoading}
 				aria-label="Play audio"
 			>
 				{isLoading ? (
-					<Loader2 className="h-8 w-8 text-purple-700 animate-spin" />
+					<Loader2 className="h-8 w-8 text-brand animate-spin" />
 				) : (
-					<Volume2 className="h-8 w-8 text-purple-700" />
+					<Volume2 className="h-8 w-8 text-brand" />
 				)}
 			</Button>
 			{error && (

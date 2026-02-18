@@ -62,10 +62,10 @@ export default function Navigation({
 							key={item.name}
 							href={item.href}
 							className={cn(
-								'flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-purple-700',
+								'flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-brand',
 								isActive
-									? 'border-purple-700 text-purple-700'
-									: 'border-transparent text-gray-600 hover:border-purple-300',
+									? 'border-brand text-brand'
+									: 'border-transparent text-gray-600 hover:border-brand/30',
 							)}
 						>
 							<item.icon className="h-4 w-4" />

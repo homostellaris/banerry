@@ -57,8 +57,8 @@ export default function MentorsList({ learnerId }: MentorsListProps) {
 							key={mentor._id}
 							className="flex items-center gap-2 p-2 rounded-md bg-gray-50"
 						>
-							<div className="rounded-full bg-blue-100 p-1">
-								<User className="h-3 w-3 text-blue-700" />
+							<div className="rounded-full bg-brand/10 p-1">
+								<User className="h-3 w-3 text-brand" />
 							</div>
 							<div className="flex-1">
 								<div className="text-sm text-gray-600">{mentor.email}</div>

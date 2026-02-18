@@ -81,11 +81,11 @@ export default function PWAInstall() {
 	if (isDismissed) return null
 
 	return (
-		<div className="fixed bottom-4 left-4 right-4 md:right-auto md:left-4 md:w-96 bg-white border-2 border-purple-200 rounded-lg shadow-lg p-4 z-50 animate-in slide-in-from-bottom-2">
+		<div className="fixed bottom-4 left-4 right-4 md:right-auto md:left-4 md:w-96 bg-white border-2 border-brand/20 rounded-lg shadow-lg p-4 z-50 animate-in slide-in-from-bottom-2">
 			<div className="flex items-start justify-between mb-3">
 				<div className="flex items-center gap-3">
-					<div className="p-2 bg-purple-100 rounded-full">
-						<Download className="h-5 w-5 text-purple-700" />
+					<div className="p-2 bg-brand/10 rounded-full">
+						<Download className="h-5 w-5 text-brand" />
 					</div>
 					<div>
 						<h3 className="font-semibold text-gray-900">Install Banerry</h3>
@@ -106,15 +106,15 @@ export default function PWAInstall() {
 
 			<div className="space-y-2 text-sm text-gray-600 mb-4">
 				<div className="flex items-center gap-2">
-					<div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+					<div className="w-1 h-1 bg-brand rounded-full"></div>
 					<span>Works offline</span>
 				</div>
 				<div className="flex items-center gap-2">
-					<div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+					<div className="w-1 h-1 bg-brand rounded-full"></div>
 					<span>Faster loading</span>
 				</div>
 				<div className="flex items-center gap-2">
-					<div className="w-1 h-1 bg-purple-500 rounded-full"></div>
+					<div className="w-1 h-1 bg-brand rounded-full"></div>
 					<span>Home screen access</span>
 				</div>
 			</div>
@@ -122,7 +122,7 @@ export default function PWAInstall() {
 			<div className="flex gap-2">
 				<Button
 					onClick={handleInstall}
-					className="flex-1 bg-purple-600 hover:bg-purple-700"
+					className="flex-1 bg-brand hover:bg-brand/90"
 				>
 					Install App
 				</Button>

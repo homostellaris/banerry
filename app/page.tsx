@@ -3,13 +3,14 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import Header from './_common/header'
+import Logo from './_common/logo'
 import PWAInstall from './_common/pwa-install'
 import RecentLearners from './_learners/recent'
 
 export default function HomePage() {
 	return (
 		<>
-			<main className="bg-gradient-to-b from-amber-50 via-pink-50 to-sky-50 min-h-screen">
+			<main className="bg-gradient-to-b from-green-50 via-amber-50 to-emerald-50 min-h-screen">
 				<Header>
 					<nav>
 						<RecentLearners />
@@ -20,12 +21,12 @@ export default function HomePage() {
 					<div className="max-w-5xl mx-auto space-y-12">
 						<div className="space-y-6">
 							<div className="inline-block animate-bounce">
-								<span className="text-6xl">🍇</span>
+								<Logo className="h-20 w-20" />
 							</div>
-							<h1 className="text-6xl md:text-8xl font-extrabold bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent drop-shadow-sm">
+							<h1 className="text-6xl md:text-8xl font-extrabold bg-gradient-to-r from-brand via-brand-highlight to-brand-warm bg-clip-text text-transparent">
 								Banerry
 							</h1>
-							<p className="text-2xl md:text-3xl font-bold text-purple-800">
+							<p className="text-2xl md:text-3xl font-bold text-brand">
 								Communication assistance for visual and gestalt language
 								learners
 							</p>
@@ -33,13 +34,13 @@ export default function HomePage() {
 
 						<div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
 							<Link href="/mentor">
-								<Button className="text-xl py-8 px-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+								<Button className="text-xl py-8 px-12 rounded-full bg-brand-warm hover:bg-brand-warm/90 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
 									<span className="mr-2">👩‍🏫</span>
 									I&apos;m a Mentor
 								</Button>
 							</Link>
 							<Link href="/learner">
-								<Button className="text-xl py-8 px-12 rounded-full bg-gradient-to-r from-sky-400 to-teal-400 hover:from-sky-500 hover:to-teal-500 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+								<Button className="text-xl py-8 px-12 rounded-full bg-brand-light hover:bg-brand-light/90 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
 									<span className="mr-2">🌟</span>
 									I&apos;m a Learner
 								</Button>
@@ -47,9 +48,9 @@ export default function HomePage() {
 						</div>
 
 						<div className="grid md:grid-cols-3 gap-6 pt-8">
-							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-purple-200">
+							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-brand/20">
 								<div className="text-5xl mb-4">📋</div>
-								<h3 className="text-xl font-bold text-purple-700 mb-2">
+								<h3 className="text-xl font-bold text-brand mb-2">
 									Now Next Then Boards
 								</h3>
 								<p className="text-gray-600">
@@ -58,9 +59,9 @@ export default function HomePage() {
 								</p>
 							</div>
 
-							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-pink-200">
+							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-brand-warm/30">
 								<div className="text-5xl mb-4">🔊</div>
-								<h3 className="text-xl font-bold text-pink-600 mb-2">
+								<h3 className="text-xl font-bold text-brand-warm mb-2">
 									Listen &amp; Learn
 								</h3>
 								<p className="text-gray-600">
@@ -68,9 +69,9 @@ export default function HomePage() {
 								</p>
 							</div>
 
-							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-sky-200">
+							<div className="bg-white/80 backdrop-blur p-6 rounded-3xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border-2 border-brand-light/30">
 								<div className="text-5xl mb-4">🤝</div>
-								<h3 className="text-xl font-bold text-sky-600 mb-2">
+								<h3 className="text-xl font-bold text-brand-light mb-2">
 									Collaborate
 								</h3>
 								<p className="text-gray-600">
@@ -80,8 +81,8 @@ export default function HomePage() {
 						</div>
 
 						<div className="pt-8">
-							<div className="bg-gradient-to-r from-purple-100 via-pink-100 to-orange-100 p-8 rounded-3xl max-w-4xl mx-auto border-2 border-purple-200/50">
-								<h2 className="text-2xl md:text-3xl font-bold text-purple-800 mb-6">
+							<div className="bg-gradient-to-r from-brand/10 via-brand-warm/10 to-brand-highlight/10 p-8 rounded-3xl max-w-4xl mx-auto border-2 border-brand/20">
+								<h2 className="text-2xl md:text-3xl font-bold text-brand mb-6">
 									Now Next Then Boards
 								</h2>
 								<p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
@@ -118,16 +119,16 @@ export default function HomePage() {
 									</div>
 								</div>
 								<div className="mt-8 flex flex-wrap justify-center gap-3">
-									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-purple-700 border border-purple-200">
+									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-brand border border-brand/20">
 										🎨 Fun art styles
 									</span>
-									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-pink-700 border border-pink-200">
+									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-brand-warm border border-brand-warm/20">
 										🎤 Voice input
 									</span>
-									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-sky-700 border border-sky-200">
+									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-brand-light border border-brand-light/30">
 										⏱️ Built-in timers
 									</span>
-									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-orange-700 border border-orange-200">
+									<span className="bg-white/80 px-4 py-2 rounded-full text-sm font-medium text-brand-highlight border border-brand-highlight/40">
 										🤖 AI pictures
 									</span>
 								</div>
@@ -135,8 +136,8 @@ export default function HomePage() {
 						</div>
 
 						<div className="pt-8 pb-8">
-							<div className="bg-white/70 backdrop-blur p-8 rounded-3xl max-w-3xl mx-auto border-2 border-purple-200/50">
-								<h2 className="text-xl md:text-2xl font-bold text-purple-800 mb-4">
+							<div className="bg-white/70 backdrop-blur p-8 rounded-3xl max-w-3xl mx-auto border-2 border-brand/20">
+								<h2 className="text-xl md:text-2xl font-bold text-brand mb-4">
 									What is Gestalt Language Processing?
 								</h2>
 								<p className="text-gray-700 leading-relaxed">
