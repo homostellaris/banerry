@@ -87,10 +87,6 @@ function buildEnhancedPrompt(
 	return enhanced
 }
 
-function delay(ms: number): Promise<void> {
-	return new Promise(resolve => setTimeout(resolve, ms))
-}
-
 export async function generateBoardImages(
 	userPrompt: string,
 	style: ImageStyle = 'studio-ghibli',
@@ -115,25 +111,30 @@ export async function generateBoardImages(
 			? undefined
 			: (avatarDescription ?? parsedPrompt.characterDescription)
 
-	for (let i = 0; i < parsedPrompt.columns.length; i++) {
-		const column = parsedPrompt.columns[i]
-		const columnId = `column-${Date.now()}-${i}`
+	const imageResults = await Promise.all(
+		parsedPrompt.columns.map(async (column, i) => {
+			const columnId = `column-${Date.now()}-${i}`
 
-		const enhancedPrompt = buildEnhancedPrompt(
-			column.prompt,
-			effectiveAvatarDescription,
-			parsedPrompt.styleConsistency,
-			style,
-			hasReferenceImage,
-		)
+			const enhancedPrompt = buildEnhancedPrompt(
+				column.prompt,
+				effectiveAvatarDescription,
+				parsedPrompt.styleConsistency,
+				style,
+				hasReferenceImage,
+			)
 
-		const result = await generateImage(
-			enhancedPrompt,
-			'1024x1024',
-			style,
-			hasReferenceImage ? avatarImageUrl : undefined,
-		)
+			const result = await generateImage(
+				enhancedPrompt,
+				'1024x1024',
+				style,
+				hasReferenceImage ? avatarImageUrl : undefined,
+			)
 
+			return { result, column, columnId, enhancedPrompt }
+		}),
+	)
+
+	for (const { result, column, columnId, enhancedPrompt } of imageResults) {
 		if (!result.success) {
 			return {
 				success: false,
@@ -148,10 +149,6 @@ export async function generateBoardImages(
 			imageData: result.imageData!,
 			prompt: enhancedPrompt,
 		})
-
-		if (i < parsedPrompt.columns.length - 1) {
-			await delay(1000)
-		}
 	}
 
 	return {
