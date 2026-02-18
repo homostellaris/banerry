@@ -17,6 +17,7 @@ import Header from './_common/header'
 import Logo from './_common/logo'
 import PWAInstall from './_common/pwa-install'
 import RecentLearners from './_learners/recent'
+import useRecentPassphrase from './_learners/use-recent-passphrase'
 
 function MosaicChunk({
 	className,
@@ -54,15 +55,18 @@ function CTAButtons() {
 }
 
 export default function HomePage() {
+	const passphrase = useRecentPassphrase()
+
 	return (
 		<>
 			<main className="bg-background min-h-screen">
-				{/* Section A: Header */}
-				<Header>
-					<nav>
-						<RecentLearners />
-					</nav>
-				</Header>
+				{passphrase && (
+					<Header>
+						<nav>
+							<RecentLearners />
+						</nav>
+					</Header>
+				)}
 
 				{/* Section B: Hero */}
 				<section className="relative overflow-hidden min-h-[70vh] md:min-h-[85vh] flex items-center justify-center">

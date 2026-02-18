@@ -1,13 +1,8 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import useRecentPassphrase from './use-recent-passphrase'
 
 export default function RecentLearners() {
-	const [passphrase, setPassphrase] = useState<string | null>(null)
-
-	useEffect(() => {
-		const storedPassphrase = localStorage.getItem('passphrase')
-		setPassphrase(storedPassphrase)
-	}, [])
+	const passphrase = useRecentPassphrase()
 
 	return (
 		<>
