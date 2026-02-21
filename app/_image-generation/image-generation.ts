@@ -1,7 +1,7 @@
 'use server'
 
 import { parseBoardPrompt, ParsedBoardPrompt } from './parse-board-prompt'
-import { generateImageWithGemini } from './gemini'
+import { generateImage as generateImageFromProvider } from './generate-image'
 
 export type ImageStyle = 'studio-ghibli' | 'play-doh' | 'ladybird' | 'symbols'
 
@@ -42,7 +42,11 @@ export async function generateImage(
 		`Generating image for prompt: "${prompt}" with style: ${style}${referenceImageUrl ? ' (with reference)' : ''}`,
 	)
 
-	const result = await generateImageWithGemini(prompt, style, referenceImageUrl)
+	const result = await generateImageFromProvider(
+		prompt,
+		style,
+		referenceImageUrl,
+	)
 
 	if (!result.success) {
 		return result

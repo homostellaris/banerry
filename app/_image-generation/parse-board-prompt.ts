@@ -1,16 +1,23 @@
 'use server'
 
-export interface ParsedColumn {
-	title: string
-	prompt: string
-}
+import { generateObject } from 'ai'
+import { gateway } from '@ai-sdk/gateway'
+import { z } from 'zod'
 
-export interface ParsedBoardPrompt {
-	boardName: string
-	characterDescription: string
-	styleConsistency: string
-	columns: ParsedColumn[]
-}
+const parsedColumnSchema = z.object({
+	title: z.string(),
+	prompt: z.string(),
+})
+
+const parsedBoardPromptSchema = z.object({
+	boardName: z.string(),
+	characterDescription: z.string(),
+	styleConsistency: z.string(),
+	columns: z.array(parsedColumnSchema).min(1),
+})
+
+export type ParsedColumn = z.infer<typeof parsedColumnSchema>
+export type ParsedBoardPrompt = z.infer<typeof parsedBoardPromptSchema>
 
 const SYSTEM_PROMPT = `You are an expert at creating detailed, consistent image prompts for AI image generation that will be used in a visual schedule board for children.
 
@@ -84,14 +91,6 @@ export async function parseBoardPrompt(
 ): Promise<
 	{ success: true; data: ParsedBoardPrompt } | { success: false; error: string }
 > {
-	const apiKey = process.env.OPENAI_API_KEY
-	if (!apiKey) {
-		return {
-			success: false,
-			error: 'OpenAI API key is not configured',
-		}
-	}
-
 	if (!userPrompt.trim()) {
 		return {
 			success: false,
@@ -133,73 +132,19 @@ export async function parseBoardPrompt(
 	}
 
 	try {
-		const response = await fetch('https://api.openai.com/v1/chat/completions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${apiKey}`,
-			},
-			body: JSON.stringify({
-				model: 'gpt-4o',
-				messages: [
-					{ role: 'system', content: SYSTEM_PROMPT },
-					{ role: 'user', content: userPromptContent },
-				],
-				response_format: { type: 'json_object' },
-				temperature: 0.7,
-			}),
+		const result = await generateObject({
+			model: gateway('openai/gpt-4o'),
+			schema: parsedBoardPromptSchema,
+			messages: [
+				{ role: 'system', content: SYSTEM_PROMPT },
+				{ role: 'user', content: userPromptContent },
+			],
+			temperature: 0.7,
 		})
-
-		if (!response.ok) {
-			let errorMessage = `OpenAI API error: ${response.status}`
-			try {
-				const errorData = await response.json()
-				errorMessage = errorData.error?.message || errorMessage
-			} catch {
-				// If we can't parse the error response, use the status
-			}
-			return {
-				success: false,
-				error: errorMessage,
-			}
-		}
-
-		const responseData = await response.json()
-		const content = responseData.choices?.[0]?.message?.content
-
-		if (!content) {
-			return {
-				success: false,
-				error: 'No response from GPT-4',
-			}
-		}
-
-		const parsed = JSON.parse(content) as ParsedBoardPrompt
-
-		if (
-			!parsed.boardName ||
-			!parsed.columns ||
-			!Array.isArray(parsed.columns) ||
-			parsed.columns.length === 0
-		) {
-			return {
-				success: false,
-				error: 'Invalid response structure from GPT-4',
-			}
-		}
-
-		for (const column of parsed.columns) {
-			if (!column.title || !column.prompt) {
-				return {
-					success: false,
-					error: 'Invalid column structure from GPT-4',
-				}
-			}
-		}
 
 		return {
 			success: true,
-			data: parsed,
+			data: result.object,
 		}
 	} catch (error) {
 		console.error('Error parsing board prompt:', error)
