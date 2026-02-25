@@ -133,7 +133,7 @@ export async function parseBoardPrompt(
 
 	try {
 		const result = await generateObject({
-			model: gateway('openai/gpt-4o'),
+			model: gateway('google/gemini-2.5-flash'),
 			schema: parsedBoardPromptSchema,
 			messages: [
 				{ role: 'system', content: SYSTEM_PROMPT },

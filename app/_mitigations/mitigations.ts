@@ -40,7 +40,7 @@ export async function generateMitigations(
 		console.log('Generating mitigations for script:', scriptText)
 
 		const result = await generateObject({
-			model: gateway('openai/gpt-4o'),
+			model: gateway('google/gemini-2.5-flash'),
 			schema: mitigationsSchema,
 			messages: [{ role: 'user', content: prompt }],
 			temperature: 0.7,
