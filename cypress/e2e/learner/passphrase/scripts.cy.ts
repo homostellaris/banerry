@@ -20,8 +20,8 @@ describe('Daily Quiz', () => {
 		cy.signIn(testEmail)
 		cy.createLearner('Quiz Learner')
 
-		navigateToLearnerScripts()
-
+		cy.visit('/mentor')
+		cy.getByName('learner-card').contains('Quiz Learner').click()
 		cy.get('code')
 			.first()
 			.invoke('text')
@@ -56,7 +56,7 @@ describe('Daily Quiz', () => {
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.getByName('quiz-option-card', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
 			'have.length',
 			4,
 		)
@@ -66,19 +66,19 @@ describe('Daily Quiz', () => {
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.getByName('quiz-option-card', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
 			'have.length',
 			4,
 		)
 
-		cy.getByName('quiz-option-card')
+		cy.get('[data-name="quiz-option-card"]')
 			.not('[data-quiz-correct="true"]')
 			.first()
 			.click()
 
 		cy.contains('Well done!').should('not.exist')
-		cy.getByName('quiz-option-card').should('have.length', 4)
-		cy.getByName('quiz-option-card')
+		cy.get('[data-name="quiz-option-card"]').should('have.length', 4)
+		cy.get('[data-name="quiz-option-card"]')
 			.not('[data-quiz-correct="true"]')
 			.first()
 			.should('have.css', 'opacity')
@@ -88,14 +88,12 @@ describe('Daily Quiz', () => {
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.getByName('quiz-option-card', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
 			'have.length',
 			4,
 		)
 
-		cy.getByName('quiz-option-card')
-			.filter('[data-quiz-correct="true"]')
-			.click()
+		cy.get('[data-name="quiz-option-card"][data-quiz-correct="true"]').click()
 
 		cy.contains('Well done!').should('be.visible')
 	})
