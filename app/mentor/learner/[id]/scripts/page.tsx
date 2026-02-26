@@ -1,4 +1,5 @@
 import AddScriptForm from '@/app/_scripts/add-script-form'
+import MentorDailyQuizSection from '@/app/_scripts/daily-quiz/mentor-daily-quiz-section'
 import MentorScriptsList from '@/app/_scripts/mentor-scripts-list'
 import AddTargetScriptForm from '@/app/_target-scripts/add-target-script-form'
 import MentorTargetScriptsList from '@/app/_target-scripts/mentor-target-scripts-list'
@@ -32,6 +33,9 @@ export default async function MentorLearnerPage({
 			<div className="flex flex-wrap items-center gap-2">
 				<AddScriptForm learnerId={id as Id<'learners'>} />
 				<AddTargetScriptForm learnerId={id as Id<'learners'>} />
+				<MentorDailyQuizSection
+					preloadedLearnerWithScripts={preloadedLearnerWithScripts}
+				/>
 			</div>
 
 			<div className="space-y-4">

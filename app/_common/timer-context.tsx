@@ -9,6 +9,7 @@ import {
 	useRef,
 	type ReactNode,
 } from 'react'
+import { playCompletionSound as playSound } from './play-completion-sound'
 
 type TimerState = 'idle' | 'running' | 'paused' | 'completed'
 type AudioState = 'unknown' | 'enabled' | 'blocked' | 'permission-needed'
@@ -64,46 +65,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 	const audioContextRef = useRef<AudioContext | null>(null)
 
 	const playCompletionSound = useCallback(async () => {
-		if (!audioContextRef.current) {
-			throw new Error('Audio context not initialized')
-		}
-
-		const audioContext = audioContextRef.current
-
-		const playNote = (
-			frequency: number,
-			startTime: number,
-			duration: number,
-		) => {
-			const oscillator = audioContext.createOscillator()
-			const gainNode = audioContext.createGain()
-
-			oscillator.connect(gainNode)
-			gainNode.connect(audioContext.destination)
-
-			oscillator.frequency.setValueAtTime(frequency, startTime)
-			oscillator.type = 'triangle'
-
-			gainNode.gain.setValueAtTime(0, startTime)
-			gainNode.gain.linearRampToValueAtTime(0.2, startTime + 0.01)
-			gainNode.gain.exponentialRampToValueAtTime(0.01, startTime + duration)
-
-			oscillator.start(startTime)
-			oscillator.stop(startTime + duration)
-		}
-
-		const now = audioContext.currentTime
-		playNote(523, now, 0.3) // C5
-		playNote(659, now + 0.15, 0.3) // E5
-		playNote(784, now + 0.3, 0.3) // G5
-		playNote(1047, now + 0.45, 0.5) // C6
-
-		setTimeout(() => {
-			playNote(1319, now + 0.7, 0.2) // E6
-			playNote(1568, now + 0.8, 0.2) // G6
-		}, 700)
-
-		return Promise.resolve()
+		await playSound()
 	}, [])
 
 	const formatTime = (totalSeconds: number) => {
