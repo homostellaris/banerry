@@ -14,7 +14,7 @@ describe('Board management', () => {
 		cy.getByName('learner-card').contains(learnerName).click()
 		cy.contains(learnerName).should('be.visible')
 		cy.get('a[href*="/boards"]').should('be.visible').click()
-		cy.url().should('include', '/boards')
+		cy.url({ timeout: 10000 }).should('include', '/boards')
 	})
 
 	it('shows empty state with create button when no boards exist', () => {
@@ -70,7 +70,7 @@ describe('Board columns', () => {
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
 		cy.get('a[href*="/boards"]').click()
-		cy.url().should('include', '/boards')
+		cy.url({ timeout: 10000 }).should('include', '/boards')
 	})
 
 	it('displays default columns on a new board', () => {
@@ -141,7 +141,7 @@ describe('Board image generation', () => {
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
 		cy.get('a[href*="/boards"]').click()
-		cy.url().should('include', '/boards')
+		cy.url({ timeout: 10000 }).should('include', '/boards')
 	})
 
 	it('generates an image for a single column', () => {

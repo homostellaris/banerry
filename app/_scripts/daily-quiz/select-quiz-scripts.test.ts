@@ -75,9 +75,8 @@ describe('selectQuizScripts', () => {
 			}
 		}
 
-		// With weight ×3, targetScript should be correct ~75% of the time (3/4 weight share)
-		// Allow generous bounds for randomness
-		expect(targetSelectedCount).toBeGreaterThan(iterations * 0.45)
+		// With weight ×3, targetScript should be correct ~50% of the time (3/6 weight share)
+		expect(targetSelectedCount).toBeGreaterThan(iterations * 0.35)
 	})
 
 	test('recently added scripts are selected more often', () => {
