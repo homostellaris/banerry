@@ -52,21 +52,41 @@ describe('Daily Quiz', () => {
 		cy.contains('Daily Quiz').should('be.visible')
 	})
 
+	function interceptQuizApis() {
+		cy.intercept('POST', '/api/generate-quiz-scenario', {
+			statusCode: 200,
+			body: {
+				success: true,
+				scenarioText: 'A child is hungry and wants a snack.',
+			},
+		})
+		cy.intercept('POST', '/api/generate-image', {
+			statusCode: 200,
+			body: {
+				success: true,
+				imageData:
+					'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+			},
+		})
+	}
+
 	it('opens modal with 4 options after clicking quiz button', () => {
+		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
 			4,
 		)
 	})
 
 	it('crosses out wrong answer without closing modal', () => {
+		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
 			4,
 		)
@@ -85,10 +105,11 @@ describe('Daily Quiz', () => {
 	})
 
 	it('shows Well done message when correct answer is selected', () => {
+		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
 		cy.contains('Daily Quiz').click()
 
-		cy.get('[data-name="quiz-option-card"]', { timeout: 60000 }).should(
+		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
 			4,
 		)
