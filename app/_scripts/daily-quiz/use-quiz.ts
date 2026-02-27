@@ -35,10 +35,14 @@ function saveHistoryEntry(passphrase: string, scriptId: string) {
 
 async function fetchScenario(
 	dialogue: string,
+	passphrase: string,
 ): Promise<{ scenarioText: string }> {
 	const response = await fetch('/api/generate-quiz-scenario', {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json',
+			'X-Learner-Passphrase': passphrase,
+		},
 		body: JSON.stringify({ dialogue }),
 	})
 	const result = (await response.json()) as
@@ -53,6 +57,7 @@ async function fetchScenario(
 async function fetchScenarioImage(
 	dialogue: string,
 	avatarUrl: string | null,
+	passphrase: string,
 ): Promise<string> {
 	const basePrompt = `A friendly scene for children showing someone about to say "${dialogue}". Simple, cheerful illustration. Do not add any text, words, or labels to the image.`
 	const prompt = avatarUrl
@@ -60,7 +65,10 @@ async function fetchScenarioImage(
 		: basePrompt
 	const response = await fetch('/api/generate-image', {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json',
+			'X-Learner-Passphrase': passphrase,
+		},
 		body: JSON.stringify({
 			prompt,
 			style: 'studio-ghibli',
@@ -96,8 +104,8 @@ export function useQuiz(
 			const { correctScript, options } = selectQuizScripts(allScripts, history)
 
 			const [{ scenarioText }, scenarioImageBase64] = await Promise.all([
-				fetchScenario(correctScript.dialogue),
-				fetchScenarioImage(correctScript.dialogue, avatarUrl),
+				fetchScenario(correctScript.dialogue, passphrase),
+				fetchScenarioImage(correctScript.dialogue, avatarUrl, passphrase),
 			])
 
 			setQuizState({
