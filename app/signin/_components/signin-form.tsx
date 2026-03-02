@@ -111,7 +111,6 @@ export default function SignInForm() {
 
 								localStorage.setItem('posthog_consent', 'true')
 								posthog.set_config({
-									cookieless_mode: undefined,
 									persistence: 'localStorage+cookie',
 								})
 								posthog.identify(email, { email })
