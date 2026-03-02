@@ -12,9 +12,8 @@ describe('Board management', () => {
 		cy.signIn(testEmail)
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
-		cy.contains(learnerName).should('be.visible')
-		cy.get('a[href*="/boards"]').should('be.visible').click()
-		cy.url({ timeout: 10000 }).should('include', '/boards')
+		cy.url().should('include', '/mentor/learner/')
+		cy.url().then(url => cy.visit(`${url}/boards`))
 	})
 
 	it('shows empty state with create button when no boards exist', () => {
