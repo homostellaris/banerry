@@ -1,19 +1,25 @@
 describe('Script CRUD', () => {
 	const testEmail = 'cypress-scripts@banerry.app'
 	let learnerName: string
+	let learnerId: string
 
 	before(() => {
 		learnerName = `Script Learner ${Date.now()}`
 		cy.signIn(testEmail)
 		cy.createLearner(learnerName)
+
+		cy.visit('/mentor')
+		cy.getByName('learner-card').contains(learnerName).click()
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+			})
 	})
 
 	beforeEach(() => {
 		cy.signIn(testEmail)
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/scripts"]').click()
-		cy.url().should('include', '/scripts')
+		cy.visit(`/mentor/learner/${learnerId}/scripts`)
 	})
 
 	it('shows add script button', () => {
@@ -47,19 +53,25 @@ describe('Script CRUD', () => {
 describe('Target scripts', () => {
 	const testEmail = 'cypress-target@banerry.app'
 	let learnerName: string
+	let learnerId: string
 
 	before(() => {
 		learnerName = `Target Learner ${Date.now()}`
 		cy.signIn(testEmail)
 		cy.createLearner(learnerName)
+
+		cy.visit('/mentor')
+		cy.getByName('learner-card').contains(learnerName).click()
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+			})
 	})
 
 	beforeEach(() => {
 		cy.signIn(testEmail)
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/scripts"]').click()
-		cy.url().should('include', '/scripts')
+		cy.visit(`/mentor/learner/${learnerId}/scripts`)
 	})
 
 	it('shows add target script button with count', () => {

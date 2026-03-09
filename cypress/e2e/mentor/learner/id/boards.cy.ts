@@ -1,19 +1,25 @@
 describe('Board management', () => {
 	const testEmail = 'cypress-boards@banerry.app'
 	let learnerName: string
+	let learnerId: string
 
 	before(() => {
 		learnerName = `Board Learner ${Date.now()}`
 		cy.signIn(testEmail)
 		cy.createLearner(learnerName)
+
+		cy.visit('/mentor')
+		cy.getByName('learner-card').contains(learnerName).click()
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+			})
 	})
 
 	beforeEach(() => {
 		cy.signIn(testEmail)
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
-		cy.url().should('include', '/mentor/learner/')
-		cy.url().then(url => cy.visit(`${url}/boards`))
+		cy.visit(`/mentor/learner/${learnerId}/boards`)
 	})
 
 	it('shows empty state with create button when no boards exist', () => {
@@ -51,6 +57,7 @@ describe('Board management', () => {
 describe('Board columns', () => {
 	const testEmail = 'cypress-columns@banerry.app'
 	let learnerName: string
+	let learnerId: string
 
 	before(() => {
 		learnerName = `Column Learner ${Date.now()}`
@@ -59,17 +66,19 @@ describe('Board columns', () => {
 
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/boards"]').click()
-		cy.getByName('create-first-board-button').click()
-		cy.contains('New board created').should('be.visible')
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+				cy.visit(`/mentor/learner/${learnerId}/boards`)
+				cy.getByName('create-first-board-button').click()
+				cy.contains('New board created').should('be.visible')
+			})
 	})
 
 	beforeEach(() => {
 		cy.signIn(testEmail)
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/boards"]').click()
-		cy.url({ timeout: 10000 }).should('include', '/boards')
+		cy.visit(`/mentor/learner/${learnerId}/boards`)
 	})
 
 	it('displays default columns on a new board', () => {
@@ -122,6 +131,7 @@ describe('Board columns', () => {
 describe('Board image generation', () => {
 	const testEmail = 'cypress-imggen@banerry.app'
 	let learnerName: string
+	let learnerId: string
 
 	before(() => {
 		learnerName = `ImgGen Learner ${Date.now()}`
@@ -130,17 +140,19 @@ describe('Board image generation', () => {
 
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/boards"]').click()
-		cy.getByName('create-first-board-button').click()
-		cy.contains('New board created').should('be.visible')
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+				cy.visit(`/mentor/learner/${learnerId}/boards`)
+				cy.getByName('create-first-board-button').click()
+				cy.contains('New board created').should('be.visible')
+			})
 	})
 
 	beforeEach(() => {
 		cy.signIn(testEmail)
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
-		cy.get('a[href*="/boards"]').click()
-		cy.url({ timeout: 10000 }).should('include', '/boards')
+		cy.visit(`/mentor/learner/${learnerId}/boards`)
 	})
 
 	it('generates an image for a single column', () => {
