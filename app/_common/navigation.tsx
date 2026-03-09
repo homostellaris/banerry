@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { BookOpen, Clock, Columns3, Palette } from 'lucide-react'
+import { BookOpen, Clock, Columns3, LayoutGrid, Palette } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -35,6 +35,12 @@ export default function Navigation({
 			exact: false,
 		},
 		{
+			name: 'Activities',
+			href: `${basePath}/activities`,
+			icon: LayoutGrid,
+			exact: false,
+		},
+		{
 			name: 'Timer',
 			href: `${basePath}/timer`,
 			icon: Clock,
@@ -50,8 +56,8 @@ export default function Navigation({
 	]
 
 	return (
-		<nav>
-			<div className="flex overflow-x-auto scrollbar-hide">
+		<nav className="flex-1">
+			<div className="flex justify-center overflow-x-auto scrollbar-hide">
 				{items.map(item => {
 					const isActive = item.exact
 						? pathname === item.href

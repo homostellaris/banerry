@@ -1,6 +1,7 @@
 describe('Daily Quiz', () => {
 	const testEmail = 'cypress-quiz@banerry.app'
 	let passphrase: string
+	let learnerId: string
 
 	function addScript(dialogue: string) {
 		cy.getByName('add-script-button').click()
@@ -9,19 +10,17 @@ describe('Daily Quiz', () => {
 		cy.contains(dialogue, { timeout: 10000 }).should('be.visible')
 	}
 
-	function navigateToLearnerScripts() {
-		cy.visit('/mentor')
-		cy.getByName('learner-card').contains('Quiz Learner').click()
-		cy.get('a[href*="/scripts"]').first().click()
-		cy.url().should('include', '/scripts')
-	}
-
 	before(() => {
 		cy.signIn(testEmail)
 		cy.createLearner('Quiz Learner')
 
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains('Quiz Learner').click()
+		cy.url()
+			.should('include', '/mentor/learner/')
+			.then(url => {
+				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+			})
 		cy.get('code')
 			.first()
 			.invoke('text')
@@ -39,7 +38,7 @@ describe('Daily Quiz', () => {
 
 	it('shows quiz button when learner has 4 or more scripts', () => {
 		cy.signIn(testEmail)
-		navigateToLearnerScripts()
+		cy.visit(`/mentor/learner/${learnerId}/scripts`)
 
 		addScript('I want more please')
 		addScript('Can we go outside?')

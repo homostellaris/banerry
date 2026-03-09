@@ -3,7 +3,7 @@
 import { useState, useRef } from 'react'
 import { audioCache } from '@/app/_tts/audio-cache'
 import { streamSpeech } from '@/app/_tts/stream-speech'
-import { StreamTextToSpeechRequest } from '@elevenlabs/elevenlabs-js/api'
+import type { StreamTextToSpeechRequest } from '@elevenlabs/elevenlabs-js/api'
 
 export function useCachedTTS() {
 	const [isLoading, setIsLoading] = useState(false)
