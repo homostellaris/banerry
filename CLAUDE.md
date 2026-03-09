@@ -96,9 +96,37 @@ Tables in `convex/schema.ts` (plus `authTables` from `@convex-dev/auth`):
 
 ## Testing
 
+**New functionality must include tests.** For every feature or UI change, add the appropriate test coverage:
+
+- Pure logic / parsing → Bun unit test alongside the source file
+- Stateless UI component → Cypress component test
+- End-to-end user flow → Cypress E2E test
+- Most features need both a component test and an E2E test
+
 ### Unit Tests (Bun)
 
 Bun's built-in test runner. Test files live alongside source code with `.test.ts` suffix (e.g. `app/_image-generation/parse-board-prompt.test.ts`).
+
+### Component Tests (Cypress)
+
+Test isolated UI components without a running server. Tests live under `cypress/component/` mirroring the source path. Components that depend on Convex should expose a pure display variant (accepting callbacks as props) so it can be tested without a live backend.
+
+```
+cypress/component/
+  _common/timer.cy.tsx              # app/_common/timer.tsx
+  mentor/learner/id/
+    activity-card.cy.tsx            # MentorActivityCardDisplay
+```
+
+Run component tests:
+```
+bunx cypress run --component
+```
+
+Run a single component spec:
+```
+bunx cypress run --component --spec cypress/component/mentor/learner/id/activity-card.cy.tsx
+```
 
 ### E2E Tests (Cypress)
 
@@ -106,17 +134,20 @@ Tests are organized to mirror the route they test:
 
 ```
 cypress/e2e/
-  signin.cy.ts                      # /signin
-  learner.cy.ts                     # /learner
-  mentor.cy.ts                      # /mentor
-  mentor/learner/id.cy.ts           # /mentor/learner/[id]
-  mentor/learner/id/boards.cy.ts    # /mentor/learner/[id]/boards
-  mentor/learner/id/scripts.cy.ts   # /mentor/learner/[id]/scripts
-  mentor/learner/id/timer.cy.ts     # /mentor/learner/[id]/timer
-  invitation/token.cy.ts            # /invitation/[token]
+  signin.cy.ts                          # /signin
+  learner.cy.ts                         # /learner
+  mentor.cy.ts                          # /mentor
+  mentor/learner/id.cy.ts               # /mentor/learner/[id]
+  mentor/learner/id/boards.cy.ts        # /mentor/learner/[id]/boards
+  mentor/learner/id/scripts.cy.ts       # /mentor/learner/[id]/scripts
+  mentor/learner/id/timer.cy.ts         # /mentor/learner/[id]/timer
+  mentor/learner/id/activities.cy.ts    # /mentor/learner/[id]/activities
+  invitation/token.cy.ts               # /invitation/[token]
 ```
 
 #### Custom Commands (`cypress/support/commands.ts`)
+
+Available in both E2E and component tests:
 
 - `cy.signIn(email)` — signs in with OTP using `CYPRESS_OTP_OVERRIDE` env var
 - `cy.createLearner(name, bio?)` — creates a new learner through the UI
@@ -128,3 +159,4 @@ cypress/e2e/
 - **Element selectors**: use `data-name` attributes, never CSS classes or tag-based selectors
 - **Setup**: each test suite resets state via `cy.task('resetCypressUsers')` and `cy.task('clearVerificationCodes')` in `beforeEach` (configured in `cypress/support/e2e.ts`)
 - **Convex test helpers**: `convex/testing.ts` provides `resetCypressUsers` and `clearVerificationCodes` tasks
+- **API stubs**: use `cy.intercept()` to stub `/api/generate-image` and similar slow/costly endpoints in tests

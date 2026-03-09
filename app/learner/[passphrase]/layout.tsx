@@ -1,7 +1,6 @@
 import Header from '@/app/_common/navbar'
 import Navigation from '@/app/_common/navigation'
 import ElevenLabsWidget from '@/app/_tts/elevenlabs-widget'
-import { SignOutButton } from '@/app/mentor/_components/signout-button'
 import { Home } from 'lucide-react'
 import Link from 'next/link'
 import Script from 'next/script'
@@ -22,7 +21,7 @@ export default async function LearnerPassphraseLayout({
 					<Home className="h-6 w-6 text-brand" />
 				</Link>
 				<Navigation basePath={`/learner/${passphrase}`} />
-				<SignOutButton />
+				<div className="w-[72px]" />
 			</Header>
 			<Script
 				src="https://unpkg.com/@elevenlabs/convai-widget-embed"

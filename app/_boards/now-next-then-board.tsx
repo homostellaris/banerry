@@ -37,6 +37,9 @@ import {
 import posthog from 'posthog-js'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { ActivityRequestOverlay } from './activity-request-overlay'
+import { useCachedTTS } from '@/app/_tts/use-cached-tts'
+import { useVoice } from '@/app/_tts/voice-context'
 
 function StorageImage({
 	storageId,
@@ -149,6 +152,10 @@ export function NowNextThenBoard({
 	const [isGeneratingAll, setIsGeneratingAll] = useState(false)
 	const [editingColumnId, setEditingColumnId] = useState<string | null>(null)
 	const [editingTitle, setEditingTitle] = useState('')
+	const [selectedColumn, setSelectedColumn] = useState<BoardColumn | null>(null)
+
+	const { speak } = useCachedTTS()
+	const { selectedVoice } = useVoice()
 
 	const hasAvatar = !!avatarImageUrl
 
@@ -654,7 +661,18 @@ export function NowNextThenBoard({
 												<Pencil className="h-4 w-4" />
 											</Button>
 										) : (
-											<div className="w-7" />
+											<Button
+												size="icon"
+												variant="ghost"
+												className="h-7 w-7 text-brand hover:bg-brand/10"
+												onClick={e => {
+													e.stopPropagation()
+													speak(column.title, selectedVoice)
+												}}
+												aria-label="Play audio"
+											>
+												<Volume2 className="h-4 w-4" />
+											</Button>
 										)}
 									</>
 								)}
@@ -673,9 +691,19 @@ export function NowNextThenBoard({
 						<CardContent className="space-y-4">
 							<div
 								className={`relative aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 transition-colors ${
-									!readOnly ? 'hover:border-brand/40 cursor-pointer' : ''
+									!readOnly
+										? 'hover:border-brand/40 cursor-pointer'
+										: column.imageStorageId
+											? 'cursor-pointer hover:opacity-90'
+											: ''
 								}`}
-								onClick={() => !readOnly && setActiveColumn(column.id)}
+								onClick={() => {
+									if (!readOnly) {
+										setActiveColumn(column.id)
+									} else if (column.imageStorageId) {
+										setSelectedColumn(column)
+									}
+								}}
 								data-name="column-image-area"
 							>
 								{column.imageStorageId ? (
@@ -787,6 +815,14 @@ export function NowNextThenBoard({
 						Add Column
 					</Button>
 				</div>
+			)}
+
+			{selectedColumn?.imageStorageId && (
+				<ActivityRequestOverlay
+					imageStorageId={selectedColumn.imageStorageId}
+					title={selectedColumn.title}
+					onClose={() => setSelectedColumn(null)}
+				/>
 			)}
 		</div>
 	)
