@@ -23,8 +23,8 @@ describe('Learner access', () => {
 		cy.visit('/mentor')
 		cy.getByName('learner-card').contains(learnerName).click()
 		cy.contains('Learner Passphrase').should('be.visible')
-		cy.get('code')
-			.first()
+		cy.getByName('learner-passphrase')
+			.should('not.be.empty')
 			.invoke('text')
 			.then(passphrase => {
 				cy.clearAllCookies()

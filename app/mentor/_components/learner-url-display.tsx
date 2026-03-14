@@ -51,7 +51,7 @@ export default function LearnerUrlDisplay({
 				</p>
 
 				<div className="flex items-center gap-2 p-2 bg-white rounded border">
-					<code className="text-sm flex-1 text-gray-700 break-all">
+					<code data-name="learner-passphrase" className="text-sm flex-1 text-gray-700 break-all">
 						{passphrase}
 					</code>
 					<Button

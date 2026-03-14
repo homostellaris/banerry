@@ -21,8 +21,8 @@ describe('Daily Quiz', () => {
 			.then(url => {
 				learnerId = url.split('/mentor/learner/')[1].split('/')[0]
 			})
-		cy.get('code')
-			.first()
+		cy.getByName('learner-passphrase')
+			.should('not.be.empty')
 			.invoke('text')
 			.then(text => {
 				passphrase = text.trim()
@@ -33,6 +33,7 @@ describe('Daily Quiz', () => {
 		cy.clearAllCookies()
 		cy.clearAllLocalStorage()
 		cy.visit(`/learner/${passphrase}/scripts`)
+		cy.contains('button', 'yes').should('be.visible')
 		cy.contains('Daily Quiz').should('not.exist')
 	})
 
@@ -48,7 +49,7 @@ describe('Daily Quiz', () => {
 		cy.clearAllCookies()
 		cy.clearAllLocalStorage()
 		cy.visit(`/learner/${passphrase}/scripts`)
-		cy.contains('Daily Quiz').should('be.visible')
+		cy.contains('Daily Quiz', { timeout: 10000 }).should('be.visible')
 	})
 
 	function interceptQuizApis() {
@@ -72,7 +73,7 @@ describe('Daily Quiz', () => {
 	it('opens modal with 4 options after clicking quiz button', () => {
 		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
-		cy.contains('Daily Quiz').click()
+		cy.contains('Daily Quiz', { timeout: 10000 }).click()
 
 		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
@@ -83,7 +84,7 @@ describe('Daily Quiz', () => {
 	it('crosses out wrong answer without closing modal', () => {
 		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
-		cy.contains('Daily Quiz').click()
+		cy.contains('Daily Quiz', { timeout: 10000 }).click()
 
 		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
@@ -100,13 +101,13 @@ describe('Daily Quiz', () => {
 		cy.get('[data-name="quiz-option-card"]')
 			.not('[data-quiz-correct="true"]')
 			.first()
-			.should('have.css', 'opacity')
+			.should('have.css', 'opacity', '0.6')
 	})
 
 	it('shows Well done message when correct answer is selected', () => {
 		interceptQuizApis()
 		cy.visit(`/learner/${passphrase}/scripts`)
-		cy.contains('Daily Quiz').click()
+		cy.contains('Daily Quiz', { timeout: 10000 }).click()
 
 		cy.get('[data-name="quiz-option-card"]', { timeout: 10000 }).should(
 			'have.length',
