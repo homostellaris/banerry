@@ -17,6 +17,7 @@ jobs:
       NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
       CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
       CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      CONVEX_SITE_URL: 'https://content-toucan-531.convex.cloud'
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
@@ -44,9 +45,10 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          start: bun dev:frontend
+          start: bun start
           wait-on: http://localhost:6604
-          command: bunx cypress run
+          command: bun cypress run
+          build: bun run build
       - name: Upload integration test videos
         if: failure()
         uses: actions/upload-artifact@v4
