@@ -1,5 +1,3 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'nodejs'
@@ -7,9 +5,14 @@ export const alt = 'Banerry'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
-export default function Image() {
-	const logoData = readFileSync(join(process.cwd(), 'public/icon-512x512.png'))
-	const logoBase64 = `data:image/png;base64,${logoData.toString('base64')}`
+export default async function Image() {
+	const baseUrl = process.env.VERCEL_URL
+		? `https://${process.env.VERCEL_URL}`
+		: `http://localhost:6604`
+
+	const iconRes = await fetch(`${baseUrl}/icon-512x512.png`)
+	const iconBuf = await iconRes.arrayBuffer()
+	const iconBase64 = `data:image/png;base64,${Buffer.from(iconBuf).toString('base64')}`
 
 	return new ImageResponse(
 		(
@@ -26,7 +29,7 @@ export default function Image() {
 				}}
 			>
 				<img
-					src={logoBase64}
+					src={iconBase64}
 					width={240}
 					height={240}
 					alt="Banerry logo"
