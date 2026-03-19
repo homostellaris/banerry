@@ -1,3 +1,4 @@
+import { VercelToolbar } from '@vercel/toolbar/next'
 import { VoiceProvider } from '@/app/_tts/voice-context'
 import { TimerProvider } from '@/app/_common/timer-context'
 import { FloatingTimerCard } from '@/app/_common/floating-timer-card'
@@ -59,7 +60,6 @@ export const metadata: Metadata = {
 		title: 'Banerry',
 		description:
 			'Communication assistance for visual and gestalt language learners.',
-		images: ['/og-image.png'],
 	},
 	appleWebApp: {
 		capable: true,
@@ -99,6 +99,7 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode
 }) {
+	const shouldInjectToolbar = process.env.NODE_ENV === 'development'
 	return (
 		<ConvexAuthNextjsServerProvider>
 			<html
@@ -135,6 +136,7 @@ export default function RootLayout({
 								<VoiceProvider>
 									<TimerProvider>
 										{children}
+										{shouldInjectToolbar && <VercelToolbar />}
 										<FloatingTimerCard />
 										{/* <SettingsMenu /> */}
 										<Analytics />

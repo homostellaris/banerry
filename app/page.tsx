@@ -107,10 +107,9 @@ export default function HomePage() {
 							Banerry
 						</h1>
 						<p className="text-xl md:text-2xl font-medium text-muted-foreground max-w-lg text-balance mb-10">
-							Communication assistance for visual and gestalt
-							language learners
+							Communication assistance for visual and gestalt language learners
 						</p>
-						<CTAButtons />
+						{/* <CTAButtons /> */}
 					</div>
 				</section>
 
@@ -124,18 +123,16 @@ export default function HomePage() {
 							Every child communicates differently
 						</h2>
 						<p className="text-lg text-muted-foreground mb-4">
-							Many children learn language in whole chunks — phrases
-							picked up from conversations, movies, or songs — rather
-							than building words one at a time. This is called
-							Gestalt Language Processing, and it&apos;s a natural,
-							valid path to communication.
+							Many children learn language in whole chunks — phrases picked up
+							from conversations, movies, or songs — rather than building words
+							one at a time. This is called Gestalt Language Processing, and
+							it&apos;s a natural, valid path to communication.
 						</p>
 						<p className="text-lg text-muted-foreground">
-							The name Banerry comes from Alex the African Grey
-							Parrot, who combined &ldquo;banana&rdquo; and
-							&ldquo;cherry&rdquo; to describe an apple — a perfect
-							example of creative, chunked language. Banerry helps
-							learners and the people who support them connect
+							The name Banerry comes from Alex the African Grey Parrot, who
+							combined &ldquo;banana&rdquo; and &ldquo;cherry&rdquo; to describe
+							an apple — a perfect example of creative, chunked language.
+							Banerry helps learners and the people who support them connect
 							through these unique ways of communicating.
 						</p>
 					</div>
@@ -152,9 +149,8 @@ export default function HomePage() {
 								Now, Next, Then boards
 							</h2>
 							<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-								Help make sense of the day with clear visual
-								schedules and AI-generated pictures in any art
-								style
+								Help make sense of the day with clear visual schedules and
+								AI-generated pictures in any art style
 							</p>
 						</div>
 
@@ -178,7 +174,7 @@ export default function HomePage() {
 									image: '/walking-to-school.png',
 									caption: 'Walking to school',
 								},
-							].map((column) => (
+							].map(column => (
 								<Card
 									key={column.label}
 									className={`border-t-4 ${column.borderColor} max-md:min-w-[260px] max-md:snap-center`}
@@ -209,7 +205,7 @@ export default function HomePage() {
 								'Play-Doh',
 								'Ladybird Books',
 								'AAC Symbols',
-							].map((style) => (
+							].map(style => (
 								<Badge
 									key={style}
 									variant="secondary"
@@ -233,24 +229,23 @@ export default function HomePage() {
 								Practise language with scripts and natural speech
 							</h2>
 							<p className="text-lg text-muted-foreground mb-6">
-								Create scripts that capture the phrases and
-								conversations your learner uses. Add stage
-								directions for context, then tap to hear them
-								spoken in a natural voice.
+								Create scripts that capture the phrases and conversations your
+								learner uses. Add stage directions for context, then tap to hear
+								them spoken in a natural voice.
 							</p>
 							<ul className="space-y-4">
 								<li className="flex items-start gap-3">
 									<BookOpen className="h-5 w-5 text-brand mt-0.5 shrink-0" />
 									<span className="text-foreground">
-										Gestalt scripts with dialogue and
-										parenthetical stage directions
+										Gestalt scripts with dialogue and parenthetical stage
+										directions
 									</span>
 								</li>
 								<li className="flex items-start gap-3">
 									<Volume2 className="h-5 w-5 text-brand mt-0.5 shrink-0" />
 									<span className="text-foreground">
-										Natural text-to-speech so learners can hear
-										and rehearse phrases
+										Natural text-to-speech so learners can hear and rehearse
+										phrases
 									</span>
 								</li>
 							</ul>
@@ -291,8 +286,8 @@ export default function HomePage() {
 							Built for teams around a learner
 						</h2>
 						<p className="text-lg text-muted-foreground mb-8">
-							Parents, teachers, and therapists can all collaborate
-							on scripts and boards — everyone stays in sync.
+							Parents, teachers, and therapists can all collaborate on scripts
+							and boards — everyone stays in sync.
 						</p>
 						<div className="flex justify-center -space-x-3">
 							<div className="w-12 h-12 rounded-full bg-brand/80 border-2 border-background" />
