@@ -45,8 +45,8 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          start: bun start -p 6614
-          wait-on: http://localhost:6614
+          start: bun start -p 6604
+          wait-on: http://localhost:6604
           command: bun cypress run
           build: bun run build
       - name: Upload integration test videos
