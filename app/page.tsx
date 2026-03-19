@@ -109,7 +109,7 @@ export default function HomePage() {
 						<p className="text-xl md:text-2xl font-medium text-muted-foreground max-w-lg text-balance mb-10">
 							Communication assistance for visual and gestalt language learners
 						</p>
-						{/* <CTAButtons /> */}
+						<CTAButtons />
 					</div>
 				</section>
 
