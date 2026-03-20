@@ -54,6 +54,14 @@ export const metadata: Metadata = {
 		description:
 			'Communication assistance for visual and gestalt language learners.',
 		siteName: 'Banerry',
+		images: [
+			{
+				url: '/opengraph-image.png?v=2',
+				width: 2400,
+				height: 1262,
+				alt: 'Banerry — Communication assistance for visual and gestalt language learners',
+			},
+		],
 	},
 	twitter: {
 		card: 'summary_large_image',
