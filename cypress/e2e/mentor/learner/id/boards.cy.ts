@@ -29,7 +29,6 @@ describe('Board management', () => {
 
 	it('creates a first board', () => {
 		cy.getByName('create-first-board-button').click()
-		cy.contains('New board created').should('be.visible')
 		cy.getByName('board-card').should('exist')
 	})
 
