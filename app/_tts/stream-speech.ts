@@ -3,7 +3,7 @@
 import type { StreamTextToSpeechRequest } from '@elevenlabs/elevenlabs-js/api'
 import { PassThrough } from 'stream'
 
-import { Err, Ok, Result } from '@/types'
+import { Err, Ok, Result } from './result'
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js'
 
 export async function streamSpeech(

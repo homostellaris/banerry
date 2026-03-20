@@ -34,7 +34,7 @@ export async function register() {
 		process.env.NEXT_RUNTIME === 'nodejs'
 	) {
 		const { setupServer } = await import('msw/node')
-		const { handlers } = await import('./test-mocks/handlers')
+		const { handlers } = await import('./cypress/support/mocks/handlers')
 
 		const server = setupServer(...handlers)
 		server.listen({ onUnhandledRequest: 'bypass' })
