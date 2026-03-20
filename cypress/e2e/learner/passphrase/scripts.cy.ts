@@ -30,6 +30,9 @@ describe('Daily Quiz', () => {
 	})
 
 	it('does not show quiz button when learner has fewer than 4 scripts', () => {
+		cy.on('uncaught:exception', error => {
+			if (error.message.includes('Unauthenticated')) return false
+		})
 		cy.clearAllCookies()
 		cy.clearAllLocalStorage()
 		cy.visit(`/learner/${passphrase}/scripts`)
