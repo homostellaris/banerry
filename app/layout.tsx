@@ -54,17 +54,6 @@ export const metadata: Metadata = {
 		description:
 			'Communication assistance for visual and gestalt language learners.',
 		siteName: 'Banerry',
-		// Explicit URL overrides Next.js auto-discovery so we can append ?v=N to
-		// bust caches (e.g. WhatsApp) when the image changes. Bump v= whenever
-		// opengraph-image.png is updated, and keep width/height/alt in sync.
-		images: [
-			{
-				url: '/opengraph-image.png?v=2',
-				width: 2400,
-				height: 1262,
-				alt: 'Banerry — Communication assistance for visual and gestalt language learners',
-			},
-		],
 	},
 	twitter: {
 		card: 'summary_large_image',
