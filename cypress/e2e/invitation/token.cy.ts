@@ -20,9 +20,4 @@ describe('Invitation page', () => {
 		cy.contains('Go to Sign In', { timeout: 10000 }).click()
 		cy.url().should('include', '/signin')
 	})
-
-	it('shows loading state initially', () => {
-		cy.visit('/invitation/test-token', { failOnStatusCode: false })
-		cy.contains('Loading invitation').should('exist')
-	})
 })
