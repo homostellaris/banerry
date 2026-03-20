@@ -6,6 +6,7 @@
 		"crypto": false
 	},
 	"scripts": {
+		"prepare": "husky; bun vercel env pull",
 		"dev": "npm-run-all --parallel dev:frontend dev:backend",
 		"dev:frontend": "next dev -p 6604",
 		"dev:backend": "convex dev",
@@ -17,8 +18,7 @@
 		"integration": "start-server-and-test 'NODE_ENV=test bun run build && NODE_ENV=test bun start -p 6614' 6614 'bun --env-file .env.test --env-file .env.test.local cypress run --config baseUrl=http://localhost:6614'",
 		"test": "bun typecheck && bun lint && bun unit && bun component && bun integration",
 		"build": "next build",
-		"start": "next start",
-		"prepare": "husky"
+		"start": "next start"
 	},
 	"dependencies": {
 		"@ai-sdk/gateway": "^3.0.53",
@@ -87,7 +87,6 @@
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
 		"vaul": "^0.9.6",
-		"vercel": "^50.34.1",
 		"zod": "^3.24.1"
 	},
 	"devDependencies": {
@@ -110,7 +109,8 @@
 		"prettier": "^3.8.1",
 		"start-server-and-test": "^2.1.5",
 		"tailwindcss": "^3.4.17",
-		"typescript": "^5.9.2"
+		"typescript": "^5.9.2",
+		"vercel": "^50.34.3"
 	},
 	"volta": {
 		"node": "22.22.0"
