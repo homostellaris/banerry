@@ -16,6 +16,8 @@ jobs:
       STUB_APIS: 'true'
       CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: team_MqLkbV0wF7v097wNC80cm6ka
+      VERCEL_PROJECT_ID: prj_q9F4a1oam7pZrQ2d5ieUjkw3HOrB
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
