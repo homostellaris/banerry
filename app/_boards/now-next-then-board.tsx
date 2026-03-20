@@ -129,9 +129,9 @@ function getGridClasses(columnCount: number): string {
 	if (columnCount <= 1) return 'grid-cols-1 max-w-sm mx-auto'
 	if (columnCount === 2) return 'grid-cols-1 sm:grid-cols-2 max-w-2xl mx-auto'
 	if (columnCount === 3) return 'grid-cols-1 md:grid-cols-3'
-	if (columnCount === 4) return 'grid-cols-2 lg:grid-cols-4'
-	if (columnCount === 5) return 'grid-cols-2 lg:grid-cols-5'
-	return 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'
+	if (columnCount === 4) return 'grid-cols-1 lg:grid-cols-4'
+	if (columnCount === 5) return 'grid-cols-1 xl:grid-cols-5'
+	return 'grid-cols-1 xl:grid-cols-6'
 }
 
 export function NowNextThenBoard({

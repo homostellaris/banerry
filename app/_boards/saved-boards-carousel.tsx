@@ -65,7 +65,8 @@ function getPreviewGridClasses(columnCount: number): string {
 	if (columnCount === 2) return 'grid-cols-2'
 	if (columnCount === 3) return 'grid-cols-3'
 	if (columnCount === 4) return 'grid-cols-4'
-	return 'grid-cols-3'
+	if (columnCount === 5) return 'grid-cols-5'
+	return 'grid-cols-6'
 }
 
 export function SavedBoardsCarousel({
