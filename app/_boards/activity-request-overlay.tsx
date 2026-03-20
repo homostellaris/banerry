@@ -26,7 +26,7 @@ export function ActivityRequestOverlay({
 			onClick={onClose}
 		>
 			<div
-				className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full flex flex-col items-center gap-6 p-8"
+				className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full flex flex-col items-center gap-6 px-8 pb-8 pt-14"
 				onClick={e => e.stopPropagation()}
 			>
 				<Button
