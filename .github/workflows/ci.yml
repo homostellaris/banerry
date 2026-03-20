@@ -14,10 +14,8 @@ jobs:
       CYPRESS_OTP_OVERRIDE: 12345678
       GOOGLE_AI_API_KEY: test-key
       STUB_APIS: 'true'
-      NEXT_PUBLIC_CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
-      CONVEX_URL: ${{ secrets.NEXT_PUBLIC_CONVEX_URL }}
       CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      CONVEX_SITE_URL: 'https://content-toucan-531.convex.cloud'
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
