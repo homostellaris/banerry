@@ -1,14 +1,27 @@
 'use client'
-import posthog from 'posthog-js'
+import posthog, { DisplaySurveyType } from 'posthog-js'
 import { CircleHelp, Mail, MessageCircle, MessageSquare } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover'
 
-const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/GROUP_LINK_HERE'
+const WHATSAPP_GROUP_URL =
+	'https://chat.whatsapp.com/DGzxPJQAJ8CAZIM1bivux2?mode=gi_t'
 
 export default function HelpPopover() {
 	function openFeedbackSurvey() {
-		posthog.capture('feedback_button_clicked')
+		posthog.surveys.getSurveys((surveys) => {
+			if (surveys.length > 0) {
+				posthog.displaySurvey(surveys[0].id, {
+					ignoreConditions: true,
+					ignoreDelay: true,
+					displayType: DisplaySurveyType.Popover,
+				})
+			}
+		}, true)
 	}
 
 	return (
