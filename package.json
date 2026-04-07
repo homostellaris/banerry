@@ -6,7 +6,7 @@
 		"crypto": false
 	},
 	"scripts": {
-		"prepare": "husky; bun vercel env pull",
+		"prepare": "husky; [ -n \"$CI\" ] || bun vercel env pull",
 		"dev": "npm-run-all --parallel dev:frontend dev:backend",
 		"dev:frontend": "next dev -p 6604",
 		"dev:backend": "convex dev",

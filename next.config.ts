@@ -7,11 +7,13 @@ const nextConfig: NextConfig = {
 			config.externals = config.externals || []
 			config.externals.push('msw', 'msw/node', '@mswjs/interceptors')
 		} else {
-			// Polyfill node:events for browser bundles (needed by ElevenLabs SDK
+			// Polyfill node: built-ins for browser bundles (needed by ElevenLabs SDK
 			// when bundled in component tests via Cypress webpack)
 			config.resolve.alias = {
 				...config.resolve.alias,
+				'node:child_process': false,
 				'node:events': 'events',
+				'node:stream': 'stream',
 			}
 		}
 		return config

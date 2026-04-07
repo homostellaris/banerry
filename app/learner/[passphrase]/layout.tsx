@@ -1,4 +1,5 @@
 import Header from '@/app/_common/navbar'
+import HelpPopover from '@/app/_common/help-popover'
 import Navigation from '@/app/_common/navigation'
 import ElevenLabsWidget from '@/app/_tts/elevenlabs-widget'
 import { Home } from 'lucide-react'
@@ -21,7 +22,7 @@ export default async function LearnerPassphraseLayout({
 					<Home className="h-6 w-6 text-brand" />
 				</Link>
 				<Navigation basePath={`/learner/${passphrase}`} />
-				<div className="w-[72px]" />
+				<HelpPopover />
 			</Header>
 			<Script
 				src="https://unpkg.com/@elevenlabs/convai-widget-embed"

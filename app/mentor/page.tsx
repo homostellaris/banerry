@@ -5,6 +5,7 @@ import { preloadQuery } from 'convex/nextjs'
 import { Home } from 'lucide-react'
 import Link from 'next/link'
 import Header from '../_common/header'
+import HelpPopover from '../_common/help-popover'
 import Learners from './_components/learners'
 import { SignOutButton } from './_components/signout-button'
 
@@ -23,7 +24,10 @@ export default async function MentorPage() {
 				<Link href="/mentor">
 					<Home className="h-6 w-6 text-brand" />
 				</Link>
-				<SignOutButton />
+				<div className="flex gap-2 items-center">
+					<SignOutButton />
+					<HelpPopover />
+				</div>
 			</Header>
 			<div className="container mx-auto p-4 sm:p-6 max-w-4xl">
 				<div className="flex items-center justify-between mb-8">
