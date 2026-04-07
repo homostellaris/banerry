@@ -138,7 +138,6 @@ export default function RootLayout({
 										{children}
 										{shouldInjectToolbar && <VercelToolbar />}
 										<FloatingTimerCard />
-										{/* <SettingsMenu /> */}
 										<Analytics />
 									</TimerProvider>
 								</VoiceProvider>
