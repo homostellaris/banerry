@@ -10,14 +10,13 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     env:
-      CYPRESS_video: 'true'
+      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+      CYPRESS_VIDEO: 'true'
       CYPRESS_OTP_OVERRIDE: 12345678
       GOOGLE_AI_API_KEY: test-key
       STUB_APIS: 'true'
-      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: team_MqLkbV0wF7v097wNC80cm6ka
-      VERCEL_PROJECT_ID: prj_q9F4a1oam7pZrQ2d5ieUjkw3HOrB
+      NEXT_PUBLIC_CONVEX_URL: https://content-toucan-531.convex.cloud
+      CONVEX_SITE_URL: https://content-toucan-531.convex.cloud
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
