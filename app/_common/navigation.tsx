@@ -56,8 +56,8 @@ export default function Navigation({
 	]
 
 	return (
-		<nav className="flex-1">
-			<div className="flex justify-center overflow-x-auto scrollbar-hide">
+		<nav className="flex-1 h-full">
+			<div className="flex justify-center overflow-x-auto scrollbar-hide h-full">
 				{items.map(item => {
 					const isActive = item.exact
 						? pathname === item.href
@@ -68,7 +68,7 @@ export default function Navigation({
 							key={item.name}
 							href={item.href}
 							className={cn(
-								'flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-brand',
+								'flex items-center gap-2 px-4 h-full text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-brand',
 								isActive
 									? 'border-brand text-brand'
 									: 'border-transparent text-gray-600 hover:border-brand/30',

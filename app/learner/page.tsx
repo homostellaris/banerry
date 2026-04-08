@@ -6,10 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowRight, Loader2, AlertCircle, Home } from 'lucide-react'
+import { ArrowRight, Loader2, AlertCircle } from 'lucide-react'
 import { useQuery } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import Header from '../_common/header'
+import Header from '../_common/navbar'
+import HomeButton from '../_common/home-button'
 import Logo from '../_common/logo'
 import Link from 'next/link'
 import RecentLearners from '../_learners/recent'
@@ -65,9 +66,7 @@ export default function LearnerPage() {
 		<>
 			<Header>
 				<nav className="flex items-center gap-4">
-					<Link href="/">
-						<Home className="h-6 w-6 text-brand" />
-					</Link>
+					<HomeButton href="/" />
 					<RecentLearners />
 				</nav>
 			</Header>

@@ -32,8 +32,9 @@ export default function HelpPopover() {
 					size="icon"
 					aria-label="Help"
 					data-name="help-popover-trigger"
+					className="text-gray-600 hover:text-brand"
 				>
-					<CircleHelp className="h-5 w-5" />
+					<CircleHelp className="h-6 w-6" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent

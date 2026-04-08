@@ -1,9 +1,7 @@
 import Header from '@/app/_common/navbar'
-import HelpPopover from '@/app/_common/help-popover'
+import HomeButton from '@/app/_common/home-button'
 import Navigation from '@/app/_common/navigation'
 import ElevenLabsWidget from '@/app/_tts/elevenlabs-widget'
-import { Home } from 'lucide-react'
-import Link from 'next/link'
 import Script from 'next/script'
 import { PropsWithChildren } from 'react'
 
@@ -18,11 +16,8 @@ export default async function LearnerPassphraseLayout({
 	return (
 		<>
 			<Header>
-				<Link href="/learner">
-					<Home className="h-6 w-6 text-brand" />
-				</Link>
+				<HomeButton href="/learner" />
 				<Navigation basePath={`/learner/${passphrase}`} />
-				<HelpPopover />
 			</Header>
 			<Script
 				src="https://unpkg.com/@elevenlabs/convai-widget-embed"

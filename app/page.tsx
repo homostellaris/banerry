@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Header from './_common/header'
+import Header from './_common/navbar'
 import Logo from './_common/logo'
 import PWAInstall from './_common/pwa-install'
 import RecentLearners from './_learners/recent'

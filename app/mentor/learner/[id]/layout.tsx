@@ -1,6 +1,6 @@
+import HelpPopover from '@/app/_common/help-popover'
+import HomeButton from '@/app/_common/home-button'
 import Navigation from '@/app/_common/navigation'
-import { Home } from 'lucide-react'
-import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 import Header from '../../../_common/navbar'
 import { SignOutButton } from '../../_components/signout-button'
@@ -16,11 +16,12 @@ export default async function Layout({
 	return (
 		<>
 			<Header>
-				<Link href="/mentor">
-					<Home className="h-6 w-6 text-brand" />
-				</Link>
+				<HomeButton href="/mentor" />
 				<Navigation basePath={`/mentor/learner/${id}`} />
-				<SignOutButton />
+				<div className="flex gap-1 items-center self-center">
+					<SignOutButton />
+					<HelpPopover />
+				</div>
 			</Header>
 			{children}
 		</>

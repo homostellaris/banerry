@@ -2,9 +2,8 @@ import AddLearnerForm from '@/app/mentor/_components/add-learner-form'
 import { api } from '@/convex/_generated/api'
 import { convexAuthNextjsToken } from '@convex-dev/auth/nextjs/server'
 import { preloadQuery } from 'convex/nextjs'
-import { Home } from 'lucide-react'
-import Link from 'next/link'
-import Header from '../_common/header'
+import Header from '../_common/navbar'
+import HomeButton from '../_common/home-button'
 import HelpPopover from '../_common/help-popover'
 import Learners from './_components/learners'
 import { SignOutButton } from './_components/signout-button'
@@ -21,10 +20,8 @@ export default async function MentorPage() {
 	return (
 		<>
 			<Header>
-				<Link href="/mentor">
-					<Home className="h-6 w-6 text-brand" />
-				</Link>
-				<div className="flex gap-2 items-center">
+				<HomeButton href="/mentor" />
+				<div className="flex gap-1 items-center self-center">
 					<SignOutButton />
 					<HelpPopover />
 				</div>
