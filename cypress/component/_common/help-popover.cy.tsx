@@ -17,24 +17,31 @@ it('shows help link', () => {
 	cy.getByName('help-link')
 		.should('be.visible')
 		.and('contain.text', 'Help')
-		.and('have.attr', 'href', 'mailto:hello@banerry.app')
+		.and('have.attr', 'href', 'mailto:mrdanielmetcalfe+banerry@gmail.com')
 })
 
 it('shows feedback button', () => {
 	mountHelpPopover()
 	cy.get('[data-name="help-popover-trigger"]').click()
-	cy.getByName('feedback-button').should('be.visible').and('contain.text', 'Feedback')
+	cy.getByName('feedback-button')
+		.should('be.visible')
+		.and('contain.text', 'Feedback')
 })
 
 it('opens the feedback survey when feedback button is clicked', () => {
-	cy.stub(posthog.surveys, 'getSurveys').callsFake((callback: (surveys: { id: string }[]) => void) => {
-		callback([{ id: 'survey-123' }])
-	})
+	cy.stub(posthog.surveys, 'getSurveys').callsFake(
+		(callback: (surveys: { id: string }[]) => void) => {
+			callback([{ id: 'survey-123' }])
+		},
+	)
 	cy.stub(posthog, 'displaySurvey')
 	mountHelpPopover()
 	cy.get('[data-name="help-popover-trigger"]').click()
 	cy.getByName('feedback-button').click()
-	cy.wrap(posthog.displaySurvey).should('have.been.calledWithMatch', 'survey-123')
+	cy.wrap(posthog.displaySurvey).should(
+		'have.been.calledWithMatch',
+		'survey-123',
+	)
 })
 
 it('shows whatsapp link', () => {

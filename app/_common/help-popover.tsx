@@ -13,7 +13,7 @@ const WHATSAPP_GROUP_URL =
 
 export default function HelpPopover() {
 	function openFeedbackSurvey() {
-		posthog.surveys.getSurveys((surveys) => {
+		posthog.surveys.getSurveys(surveys => {
 			if (surveys.length > 0) {
 				posthog.displaySurvey(surveys[0].id, {
 					ignoreConditions: true,
@@ -48,7 +48,7 @@ export default function HelpPopover() {
 						asChild
 					>
 						<a
-							href="mailto:hello@banerry.app"
+							href="mailto:mrdanielmetcalfe+banerry@gmail.com"
 							data-name="help-link"
 						>
 							<Mail className="h-4 w-4" />
