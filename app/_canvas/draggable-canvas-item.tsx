@@ -17,9 +17,11 @@ export default function DraggableCanvasItem({
 	onSelect,
 	onMove,
 	onRemove,
-	gridCols,
-	gridRows,
 	cellSize,
+	minGridX,
+	minGridY,
+	maxGridX,
+	maxGridY,
 }: {
 	item: CanvasItemData
 	activities: Activity[]
@@ -28,9 +30,11 @@ export default function DraggableCanvasItem({
 	onSelect: (id: Id<'canvasItems'> | null) => void
 	onMove: (id: Id<'canvasItems'>, gridX: number, gridY: number) => void
 	onRemove: (id: Id<'canvasItems'>) => void
-	gridCols: number
-	gridRows: number
 	cellSize: number
+	minGridX: number
+	minGridY: number
+	maxGridX: number
+	maxGridY: number
 }) {
 	const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 })
 	const [isDragging, setIsDragging] = useState(false)
@@ -64,15 +68,15 @@ export default function DraggableCanvasItem({
 		if (!pointerDownRef.current) return
 
 		if (hasDraggedRef.current) {
-			const newGridX = Math.max(
-				0,
-				Math.min(gridCols - 1, Math.round(item.gridX + dragDelta.x / cellSize)),
-			)
-			const newGridY = Math.max(
-				0,
-				Math.min(gridRows - 1, Math.round(item.gridY + dragDelta.y / cellSize)),
-			)
-			onMove(item._id, newGridX, newGridY)
+			// Calculate new position with snap-to-grid
+			const newGridX = Math.round(item.gridX + dragDelta.x / cellSize)
+			const newGridY = Math.round(item.gridY + dragDelta.y / cellSize)
+
+			// Clamp to valid bounds (allow extension)
+			const clampedX = Math.max(minGridX, Math.min(maxGridX - 1, newGridX))
+			const clampedY = Math.max(minGridY, Math.min(maxGridY - 1, newGridY))
+
+			onMove(item._id, clampedX, clampedY)
 		} else {
 			onSelect(isSelected ? null : item._id)
 		}
@@ -85,9 +89,9 @@ export default function DraggableCanvasItem({
 
 	return (
 		<div
-			className={`absolute rounded-lg overflow-hidden shadow-sm border-2 ${
-				isSelected ? 'border-brand' : 'border-transparent'
-			} ${isDragging ? 'shadow-lg opacity-90' : ''}`}
+			className={`absolute rounded-lg overflow-hidden border-2 transition-all ${
+				isSelected ? 'border-brand shadow-lg' : 'border-transparent shadow-md'
+			} ${isDragging ? 'shadow-2xl' : ''}`}
 			style={{
 				left: visualLeft + 2,
 				top: visualTop + 2,
@@ -97,6 +101,8 @@ export default function DraggableCanvasItem({
 				touchAction: 'none',
 				cursor: isDragging ? 'grabbing' : 'grab',
 				userSelect: 'none',
+				// Smooth transitions for position updates
+				transition: isDragging ? 'none' : 'box-shadow 0.2s ease, border-color 0.2s ease',
 			}}
 			onPointerDown={handlePointerDown}
 			onPointerMove={handlePointerMove}

@@ -7,8 +7,8 @@ import { useState } from 'react'
 import CanvasGrid from './canvas-grid'
 import CanvasPalette from './canvas-palette'
 
-const GRID_COLS = 20
-const GRID_ROWS = 20
+// Canvas extends dynamically based on placed items
+// No fixed grid size needed anymore
 
 export interface Activity {
 	id: string
@@ -78,7 +78,8 @@ export default function CanvasBoard({
 		color?: string,
 	) {
 		const items = canvasItems ?? []
-		const { x, y } = findFreeCell(items, GRID_COLS, GRID_ROWS)
+		// Find a free cell in a reasonable space (allow canvas to grow)
+		const { x, y } = findFreeCell(items, 50, 50) // Larger search space
 		await addItemMutation({ learnerId, type, sourceId, gridX: x, gridY: y, color })
 	}
 
@@ -110,7 +111,7 @@ export default function CanvasBoard({
 	}
 
 	return (
-		<>
+		<div className="flex flex-col h-full">
 			<CanvasGrid
 				items={canvasItems}
 				activities={activities}
@@ -125,6 +126,6 @@ export default function CanvasBoard({
 				scripts={scripts ?? []}
 				onAdd={handleAddItem}
 			/>
-		</>
+		</div>
 	)
 }
