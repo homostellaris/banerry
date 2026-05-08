@@ -45,7 +45,7 @@ export default function CanvasPalette({
 	}
 
 	return (
-		<div className="border-t border-gray-200 bg-white flex-shrink-0 shadow-lg">
+		<div data-testid="canvas-palette" className="border-t border-gray-200 bg-white flex-shrink-0 shadow-lg">
 			<div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-gray-50">
 				<div className="flex gap-2">
 					<TabButton
@@ -67,7 +67,7 @@ export default function CanvasPalette({
 						label="Colours"
 					/>
 				</div>
-				<button
+				<button data-testid="palette-toggle"
 					className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
 					onClick={() => setIsExpanded(!isExpanded)}
 					aria-label={isExpanded ? 'Collapse palette' : 'Expand palette'}
@@ -107,7 +107,7 @@ function TabButton({
 	label: string
 }) {
 	return (
-		<button
+		<button data-testid="palette-toggle"
 			className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
 				active
 					? 'bg-brand text-white shadow-md'
@@ -165,7 +165,7 @@ function ActivityPaletteItem({
 	})
 
 	return (
-		<button
+		<button data-testid="palette-toggle"
 			className="flex-shrink-0 w-24 rounded-lg border-2 border-gray-200 overflow-hidden hover:border-brand hover:shadow-md transition-all active:scale-95 bg-white"
 			onClick={() => onAdd('activity', activity.id)}
 			aria-label={`Add ${activity.title} to canvas`}
@@ -213,7 +213,7 @@ function ScriptsTab({
 	return (
 		<div className="flex gap-3">
 			{scripts.map(script => (
-				<button
+				<button data-testid="palette-toggle"
 					key={script._id}
 					className="flex-shrink-0 w-32 h-24 rounded-lg border-2 border-gray-200 bg-brand/5 hover:border-brand hover:shadow-md transition-all active:scale-95 p-3 flex items-center justify-center"
 					onClick={() => onAdd('script', script._id as string)}
@@ -240,11 +240,11 @@ function ColorsTab({
 	return (
 		<div className="flex flex-wrap gap-4">
 			{PALETTE_COLORS.map(color => (
-				<button
+				<button data-testid="palette-toggle"
 					key={color}
 					className="w-14 h-14 rounded-lg border-2 border-gray-300 hover:border-gray-500 hover:shadow-md active:scale-90 transition-all shadow-sm"
 					style={{ backgroundColor: color }}
-					onClick={() => onAdd('color', undefined, color)}
+					data-testid="color-option" onClick={() => onAdd('color'', undefined, color)}
 					aria-label={`Add ${color} colour tile`}
 					title={color}
 				/>
