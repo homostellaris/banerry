@@ -55,7 +55,7 @@ export default function CanvasGrid({
 
 	return (
 		<div
-			className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100"
+			data-testid="canvas-container" className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100"
 			onClick={() => onSelect(null)}
 			// Touch scroll optimization: use passive listeners
 			onTouchMove={(e) => {
@@ -63,7 +63,7 @@ export default function CanvasGrid({
 			}}
 		>
 			<div
-				className="relative select-none"
+				data-testid="canvas-grid" className="relative select-none"
 				style={{
 					width: canvasWidth,
 					height: canvasHeight,
