@@ -88,7 +88,7 @@ export default function DraggableCanvasItem({
 	}
 
 	return (
-		<div
+		<div data-testid="canvas-item" data-x={item.gridX} data-y={item.gridY} data-selected={isSelected} data-snapped="true"
 			className={`absolute rounded-lg overflow-hidden border-2 transition-all ${
 				isSelected ? 'border-brand shadow-lg' : 'border-transparent shadow-md'
 			} ${isDragging ? 'shadow-2xl' : ''}`}
@@ -114,7 +114,7 @@ export default function DraggableCanvasItem({
 				scripts={scripts}
 			/>
 			{isSelected && (
-				<button
+				<button data-testid="delete-item"
 					className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md z-10"
 					onClick={e => {
 						e.stopPropagation()
