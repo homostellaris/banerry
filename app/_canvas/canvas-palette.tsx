@@ -107,7 +107,7 @@ function TabButton({
 	label: string
 }) {
 	return (
-		<button data-testid="palette-toggle"
+		<button data-testid="palette-tab-button"
 			className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all active:scale-95 ${
 				active
 					? 'bg-brand text-white shadow-md'
@@ -165,7 +165,7 @@ function ActivityPaletteItem({
 	})
 
 	return (
-		<button data-testid="palette-toggle"
+		<button data-testid="activity-palette-item"
 			className="flex-shrink-0 w-24 rounded-lg border-2 border-gray-200 overflow-hidden hover:border-brand hover:shadow-md transition-all active:scale-95 bg-white"
 			onClick={() => onAdd('activity', activity.id)}
 			aria-label={`Add ${activity.title} to canvas`}
@@ -213,7 +213,7 @@ function ScriptsTab({
 	return (
 		<div className="flex gap-3">
 			{scripts.map(script => (
-				<button data-testid="palette-toggle"
+				<button data-testid="script-palette-item"
 					key={script._id}
 					className="flex-shrink-0 w-32 h-24 rounded-lg border-2 border-gray-200 bg-brand/5 hover:border-brand hover:shadow-md transition-all active:scale-95 p-3 flex items-center justify-center"
 					onClick={() => onAdd('script', script._id as string)}
@@ -240,11 +240,12 @@ function ColorsTab({
 	return (
 		<div className="flex flex-wrap gap-4">
 			{PALETTE_COLORS.map(color => (
-				<button data-testid="palette-toggle"
+				<button
 					key={color}
 					className="w-14 h-14 rounded-lg border-2 border-gray-300 hover:border-gray-500 hover:shadow-md active:scale-90 transition-all shadow-sm"
 					style={{ backgroundColor: color }}
-					data-testid="color-option" onClick={() => onAdd('color'', undefined, color)}
+					data-testid="color-option"
+					onClick={() => onAdd('color', undefined, color)}
 					aria-label={`Add ${color} colour tile`}
 					title={color}
 				/>
