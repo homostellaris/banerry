@@ -64,6 +64,7 @@ export default function CanvasGrid({
 		>
 			<div
 				data-testid="canvas-grid" className="relative select-none"
+				tabIndex={0}
 				style={{
 					width: canvasWidth,
 					height: canvasHeight,

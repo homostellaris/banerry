@@ -56,28 +56,36 @@ describe('Canvas Section', () => {
     })
 
     it('allows collapsing the palette', () => {
+      cy.get('[data-testid="palette-tab-button"]').contains('Colours').click()
+      cy.get('[data-testid="color-option"]').should('have.length.greaterThan', 0)
       cy.get('[data-testid="palette-toggle"]').click()
-      // Palette content should not be visible after collapse
-      cy.get('[data-testid="color-option"]').should('have.length', 0)
+      cy.get('[data-testid="color-option"]').should('not.exist')
     })
 
     it('allows expanding the collapsed palette', () => {
+      cy.get('[data-testid="palette-tab-button"]').contains('Colours').click()
       cy.get('[data-testid="palette-toggle"]').click()
+      cy.get('[data-testid="color-option"]').should('not.exist')
       cy.get('[data-testid="palette-toggle"]').click()
-      // Colors should reappear
       cy.get('[data-testid="color-option"]').should('have.length.greaterThan', 0)
     })
 
     it('displays color options in palette', () => {
+      cy.get('[data-testid="palette-tab-button"]').contains('Colours').click()
       cy.get('[data-testid="color-option"]').should('have.length.greaterThan', 0)
     })
 
     it('has at least 12 color options', () => {
+      cy.get('[data-testid="palette-tab-button"]').contains('Colours').click()
       cy.get('[data-testid="color-option"]').should('have.length.at.least', 12)
     })
   })
 
   describe('Color Palette Grid', () => {
+    beforeEach(() => {
+      cy.get('[data-testid="palette-tab-button"]').contains('Colours').click()
+    })
+
     it('color options are visually distinct', () => {
       cy.get('[data-testid="color-option"]').first().should('have.css', 'backgroundColor')
     })
@@ -175,7 +183,7 @@ describe('Canvas Section', () => {
 
   describe('Page Load', () => {
     it('page title includes canvas or learner name', () => {
-      cy.title().should('include.oneOf', ['Canvas', 'Learner', 'Banerry'])
+      cy.title().should('include', 'Banerry')
     })
 
     it('all critical elements load within timeout', () => {
