@@ -1,10 +1,29 @@
 describe('Canvas Section', () => {
-  const passphrase = 'test-learner'
-  const baseUrl = '/learner/test-learner/canvas'
+  const testEmail = 'cypress-canvas@banerry.app'
+  let passphrase: string
+  let learnerId: string
+
+  before(() => {
+    cy.signIn(testEmail)
+    cy.createLearner('Canvas Learner')
+
+    cy.visit('/mentor')
+    cy.getByName('learner-card').contains('Canvas Learner').click()
+    cy.url()
+      .should('include', '/mentor/learner/')
+      .then(url => {
+        learnerId = url.split('/mentor/learner/')[1].split('/')[0]
+      })
+    cy.getByName('learner-passphrase')
+      .should('not.be.empty')
+      .invoke('text')
+      .then(text => {
+        passphrase = text.trim()
+      })
+  })
 
   beforeEach(() => {
-    cy.task('resetCypressUsers')
-    cy.visit(baseUrl)
+    cy.visit(`/learner/${passphrase}/canvas`)
     // Wait for canvas to load
     cy.get('[data-testid="canvas-grid"]', { timeout: 5000 }).should('exist')
   })
