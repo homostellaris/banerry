@@ -26,6 +26,8 @@ jobs:
           echo '{"token":"${{ secrets.VERCEL_TOKEN }}"}' > ~/.local/share/com.vercel.cli/auth.json
       - name: Install dependencies
         run: bun install --frozen-lockfile
+      - name: Deploy Convex schema and functions
+        run: bunx convex deploy
       - name: Typecheck
         run: bun typecheck
       - name: Lint
