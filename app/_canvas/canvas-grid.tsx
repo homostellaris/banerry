@@ -3,28 +3,16 @@
 import { Id } from '@/convex/_generated/dataModel'
 import { useMemo } from 'react'
 import { Activity, CanvasItemData, Script } from './canvas-board'
+import { CELL_SIZE } from './constants'
 import DraggableCanvasItem from './draggable-canvas-item'
 
-const CELL_SIZE = 100
-const MIN_GRID_SIZE = 20 // Minimum visible grid cells
+const MIN_GRID_SIZE = 20
 
-/**
- * Calculate the bounds of the canvas based on placed items.
- * Adds padding around items to allow room for interaction.
- */
 function calculateCanvasBounds(items: CanvasItemData[], minSize: number) {
-	if (items.length === 0) {
-		return { minX: 0, minY: 0, maxX: minSize, maxY: minSize }
-	}
-
-	const xs = items.map(item => item.gridX)
-	const ys = items.map(item => item.gridY)
-	const minX = Math.min(0, Math.min(...xs) - 2) // 2 cell padding
-	const minY = Math.min(0, Math.min(...ys) - 2)
-	const maxX = Math.max(minSize, Math.max(...xs) + 3) // Account for item width + padding
-	const maxY = Math.max(minSize, Math.max(...ys) + 3)
-
-	return { minX, minY, maxX, maxY }
+	if (items.length === 0) return { maxX: minSize, maxY: minSize }
+	const maxX = Math.max(minSize, Math.max(...items.map(i => i.gridX)) + 3)
+	const maxY = Math.max(minSize, Math.max(...items.map(i => i.gridY)) + 3)
+	return { maxX, maxY }
 }
 
 export default function CanvasGrid({
@@ -35,6 +23,8 @@ export default function CanvasGrid({
 	onSelect,
 	onMove,
 	onRemove,
+	containerRef,
+	dropPreview,
 }: {
 	items: CanvasItemData[]
 	activities: Activity[]
@@ -43,56 +33,68 @@ export default function CanvasGrid({
 	onSelect: (id: Id<'canvasItems'> | null) => void
 	onMove: (id: Id<'canvasItems'>, gridX: number, gridY: number) => void
 	onRemove: (id: Id<'canvasItems'>) => void
+	containerRef: { current: HTMLDivElement | null }
+	dropPreview: { gridX: number; gridY: number } | null
 }) {
-	// Calculate dynamic canvas bounds based on content
-	const { minX, minY, maxX, maxY } = useMemo(
+	const { maxX, maxY } = useMemo(
 		() => calculateCanvasBounds(items, MIN_GRID_SIZE),
 		[items],
 	)
 
-	const canvasWidth = (maxX - minX) * CELL_SIZE
-	const canvasHeight = (maxY - minY) * CELL_SIZE
+	const canvasWidth = maxX * CELL_SIZE
+	const canvasHeight = maxY * CELL_SIZE
 
 	return (
 		<div
-			data-testid="canvas-container" className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100"
-			onClick={() => onSelect(null)}
-			// Touch scroll optimization: use passive listeners
-			onTouchMove={(e) => {
-				// Allow natural scrolling
+			ref={containerRef}
+			data-testid="canvas-container"
+			className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 to-slate-100"
+			onPointerDown={(e: any) => {
+				// Only deselect if clicking directly on the container, not on a child
+				if (e.target === e.currentTarget) onSelect(null)
 			}}
 		>
 			<div
-				data-testid="canvas-grid" className="relative select-none"
+				data-testid="canvas-grid"
+				className="relative select-none"
 				tabIndex={0}
 				style={{
 					width: canvasWidth,
 					height: canvasHeight,
-					// Grid pattern: repeating lines at CELL_SIZE intervals
 					backgroundImage: `
 						linear-gradient(to right, #d1d5db 1px, transparent 1px),
 						linear-gradient(to bottom, #d1d5db 1px, transparent 1px)
 					`,
 					backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`,
-					backgroundPosition: `${minX * CELL_SIZE}px ${minY * CELL_SIZE}px`,
 					backgroundColor: '#ffffff',
-					// Prevent text selection during drag
 					WebkitUserSelect: 'none',
-				userSelect: 'none',
-				// Improve touch performance
-				WebkitTouchCallout: 'none',
-			}}
+					userSelect: 'none',
+					WebkitTouchCallout: 'none',
+				}}
 			>
-				{items.length === 0 && (
+				{items.length === 0 && !dropPreview && (
 					<div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 						<div className="text-center">
 							<p className="text-gray-400 text-lg font-medium mb-2">Your Canvas</p>
-							<p className="text-gray-300 text-sm">Tap items below to create</p>
+							<p className="text-gray-300 text-sm">Drag items from below to create</p>
 						</div>
 					</div>
 				)}
 
-				{/* Render all canvas items with absolute positioning */}
+				{/* Drop preview cell highlight */}
+				{dropPreview && (
+					<div
+						className="absolute rounded-md border-2 border-brand bg-brand/10 pointer-events-none"
+						style={{
+							left: dropPreview.gridX * CELL_SIZE + 2,
+							top: dropPreview.gridY * CELL_SIZE + 2,
+							width: CELL_SIZE - 4,
+							height: CELL_SIZE - 4,
+							zIndex: 50,
+						}}
+					/>
+				)}
+
 				{items.map(item => (
 					<DraggableCanvasItem
 						key={item._id}
@@ -104,11 +106,6 @@ export default function CanvasGrid({
 						onMove={onMove}
 						onRemove={onRemove}
 						cellSize={CELL_SIZE}
-						// Pass bounds so items know valid placement area
-						minGridX={minX}
-						minGridY={minY}
-						maxGridX={maxX}
-						maxGridY={maxY}
 					/>
 				))}
 			</div>

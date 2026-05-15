@@ -6,8 +6,7 @@ import { useQuery } from 'convex/react'
 import { X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Activity, CanvasItemData, Script } from './canvas-board'
-
-const DRAG_THRESHOLD = 8
+import { DRAG_THRESHOLD } from './constants'
 
 export default function DraggableCanvasItem({
 	item,
@@ -18,10 +17,6 @@ export default function DraggableCanvasItem({
 	onMove,
 	onRemove,
 	cellSize,
-	minGridX,
-	minGridY,
-	maxGridX,
-	maxGridY,
 }: {
 	item: CanvasItemData
 	activities: Activity[]
@@ -31,10 +26,6 @@ export default function DraggableCanvasItem({
 	onMove: (id: Id<'canvasItems'>, gridX: number, gridY: number) => void
 	onRemove: (id: Id<'canvasItems'>) => void
 	cellSize: number
-	minGridX: number
-	minGridY: number
-	maxGridX: number
-	maxGridY: number
 }) {
 	const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 })
 	const [isDragging, setIsDragging] = useState(false)
@@ -44,7 +35,7 @@ export default function DraggableCanvasItem({
 	const visualLeft = item.gridX * cellSize + (isDragging ? dragDelta.x : 0)
 	const visualTop = item.gridY * cellSize + (isDragging ? dragDelta.y : 0)
 
-	function handlePointerDown(e: React.PointerEvent) {
+	function handlePointerDown(e: any) {
 		e.stopPropagation()
 		e.currentTarget.setPointerCapture(e.pointerId)
 		pointerDownRef.current = { pointerX: e.clientX, pointerY: e.clientY }
@@ -52,7 +43,7 @@ export default function DraggableCanvasItem({
 		setDragDelta({ x: 0, y: 0 })
 	}
 
-	function handlePointerMove(e: React.PointerEvent) {
+	function handlePointerMove(e: any) {
 		if (!pointerDownRef.current) return
 		const dx = e.clientX - pointerDownRef.current.pointerX
 		const dy = e.clientY - pointerDownRef.current.pointerY
@@ -68,15 +59,9 @@ export default function DraggableCanvasItem({
 		if (!pointerDownRef.current) return
 
 		if (hasDraggedRef.current) {
-			// Calculate new position with snap-to-grid
-			const newGridX = Math.round(item.gridX + dragDelta.x / cellSize)
-			const newGridY = Math.round(item.gridY + dragDelta.y / cellSize)
-
-			// Clamp to valid bounds (allow extension)
-			const clampedX = Math.max(minGridX, Math.min(maxGridX - 1, newGridX))
-			const clampedY = Math.max(minGridY, Math.min(maxGridY - 1, newGridY))
-
-			onMove(item._id, clampedX, clampedY)
+			const newGridX = Math.max(0, Math.round(item.gridX + dragDelta.x / cellSize))
+			const newGridY = Math.max(0, Math.round(item.gridY + dragDelta.y / cellSize))
+			onMove(item._id, newGridX, newGridY)
 		} else {
 			onSelect(isSelected ? null : item._id)
 		}
@@ -88,7 +73,12 @@ export default function DraggableCanvasItem({
 	}
 
 	return (
-		<div data-testid="canvas-item" data-x={item.gridX} data-y={item.gridY} data-selected={isSelected} data-snapped="true"
+		<div
+			data-testid="canvas-item"
+			data-x={item.gridX}
+			data-y={item.gridY}
+			data-selected={isSelected}
+			data-snapped="true"
 			className={`absolute rounded-lg overflow-hidden border-2 transition-all ${
 				isSelected ? 'border-brand shadow-lg' : 'border-transparent shadow-md'
 			} ${isDragging ? 'shadow-2xl' : ''}`}
@@ -101,21 +91,20 @@ export default function DraggableCanvasItem({
 				touchAction: 'none',
 				cursor: isDragging ? 'grabbing' : 'grab',
 				userSelect: 'none',
-				// Smooth transitions for position updates
 				transition: isDragging ? 'none' : 'box-shadow 0.2s ease, border-color 0.2s ease',
 			}}
 			onPointerDown={handlePointerDown}
 			onPointerMove={handlePointerMove}
 			onPointerUp={handlePointerUp}
+			// Prevent synthetic click from bubbling to canvas and deselecting immediately
+			onClick={e => e.stopPropagation()}
 		>
-			<ItemContent
-				item={item}
-				activities={activities}
-				scripts={scripts}
-			/>
+			<ItemContent item={item} activities={activities} scripts={scripts} />
 			{isSelected && (
-				<button data-testid="delete-item"
+				<button
+					data-testid="delete-item"
 					className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow-md z-10"
+					onPointerDown={e => e.stopPropagation()}
 					onClick={e => {
 						e.stopPropagation()
 						onRemove(item._id)
@@ -157,11 +146,11 @@ function ActivityContent({
 	const activity = activities.find(a => a.id === sourceId)
 	const imageUrl = useQuery(
 		api.boards.getImageUrl,
-		activity ? { storageId: activity.imageStorageId } : 'skip',
+		activity?.imageStorageId ? { storageId: activity.imageStorageId } : 'skip',
 	)
 
 	return (
-		<div className="w-full h-full relative">
+		<div className="w-full h-full relative bg-gray-100">
 			{imageUrl ? (
 				<img
 					src={imageUrl}
@@ -170,7 +159,7 @@ function ActivityContent({
 					draggable={false}
 				/>
 			) : (
-				<div className="w-full h-full bg-gray-100 flex items-center justify-center">
+				<div className="w-full h-full flex items-center justify-center">
 					<div className="w-6 h-6 rounded-full border-2 border-brand border-t-transparent animate-spin" />
 				</div>
 			)}
