@@ -116,6 +116,11 @@ export default function CanvasBoard({
 			if (script?.dialogue) {
 				speak(script.dialogue, selectedVoice)
 			}
+		} else if (item.type === 'activity' && item.sourceId) {
+			const activity = activities.find(a => a.id === item.sourceId)
+			if (activity?.title) {
+				speak(activity.title, selectedVoice)
+			}
 		}
 	}
 
