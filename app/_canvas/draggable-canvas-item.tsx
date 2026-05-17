@@ -16,6 +16,7 @@ export default function DraggableCanvasItem({
 	onSelect,
 	onMove,
 	onRemove,
+	onTap,
 	cellSize,
 }: {
 	item: CanvasItemData
@@ -25,6 +26,7 @@ export default function DraggableCanvasItem({
 	onSelect: (id: Id<'canvasItems'> | null) => void
 	onMove: (id: Id<'canvasItems'>, gridX: number, gridY: number) => void
 	onRemove: (id: Id<'canvasItems'>) => void
+	onTap: (item: CanvasItemData) => void
 	cellSize: number
 }) {
 	const [dragDelta, setDragDelta] = useState({ x: 0, y: 0 })
@@ -64,6 +66,7 @@ export default function DraggableCanvasItem({
 			onMove(item._id, newGridX, newGridY)
 		} else {
 			onSelect(isSelected ? null : item._id)
+			onTap(item)
 		}
 
 		pointerDownRef.current = null

@@ -23,6 +23,7 @@ export default function CanvasGrid({
 	onSelect,
 	onMove,
 	onRemove,
+	onTap,
 	containerRef,
 	dropPreview,
 }: {
@@ -33,6 +34,7 @@ export default function CanvasGrid({
 	onSelect: (id: Id<'canvasItems'> | null) => void
 	onMove: (id: Id<'canvasItems'>, gridX: number, gridY: number) => void
 	onRemove: (id: Id<'canvasItems'>) => void
+	onTap: (item: CanvasItemData) => void
 	containerRef: { current: HTMLDivElement | null }
 	dropPreview: { gridX: number; gridY: number } | null
 }) {
@@ -105,6 +107,7 @@ export default function CanvasGrid({
 						onSelect={onSelect}
 						onMove={onMove}
 						onRemove={onRemove}
+						onTap={onTap}
 						cellSize={CELL_SIZE}
 					/>
 				))}

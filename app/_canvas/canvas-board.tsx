@@ -9,6 +9,8 @@ import { createPortal } from 'react-dom'
 import CanvasGrid from './canvas-grid'
 import CanvasPalette from './canvas-palette'
 import { CELL_SIZE } from './constants'
+import { useCachedTTS } from '@/app/_tts/use-cached-tts'
+import { useVoice } from '@/app/_tts/voice-context'
 
 export interface Activity {
 	id: string
@@ -63,6 +65,9 @@ export default function CanvasBoard({
 	const [dropPreview, setDropPreview] = useState<{ gridX: number; gridY: number } | null>(null)
 	const canvasContainerRef = useRef<HTMLDivElement>(null)
 
+	const { speak } = useCachedTTS()
+	const { selectedVoice } = useVoice()
+
 	const canvasItems = useQuery(api.canvas.listItems, { learnerId })
 	const boards = useQuery(api.boards.getBoards, { learnerId })
 	const scripts = useQuery(api.scripts.list, { learnerId })
@@ -103,6 +108,15 @@ export default function CanvasBoard({
 	async function handleRemoveItem(itemId: Id<'canvasItems'>) {
 		setSelectedItemId(null)
 		await removeItemMutation({ itemId })
+	}
+
+	function handleItemTap(item: CanvasItemData) {
+		if (item.type === 'script' && item.sourceId) {
+			const script = scripts?.find(s => (s._id as string) === item.sourceId)
+			if (script?.dialogue) {
+				speak(script.dialogue, selectedVoice)
+			}
+		}
 	}
 
 	function getGridPosition(clientX: number, clientY: number): { gridX: number; gridY: number } | null {
@@ -172,6 +186,7 @@ export default function CanvasBoard({
 				onSelect={setSelectedItemId}
 				onMove={handleMoveItem}
 				onRemove={handleRemoveItem}
+				onTap={handleItemTap}
 				containerRef={canvasContainerRef}
 				dropPreview={dropPreview}
 			/>
