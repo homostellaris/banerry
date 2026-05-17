@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTimer } from '../_common/timer-context'
 import { useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 export default function ElevenLabsWidget({
 	agentId,
@@ -13,6 +14,7 @@ export default function ElevenLabsWidget({
 }) {
 	const router = useRouter()
 	const timer = useTimer()
+	const [mobileVisible, setMobileVisible] = useState(false)
 
 	useEffect(() => {
 		const onCall = (event: any) => {
@@ -26,33 +28,60 @@ export default function ElevenLabsWidget({
 					timer.startTimer(timerDurationSeconds)
 				},
 			}
-		}
-		const onDOMContentLoaded = () => {
-			const widget = document.querySelector('elevenlabs-convai')
-			if (widget) {
-				widget.addEventListener('elevenlabs-convai:call', onCall)
-			}
+			window.dispatchEvent(new CustomEvent('elevenlabs:conversation-start'))
 		}
 
-		// document.addEventListener("DOMContentLoaded", onDOMContentLoaded);
+		const onCallEnded = () => {
+			setMobileVisible(false)
+			window.dispatchEvent(new CustomEvent('elevenlabs:conversation-end'))
+		}
+
+		const onTrigger = () => {
+			setMobileVisible(true)
+			// Click the widget's button after React commits the visibility change
+			setTimeout(() => {
+				const widget = document.querySelector('elevenlabs-convai')
+				if (!widget) return
+				const shadowRoot = (widget as any).shadowRoot
+				const btn = shadowRoot?.querySelector('button')
+				if (btn) {
+					btn.click()
+				} else {
+					;(widget as HTMLElement).click()
+				}
+			}, 50)
+		}
+
 		const widget = document.querySelector('elevenlabs-convai')
 		if (widget) {
 			widget.addEventListener('elevenlabs-convai:call', onCall)
+			widget.addEventListener('elevenlabs-convai:call_ended', onCallEnded)
 		}
+		window.addEventListener('elevenlabs:trigger', onTrigger)
 
 		return () => {
-			document.removeEventListener('DOMContentLoaded', onDOMContentLoaded)
-			const widget = document.querySelector('elevenlabs-convai')
-			if (widget) {
-				widget.removeEventListener('elevenlabs-convai:call', onCall)
+			window.removeEventListener('elevenlabs:trigger', onTrigger)
+			const widgetEl = document.querySelector('elevenlabs-convai')
+			if (widgetEl) {
+				widgetEl.removeEventListener('elevenlabs-convai:call', onCall)
+				widgetEl.removeEventListener('elevenlabs-convai:call_ended', onCallEnded)
 			}
 		}
 	})
 
 	return (
-		<>
+		// On mobile: invisible + no pointer events by default (hides the floating button
+		// without unmounting the web component, keeping its JS alive for event listeners).
+		// visibility:hidden propagates into shadow DOM, suppressing fixed-position descendants.
+		// On sm+ (desktop): normal rendering with native floating button.
+		// When a mobile conversation is triggered, mobileVisible removes the hiding classes.
+		<div
+			className={cn(
+				!mobileVisible && 'max-sm:invisible max-sm:pointer-events-none',
+			)}
+		>
 			{/* @ts-expect-error: because I said so */}
 			<elevenlabs-convai agent-id={agentId}></elevenlabs-convai>
-		</>
+		</div>
 	)
 }
