@@ -133,7 +133,7 @@ function TabButton({
 }: {
 	active: boolean
 	onClick: () => void
-	icon: unknown
+	icon: any
 	label: string
 }) {
 	return (

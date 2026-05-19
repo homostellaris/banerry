@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Deploy Convex schema and functions
+        if: env.CONVEX_DEPLOY_KEY != ''
         run: bunx convex deploy
       - name: Typecheck
         run: bun typecheck
