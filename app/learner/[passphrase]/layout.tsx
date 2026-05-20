@@ -2,6 +2,7 @@ import Header from '@/app/_common/navbar'
 import HomeButton from '@/app/_common/home-button'
 import Navigation from '@/app/_common/navigation'
 import ElevenLabsWidget from '@/app/_tts/elevenlabs-widget'
+import ElevenLabsNavButton from '@/app/_tts/elevenlabs-nav-button'
 import Script from 'next/script'
 import { PropsWithChildren } from 'react'
 
@@ -16,7 +17,10 @@ export default async function LearnerPassphraseLayout({
 	return (
 		<>
 			<Header>
-				<HomeButton href="/learner" />
+				<div className="flex items-center">
+					<HomeButton href="/learner" />
+					<ElevenLabsNavButton />
+				</div>
 				<Navigation basePath={`/learner/${passphrase}`} />
 			</Header>
 			<Script

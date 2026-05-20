@@ -1,9 +1,23 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { BookOpen, Clock, Columns3, LayoutGrid, Palette } from 'lucide-react'
+import {
+	BookOpen,
+	ChevronsUpDown,
+	Clock,
+	Columns3,
+	LayoutGrid,
+	Palette,
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
 
 type NavigationItem = {
 	name: string
@@ -55,30 +69,64 @@ export default function Navigation({
 		...additionalItems,
 	]
 
+	const isItemActive = (item: NavigationItem) => {
+		if (!pathname) return false
+		return item.exact ? pathname === item.href : pathname.startsWith(item.href)
+	}
+
+	const activeItem = items.find(isItemActive) ?? items[0]
+
 	return (
 		<nav className="flex-1 h-full">
-			<div className="flex justify-center overflow-x-auto scrollbar-hide h-full">
-				{items.map(item => {
-					const isActive = item.exact
-						? pathname === item.href
-						: pathname.startsWith(item.href)
-
-					return (
-						<Link
-							key={item.name}
-							href={item.href}
-							className={cn(
-								'flex items-center gap-2 px-4 h-full text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-brand',
-								isActive
-									? 'border-brand text-brand'
-									: 'border-transparent text-gray-600 hover:border-brand/30',
-							)}
+			{/* Mobile: dropdown */}
+			<div className="sm:hidden flex items-center justify-center h-full">
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="ghost"
+							className="gap-1.5 px-2 font-medium text-sm"
 						>
-							<item.icon className="h-4 w-4" />
-							<span className="hidden sm:inline">{item.name}</span>
-						</Link>
-					)
-				})}
+							<activeItem.icon className="h-4 w-4 shrink-0" />
+							<span>{activeItem.name}</span>
+							<ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="start" className="w-44">
+						{items.map(item => (
+							<DropdownMenuItem
+								key={item.name}
+								asChild
+								className={cn(
+									isItemActive(item) && 'bg-accent text-accent-foreground',
+								)}
+							>
+								<Link href={item.href}>
+									<item.icon className="h-4 w-4" />
+									{item.name}
+								</Link>
+							</DropdownMenuItem>
+						))}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</div>
+
+			{/* Desktop: tabs */}
+			<div className="hidden sm:flex justify-center overflow-x-auto scrollbar-hide h-full">
+				{items.map(item => (
+					<Link
+						key={item.name}
+						href={item.href}
+						className={cn(
+							'flex items-center gap-2 px-4 h-full text-sm font-medium whitespace-nowrap border-b-2 transition-colors hover:text-brand',
+							isItemActive(item)
+								? 'border-brand text-brand'
+								: 'border-transparent text-gray-600 hover:border-brand/30',
+						)}
+					>
+						<item.icon className="h-4 w-4" />
+						<span>{item.name}</span>
+					</Link>
+				))}
 			</div>
 		</nav>
 	)
