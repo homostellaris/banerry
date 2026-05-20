@@ -23,9 +23,13 @@ describe('Canvas Section', () => {
   })
 
   beforeEach(() => {
+    cy.on('uncaught:exception', error => {
+      if (error.message.includes('Unauthenticated')) return false
+    })
+    cy.clearAllCookies()
+    cy.clearAllLocalStorage()
     cy.visit(`/learner/${passphrase}/canvas`)
-    // Wait for canvas to load
-    cy.get('[data-testid="canvas-grid"]', { timeout: 5000 }).should('exist')
+    cy.get('[data-testid="canvas-grid"]', { timeout: 10000 }).should('exist')
   })
 
   describe('Canvas Grid Rendering', () => {

@@ -173,18 +173,10 @@ export default function CanvasBoard({
 		}
 	}
 
-	if (!canvasItems) {
-		return (
-			<div className="flex-1 flex items-center justify-center">
-				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand" />
-			</div>
-		)
-	}
-
 	return (
 		<div className="flex flex-col h-full">
 			<CanvasGrid
-				items={canvasItems}
+				items={canvasItems ?? []}
 				activities={activities}
 				scripts={scripts ?? []}
 				selectedItemId={selectedItemId}
