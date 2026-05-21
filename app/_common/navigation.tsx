@@ -79,7 +79,7 @@ export default function Navigation({
 	return (
 		<nav className="flex-1 h-full">
 			{/* Mobile: dropdown */}
-			<div className="sm:hidden flex items-center justify-center h-full">
+			<div className="md:hidden flex items-center justify-center h-full">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button
@@ -111,7 +111,7 @@ export default function Navigation({
 			</div>
 
 			{/* Desktop: tabs */}
-			<div className="hidden sm:flex justify-center overflow-x-auto scrollbar-hide h-full">
+			<div className="hidden md:flex justify-center overflow-x-auto scrollbar-hide h-full">
 				{items.map(item => (
 					<Link
 						key={item.name}

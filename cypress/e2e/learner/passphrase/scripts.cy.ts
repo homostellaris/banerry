@@ -15,7 +15,10 @@ describe('Daily Quiz', () => {
 		cy.createLearner('Quiz Learner')
 
 		cy.visit('/mentor')
-		cy.getByName('learner-card').contains('Quiz Learner').click()
+		cy.contains('[data-name="learner-card"]', 'Quiz Learner')
+			.find('[data-name="learner-card-menu"]')
+			.click()
+		cy.getByName('learner-card-edit').click()
 		cy.url()
 			.should('include', '/mentor/learner/')
 			.then(url => {

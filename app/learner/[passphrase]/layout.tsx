@@ -22,6 +22,7 @@ export default async function LearnerPassphraseLayout({
 					<ElevenLabsNavButton />
 				</div>
 				<Navigation basePath={`/learner/${passphrase}`} />
+				<ElevenLabsNavButton />
 			</Header>
 			<Script
 				src="https://unpkg.com/@elevenlabs/convai-widget-embed"

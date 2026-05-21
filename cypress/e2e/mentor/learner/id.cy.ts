@@ -11,7 +11,10 @@ describe('Learner profile editor', () => {
 	beforeEach(() => {
 		cy.signIn(testEmail)
 		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
+		cy.contains('[data-name="learner-card"]', learnerName)
+			.find('[data-name="learner-card-menu"]')
+			.click()
+		cy.getByName('learner-card-edit').click()
 		cy.contains(learnerName).should('be.visible')
 	})
 
