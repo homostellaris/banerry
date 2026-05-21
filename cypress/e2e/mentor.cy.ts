@@ -26,7 +26,10 @@ describe('Learner management', () => {
 	it('navigates to learner detail page', () => {
 		const learnerName = `Nav Learner ${Date.now()}`
 		cy.createLearner(learnerName)
-		cy.getByName('learner-card').contains(learnerName).click()
+		cy.contains('[data-name="learner-card"]', learnerName)
+			.find('[data-name="learner-card-menu"]')
+			.click()
+		cy.getByName('learner-card-edit').click()
 		cy.contains(learnerName).should('be.visible')
 		cy.getByName('delete-learner-button').should('be.visible')
 	})
@@ -34,7 +37,10 @@ describe('Learner management', () => {
 	it('deletes a learner', () => {
 		const learnerName = `Delete Learner ${Date.now()}`
 		cy.createLearner(learnerName)
-		cy.getByName('learner-card').contains(learnerName).click()
+		cy.contains('[data-name="learner-card"]', learnerName)
+			.find('[data-name="learner-card-menu"]')
+			.click()
+		cy.getByName('learner-card-edit').click()
 		cy.getByName('delete-learner-button').click()
 		cy.getByName('confirm-delete-learner').click()
 		cy.url().should('include', '/mentor')

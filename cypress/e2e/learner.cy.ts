@@ -21,7 +21,10 @@ describe('Learner access', () => {
 		cy.createLearner(learnerName)
 
 		cy.visit('/mentor')
-		cy.getByName('learner-card').contains(learnerName).click()
+		cy.contains('[data-name="learner-card"]', learnerName)
+			.find('[data-name="learner-card-menu"]')
+			.click()
+		cy.getByName('learner-card-edit').click()
 		cy.contains('Learner Passphrase').should('be.visible')
 		cy.getByName('learner-passphrase')
 			.should('not.be.empty')
