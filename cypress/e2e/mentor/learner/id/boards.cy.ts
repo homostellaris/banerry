@@ -222,6 +222,13 @@ describe('Board image generation', () => {
 		)
 	})
 
+	it('shows the generation prompt when revisiting the board', () => {
+		cy.getByName('batch-prompt-input').should(
+			'have.value',
+			'brushing teeth, eating breakfast, going to school',
+		)
+	})
+
 	it('changes the image style', () => {
 		cy.get('body').then($body => {
 			if ($body.find('[data-name="style-selector"]').length > 0) {

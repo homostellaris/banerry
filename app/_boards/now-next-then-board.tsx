@@ -149,7 +149,9 @@ export function NowNextThenBoard({
 	const [isListening, setIsListening] = useState(false)
 	const [selectedStyle, setSelectedStyle] =
 		useState<ImageStyle>('studio-ghibli')
-	const [boardPrompt, setBoardPrompt] = useState('')
+	const [boardPrompt, setBoardPrompt] = useState(
+		!readOnly ? (board?.generationPrompt ?? '') : '',
+	)
 	const [isGeneratingAll, setIsGeneratingAll] = useState(false)
 	const [editingColumnId, setEditingColumnId] = useState<string | null>(null)
 	const [editingTitle, setEditingTitle] = useState('')
@@ -159,6 +161,12 @@ export function NowNextThenBoard({
 	const { selectedVoice } = useVoice()
 
 	const hasAvatar = !!avatarImageUrl
+
+	useEffect(() => {
+		if (!readOnly) {
+			setBoardPrompt(board?.generationPrompt ?? '')
+		}
+	}, [board?._id, readOnly])
 
 	useEffect(() => {
 		const savedStyle = localStorage.getItem('board-image-style')
