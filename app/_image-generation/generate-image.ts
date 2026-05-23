@@ -68,6 +68,12 @@ export async function generateImage(
 
 		const file = result.files[0]
 		if (!file) {
+			console.error(
+				'No image data in response. Text:',
+				result.text,
+				'Files:',
+				result.files,
+			)
 			return {
 				success: false,
 				error: 'No image data in response',
