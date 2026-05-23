@@ -60,7 +60,7 @@ export const createTestLearner = internalMutation({
 		name: v.string(),
 		bio: v.optional(v.string()),
 	},
-	returns: v.id('learners'),
+	returns: v.object({ learnerId: v.id('learners'), passphrase: v.string() }),
 	handler: async (ctx, args) => {
 		assertNotProduction()
 
@@ -95,7 +95,7 @@ export const createTestLearner = internalMutation({
 			mentorId: user._id,
 		})
 
-		return learnerId
+		return { learnerId, passphrase }
 	},
 })
 

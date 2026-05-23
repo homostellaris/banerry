@@ -1,24 +1,15 @@
 describe('Learner board view', () => {
 	const testEmail = 'cypress-learner-boards@banerry.app'
 	let passphrase: string
-	let learnerName: string
 
 	before(() => {
-		learnerName = `Learner Boards ${Date.now()}`
 		cy.signIn(testEmail)
-		cy.createLearner(learnerName)
-
-		cy.visit('/mentor')
-		cy.contains('[data-name="learner-card"]', learnerName)
-			.find('[data-name="learner-card-menu"]')
-			.click()
-		cy.getByName('learner-card-edit').click()
-		cy.getByName('learner-passphrase')
-			.should('not.be.empty')
-			.invoke('text')
-			.then(text => {
-				passphrase = text.trim()
-			})
+		cy.task('createTestLearner', {
+			email: testEmail,
+			name: `Learner Boards ${Date.now()}`,
+		}).then(({ passphrase: p }: { passphrase: string }) => {
+			passphrase = p
+		})
 	})
 
 	beforeEach(() => {
