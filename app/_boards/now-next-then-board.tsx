@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
 	Select,
 	SelectContent,
@@ -538,24 +539,25 @@ export function NowNextThenBoard({
 			)}
 
 			{!readOnly && (
-				<div className="flex gap-2 max-w-2xl mx-auto">
-					<Input
+				<div className="flex flex-col gap-2 max-w-2xl mx-auto">
+					<Textarea
 						placeholder='Describe the routine (e.g., "brushing teeth, eating breakfast, walking to school")'
 						value={boardPrompt}
 						onChange={e => setBoardPrompt(e.target.value)}
 						onKeyDown={e => {
-							if (e.key === 'Enter' && boardPrompt.trim() && !isGeneratingAll) {
+							if (e.key === 'Enter' && !e.shiftKey && boardPrompt.trim() && !isGeneratingAll) {
+								e.preventDefault()
 								handleGenerateAllImages()
 							}
 						}}
 						disabled={isGeneratingAll}
-						className="flex-1"
+						className="min-h-[80px] resize-y"
 						data-name="batch-prompt-input"
 					/>
 					<Button
 						onClick={handleGenerateAllImages}
 						disabled={!boardPrompt.trim() || isGeneratingAll}
-						className="bg-brand hover:bg-brand/90"
+						className="bg-brand hover:bg-brand/90 self-center"
 						data-name="batch-generate-button"
 					>
 						{isGeneratingAll ? (
