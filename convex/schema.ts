@@ -65,4 +65,12 @@ export default defineSchema({
 	})
 		.index('by_learner', ['learnerId'])
 		.index('by_learner_active', ['learnerId', 'isActive']),
+	canvasItems: defineTable({
+		learnerId: v.id('learners'),
+		type: v.union(v.literal('activity'), v.literal('script'), v.literal('color')),
+		sourceId: v.optional(v.string()),
+		gridX: v.number(),
+		gridY: v.number(),
+		color: v.optional(v.string()),
+	}).index('by_learner', ['learnerId']),
 })
