@@ -1,8 +1,8 @@
 'use client'
 
-import { useQuery, useMutation } from 'convex/react'
+import { usePreloadedQuery, useQuery, useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import { useState, use } from 'react'
+import { useState } from 'react'
 import {
 	CanvasEmptyState,
 	CanvasCarousel,
@@ -10,23 +10,20 @@ import {
 } from '@/components/canvas'
 import type { Canvas, CanvasBlock } from '@/lib/types/canvas'
 import { Id } from '@/convex/_generated/dataModel'
+import { Preloaded } from 'convex/react'
 
-export default function LearnerCanvasPage({
-	params,
+export default function CanvasPageClient({
+	passphrase,
+	preloadedLearner,
 }: {
-	params: Promise<{ passphrase: string }>
+	passphrase: string
+	preloadedLearner: Preloaded<typeof api.learners.getByPassphrase>
 }) {
-	const resolvedParams = use(params)
-	const passphrase = resolvedParams.passphrase
-
-	const learner = useQuery(
-		api.learners.getByPassphrase,
-		passphrase ? { passphrase } : 'skip',
-	)
+	const learner = usePreloadedQuery(preloadedLearner)
 
 	const convexCanvases = useQuery(
-		api.canvas.getCanvasesByPassphrase,
-		passphrase ? { passphrase } : 'skip',
+		api.canvas.getCanvases,
+		learner?._id ? { learnerId: learner._id } : 'skip',
 	)
 
 	const [selectedCanvasId, setSelectedCanvasId] = useState<string | undefined>(
@@ -37,6 +34,14 @@ export default function LearnerCanvasPage({
 	const createCanvasMutation = useMutation(api.canvas.createCanvas)
 	const updateCanvasMutation = useMutation(api.canvas.updateCanvas)
 	const deleteCanvasMutation = useMutation(api.canvas.deleteCanvas)
+
+	if (!learner) {
+		return (
+			<div className="container mx-auto p-4 max-w-4xl text-center text-gray-500 py-12">
+				Learner not found.
+			</div>
+		)
+	}
 
 	const canvases: Canvas[] = (convexCanvases || []).map(c => ({
 		id: c._id,
@@ -63,7 +68,8 @@ export default function LearnerCanvasPage({
 		title: string
 		blocks: CanvasBlock[]
 	}) => {
-		const learnerId = learner?._id
+		if (!learner?._id) return
+
 		if (selectedCanvasId && !isCreating) {
 			await updateCanvasMutation({
 				canvasId: selectedCanvasId as Id<'canvases'>,
@@ -72,7 +78,7 @@ export default function LearnerCanvasPage({
 			})
 		} else {
 			const newId = await createCanvasMutation({
-				learnerId: learnerId,
+				learnerId: learner._id,
 				title: data.title,
 				blocks: data.blocks,
 			})

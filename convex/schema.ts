@@ -65,4 +65,27 @@ export default defineSchema({
 	})
 		.index('by_learner', ['learnerId'])
 		.index('by_learner_active', ['learnerId', 'isActive']),
+	canvases: defineTable({
+		learnerId: v.optional(v.id('learners')),
+		title: v.string(),
+		blocks: v.array(
+			v.object({
+				id: v.string(),
+				type: v.union(
+					v.literal('script'),
+					v.literal('activity'),
+					v.literal('emoji'),
+					v.literal('letter'),
+					v.literal('number'),
+					v.literal('paint'),
+				),
+				content: v.string(),
+				label: v.optional(v.string()),
+				phrase: v.optional(v.string()),
+				seed: v.optional(v.string()),
+			}),
+		),
+		createdAt: v.optional(v.number()),
+		updatedAt: v.optional(v.number()),
+	}).index('by_learner', ['learnerId']),
 })

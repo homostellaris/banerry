@@ -7,15 +7,21 @@ export default defineConfig({
 		setupNodeEvents(on, config) {
 			on('task', {
 				resetCypressUsers() {
-					execSync('bun convex run internal.testing.resetCypressUsers', {
-						stdio: 'inherit',
-					})
+					execSync(
+						'bunx convex run --env-file .env.test.local internal.testing.resetCypressUsers',
+						{
+							stdio: 'inherit',
+						},
+					)
 					return null
 				},
 				clearVerificationCodes() {
-					execSync('bun convex run internal.testing.clearVerificationCodes', {
-						stdio: 'inherit',
-					})
+					execSync(
+						'bunx convex run --env-file .env.test.local internal.testing.clearVerificationCodes',
+						{
+							stdio: 'inherit',
+						},
+					)
 					return null
 				},
 				createTestLearner({
@@ -29,10 +35,19 @@ export default defineConfig({
 				}) {
 					const args = JSON.stringify({ email, name, bio })
 					const result = execSync(
-						`bun convex run internal.testing.createTestLearner '${args}'`,
+						`bunx convex run --env-file .env.test.local internal.testing.createTestLearner '${args}'`,
 						{ encoding: 'utf-8' },
 					)
-					return result.trim().replace(/^"|"$/g, '')
+					const raw = result.trim()
+					try {
+						return JSON.parse(raw)
+					} catch {
+						try {
+							return Function('"use strict";return (' + raw + ')')()
+						} catch {
+							return raw.replace(/^"|"$/g, '')
+						}
+					}
 				},
 			})
 		},
