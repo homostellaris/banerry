@@ -1,5 +1,10 @@
 import { defineConfig } from 'cypress'
 import { execSync } from 'child_process'
+import fs from 'fs'
+
+const envFlag = fs.existsSync('.env.test.local')
+	? '--env-file .env.test.local '
+	: ''
 
 export default defineConfig({
 	e2e: {
@@ -8,7 +13,7 @@ export default defineConfig({
 			on('task', {
 				resetCypressUsers() {
 					execSync(
-						'bunx convex run --env-file .env.test.local internal.testing.resetCypressUsers',
+						`bunx convex run ${envFlag}internal.testing.resetCypressUsers`,
 						{
 							stdio: 'inherit',
 						},
@@ -17,7 +22,7 @@ export default defineConfig({
 				},
 				clearVerificationCodes() {
 					execSync(
-						'bunx convex run --env-file .env.test.local internal.testing.clearVerificationCodes',
+						`bunx convex run ${envFlag}internal.testing.clearVerificationCodes`,
 						{
 							stdio: 'inherit',
 						},
@@ -35,7 +40,7 @@ export default defineConfig({
 				}) {
 					const args = JSON.stringify({ email, name, bio })
 					const result = execSync(
-						`bunx convex run --env-file .env.test.local internal.testing.createTestLearner '${args}'`,
+						`bunx convex run ${envFlag}internal.testing.createTestLearner '${args}'`,
 						{ encoding: 'utf-8' },
 					)
 					const raw = result.trim()
