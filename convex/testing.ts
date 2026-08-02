@@ -64,12 +64,16 @@ export const createTestLearner = internalMutation({
 	handler: async (ctx, args) => {
 		assertNotProduction()
 
-		const user = await ctx.db
+		let user = await ctx.db
 			.query('users')
 			.withIndex('email', q => q.eq('email', args.email))
 			.unique()
 		if (!user) {
-			throw new Error(`No user found with email: ${args.email}`)
+			const userId = await ctx.db.insert('users', {
+				email: args.email,
+				emailVerificationTime: Date.now(),
+			})
+			user = await ctx.db.get(userId)
 		}
 
 		let passphrase = generatePassphrase()
@@ -92,7 +96,7 @@ export const createTestLearner = internalMutation({
 
 		await ctx.db.insert('learnerMentorRelationships', {
 			learnerId,
-			mentorId: user._id,
+			mentorId: user!._id,
 		})
 
 		return { learnerId, passphrase }

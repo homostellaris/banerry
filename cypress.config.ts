@@ -43,7 +43,17 @@ export default defineConfig({
 						`bunx convex run ${envFlag}internal.testing.createTestLearner '${args}'`,
 						{ encoding: 'utf-8' },
 					)
-					return result.trim().replace(/^"|"$/g, '')
+					const trimmed = result.trim()
+					try {
+						return JSON.parse(trimmed)
+					} catch {
+						const unquoted = trimmed.replace(/^"|"$/g, '')
+						try {
+							return JSON.parse(unquoted)
+						} catch {
+							return unquoted
+						}
+					}
 				},
 			})
 		},
