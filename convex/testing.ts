@@ -173,3 +173,43 @@ export const resetCypressUsers = internalMutation({
 		return null
 	},
 })
+
+export const seedTestScript = internalMutation({
+	args: {
+		learnerId: v.id('learners'),
+		dialogue: v.string(),
+		parentheticals: v.optional(v.string()),
+	},
+	returns: v.id('scripts'),
+	handler: async (ctx, args) => {
+		assertNotProduction()
+		return await ctx.db.insert('scripts', {
+			learnerId: args.learnerId,
+			dialogue: args.dialogue,
+			parentheticals: args.parentheticals ?? '',
+		})
+	},
+})
+
+export const seedTestBoard = internalMutation({
+	args: {
+		learnerId: v.id('learners'),
+		name: v.string(),
+	},
+	returns: v.id('boards'),
+	handler: async (ctx, args) => {
+		assertNotProduction()
+		return await ctx.db.insert('boards', {
+			learnerId: args.learnerId,
+			name: args.name,
+			columns: [
+				{ id: '1', title: 'Now', position: 1 },
+				{ id: '2', title: 'Next', position: 2 },
+				{ id: '3', title: 'Then', position: 3 },
+			],
+			isActive: true,
+			createdAt: Date.now(),
+		})
+	},
+})
+

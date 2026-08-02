@@ -16,6 +16,7 @@
 		"unit": "bun test",
 		"component": "cypress run --component",
 		"integration": "start-server-and-test 'NODE_ENV=test bun run build && NODE_ENV=test bun start -p 6614' 6614 'bun --env-file .env.test --env-file .env.test.local cypress run --config baseUrl=http://localhost:6614'",
+		"check:fast": "bun typecheck && bun lint && bun unit",
 		"test": "bun typecheck && bun lint && bun unit && bun component && bun integration",
 		"build": "next build",
 		"start": "next start"
