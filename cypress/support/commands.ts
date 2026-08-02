@@ -1,4 +1,18 @@
-/// <reference types="cypress" />
+declare global {
+	namespace Cypress {
+		interface Chainable {
+			signIn(email: string): Chainable<void>
+			createLearner(name: string, bio?: string): Chainable<void>
+			getByName(name: string): Chainable<JQuery<HTMLElement>>
+			visitLearner(passphrase: string, subpath?: string): Chainable<AUTWindow>
+		}
+	}
+}
+
+Cypress.Commands.add('visitLearner', (passphrase: string, subpath?: string) => {
+	const cleanSubpath = subpath ? `/${subpath.replace(/^\//, '')}` : ''
+	return cy.visit(`/learner/${passphrase}${cleanSubpath}`)
+})
 
 Cypress.Commands.add('signIn', (email: string) => {
 	const otp = Cypress.env('OTP_OVERRIDE')
@@ -46,3 +60,4 @@ Cypress.Commands.add('getByName', (name: string) => {
 })
 
 export {}
+

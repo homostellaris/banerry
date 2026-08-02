@@ -11,8 +11,6 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { MentorActivityCardDisplay } from './mentor-activity-card-display'
 
-export { MentorActivityCardDisplay } from './mentor-activity-card-display'
-
 interface Activity {
 	id: string
 	boardId: Id<'boards'>
