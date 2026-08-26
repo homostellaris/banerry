@@ -3,6 +3,10 @@ declare global {
 		interface Chainable {
 			signIn(email: string): Chainable<void>
 			createLearner(name: string, bio?: string): Chainable<void>
+			createPopulatedLearner(
+				name: string,
+				bio?: string,
+			): Chainable<{ learnerId: string; passphrase: string }>
 			getByName(
 				name: string,
 				options?: Partial<Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>
@@ -56,6 +60,17 @@ Cypress.Commands.add('createLearner', (name: string, bio?: string) => {
 	}
 
 	cy.task('createTestLearner', { email, name, bio })
+})
+
+Cypress.Commands.add('createPopulatedLearner', (name: string, bio?: string) => {
+	const email = Cypress.env('CURRENT_TEST_EMAIL')
+	if (!email) {
+		throw new Error(
+			'CURRENT_TEST_EMAIL not set — call cy.signIn() before cy.createPopulatedLearner()',
+		)
+	}
+
+	return cy.task('createPopulatedLearner', { email, name, bio })
 })
 
 Cypress.Commands.add('getByName', (name: string, options?: any) => {

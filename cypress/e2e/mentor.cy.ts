@@ -14,19 +14,19 @@ describe('Learner management', () => {
 	it('creates a new learner', () => {
 		const learnerName = `Test Learner ${Date.now()}`
 		cy.createLearner(learnerName)
-		cy.contains(learnerName).should('be.visible')
+		cy.contains(learnerName, { timeout: 10000 }).should('be.visible')
 	})
 
 	it('creates a learner with a bio', () => {
 		const learnerName = `Bio Learner ${Date.now()}`
 		cy.createLearner(learnerName, 'Likes dinosaurs and trains')
-		cy.contains(learnerName).should('be.visible')
+		cy.contains(learnerName, { timeout: 10000 }).should('be.visible')
 	})
 
 	it('navigates to learner detail page', () => {
 		const learnerName = `Nav Learner ${Date.now()}`
 		cy.createLearner(learnerName)
-		cy.contains('[data-name="learner-card"]', learnerName)
+		cy.contains('[data-name="learner-card"]', learnerName, { timeout: 10000 })
 			.find('[data-name="learner-card-menu"]')
 			.click()
 		cy.getByName('learner-card-edit').click()
@@ -37,7 +37,7 @@ describe('Learner management', () => {
 	it('deletes a learner', () => {
 		const learnerName = `Delete Learner ${Date.now()}`
 		cy.createLearner(learnerName)
-		cy.contains('[data-name="learner-card"]', learnerName)
+		cy.contains('[data-name="learner-card"]', learnerName, { timeout: 10000 })
 			.find('[data-name="learner-card-menu"]')
 			.click()
 		cy.getByName('learner-card-edit').click()

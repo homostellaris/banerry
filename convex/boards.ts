@@ -1,5 +1,6 @@
 import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
+import { Id } from './_generated/dataModel'
 
 const columnValidator = v.object({
 	id: v.string(),
@@ -250,10 +251,14 @@ export const updateColumnImage = mutation({
 })
 
 export const getImageUrl = query({
-	args: { storageId: v.id('_storage') },
+	args: { storageId: v.union(v.id('_storage'), v.string()) },
 	returns: v.union(v.string(), v.null()),
 	handler: async (ctx, args) => {
-		return await ctx.storage.getUrl(args.storageId)
+		try {
+			return await ctx.storage.getUrl(args.storageId as Id<'_storage'>)
+		} catch {
+			return null
+		}
 	},
 })
 
