@@ -21,16 +21,10 @@ function ActivityPickerThumbnail({
 	imageUrl?: string
 	title: string
 }) {
-	let storageUrl: string | null | undefined = null
-	try {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		storageUrl = useQuery(
-			api.boards.getImageUrl,
-			imageStorageId ? { storageId: imageStorageId as Id<'_storage'> } : 'skip',
-		)
-	} catch {
-		storageUrl = null
-	}
+	const storageUrl = useQuery(
+		api.boards.getImageUrl,
+		imageStorageId ? { storageId: imageStorageId as Id<'_storage'> } : 'skip',
+	)
 
 	const src = imageUrl || storageUrl
 

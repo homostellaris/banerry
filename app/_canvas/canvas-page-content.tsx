@@ -45,7 +45,7 @@ export function CanvasPageContent({ passphrase }: CanvasPageContentProps) {
 	const removeCanvas = useMutation(api.canvases.remove)
 
 	const activeBoardColumns: ActivityItem[] = (boards || []).flatMap(board =>
-		board.columns.map(col => ({
+		(board?.columns || []).map(col => ({
 			id: `${board._id}-${col.id}`,
 			title: col.title,
 			imageStorageId: col.imageStorageId,

@@ -9,16 +9,10 @@ import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 function StorageImagePreview({ storageId }: { storageId: Id<'_storage'> | string }) {
-	let imageUrl: string | null | undefined = null
-	try {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		imageUrl = useQuery(
-			api.boards.getImageUrl,
-			storageId ? { storageId: storageId as Id<'_storage'> } : 'skip',
-		)
-	} catch {
-		imageUrl = null
-	}
+	const imageUrl = useQuery(
+		api.boards.getImageUrl,
+		storageId ? { storageId: storageId as Id<'_storage'> } : 'skip',
+	)
 
 	if (!imageUrl) {
 		return (
