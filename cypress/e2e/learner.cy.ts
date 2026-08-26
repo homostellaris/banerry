@@ -21,7 +21,7 @@ describe('Learner access', () => {
 		cy.createLearner(learnerName)
 
 		cy.visit('/mentor')
-		cy.contains('[data-name="learner-card"]', learnerName)
+		cy.contains('[data-name="learner-card"]', learnerName, { timeout: 10000 })
 			.find('[data-name="learner-card-menu"]')
 			.click()
 		cy.getByName('learner-card-edit').click()

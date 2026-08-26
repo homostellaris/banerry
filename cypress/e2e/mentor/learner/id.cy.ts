@@ -74,7 +74,7 @@ describe('Learner profile editor', () => {
 		cy.getByName('avatar-prompt-input')
 			.clear()
 			.type('7-year-old girl with long red hair')
-		cy.getByName('generate-avatar-button').click()
+		cy.getByName('generate-avatar-button').scrollIntoView().click()
 		cy.get('[data-name="avatar-preview"]', { timeout: 30000 }).should(
 			'be.visible',
 		)

@@ -4,17 +4,18 @@ describe('Learner Canvas E2E Specification', () => {
 	const testEmail = 'cypress-canvas-learner@banerry.app'
 	let passphrase: string
 
-	beforeEach(() => {
-		cy.task('resetCypressUsers')
-		cy.task('clearVerificationCodes')
+	before(() => {
+		cy.signIn(testEmail)
+	})
 
+	beforeEach(() => {
 		cy.on('uncaught:exception', error => {
+			// Never suppress internal application exceptions or React dispatcher errors.
+			// Only bypass benign external widget network disconnects or Unauthenticated if needed.
 			if (
-				error.message.includes('Unauthenticated') ||
-				error.message.includes('Invalid or unexpected token') ||
-				error.message.includes('Unexpected token') ||
-				error.message.includes('more than one result') ||
-				error.message.includes('500')
+				error.message.includes('elevenlabs') ||
+				error.message.includes('convai') ||
+				error.message.includes('Unauthenticated')
 			) {
 				return false
 			}
@@ -28,7 +29,6 @@ describe('Learner Canvas E2E Specification', () => {
 		cy.clearAllLocalStorage()
 		cy.clearAllSessionStorage()
 
-		cy.signIn(testEmail)
 		cy.task('createTestLearner', {
 			email: testEmail,
 			name: `Canvas Learner ${Date.now()}`,
@@ -130,10 +130,11 @@ describe('Learner Canvas E2E Specification', () => {
 	describe('3. Transparent Block Container Styling & Single-Tap Actions', () => {
 		it('renders canvas blocks with clean container styling without harsh solid backgrounds', () => {
 			cy.visitLearner(passphrase, 'canvas')
-			cy.getByName(CANVAS_DATA_NAMES.CREATE_CANVAS_BTN).click()
-			cy.getByName('palette-block-emoji').click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.CREATE_CANVAS_BTN).first().click()
+			cy.getByName('palette-block-emoji').scrollIntoView().click({ force: true })
 			cy.getByName(CANVAS_DATA_NAMES.EMOJI_PICKER_MODAL).should('be.visible')
 			cy.getByName(CANVAS_DATA_NAMES.EMOJI_ITEM_OPTION).first().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.EMOJI_PICKER_MODAL).should('not.exist')
 
 			const blockSelector = `${CANVAS_DATA_NAMES.BLOCK_PREFIX}emoji`
 			cy.getByName(blockSelector).should('be.visible')
@@ -144,10 +145,11 @@ describe('Learner Canvas E2E Specification', () => {
 
 		it('opens and shows edit and delete actions directly on single-tap on a block', () => {
 			cy.visitLearner(passphrase, 'canvas')
-			cy.getByName(CANVAS_DATA_NAMES.CREATE_CANVAS_BTN).click()
-			cy.getByName('palette-block-emoji').click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.CREATE_CANVAS_BTN).first().click()
+			cy.getByName('palette-block-emoji').scrollIntoView().click({ force: true })
 			cy.getByName(CANVAS_DATA_NAMES.EMOJI_PICKER_MODAL).should('be.visible')
 			cy.getByName(CANVAS_DATA_NAMES.EMOJI_ITEM_OPTION).first().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.EMOJI_PICKER_MODAL).should('not.exist')
 
 			const blockSelector = `${CANVAS_DATA_NAMES.BLOCK_PREFIX}emoji`
 			cy.getByName(blockSelector).should('be.visible')
@@ -613,6 +615,73 @@ describe('Learner Canvas E2E Specification', () => {
 				cy.get('[data-name="move-right-btn"], [aria-label*="right"]')
 					.should('exist')
 			})
+		})
+	})
+
+	describe('11. Pre-Populated Learner State & Resilient Component Rendering', () => {
+		let populatedPassphrase: string
+
+		beforeEach(() => {
+			cy.signIn(testEmail)
+			cy.createPopulatedLearner(`Populated Learner ${Date.now()}`).then(
+				res => {
+					populatedPassphrase = res.passphrase
+				},
+			)
+		})
+
+		it('loads existing canvases, scripts, and board activities without hydration or query errors', () => {
+			cy.visitLearner(populatedPassphrase, 'canvas')
+
+			// Carousel should show pre-seeded canvas card
+			cy.getByName(CANVAS_DATA_NAMES.CAROUSEL).should('be.visible')
+			cy.getByName(CANVAS_DATA_NAMES.CARD).should('have.length.at.least', 1)
+
+			// Editor should render pre-seeded blocks
+			cy.getByName(CANVAS_DATA_NAMES.EDITOR).should('be.visible')
+			cy.getByName(`${CANVAS_DATA_NAMES.BLOCK_PREFIX}script`).should('be.visible')
+			cy.getByName(`${CANVAS_DATA_NAMES.BLOCK_PREFIX}activity`).should('be.visible')
+			cy.getByName(`${CANVAS_DATA_NAMES.BLOCK_PREFIX}emoji`).should('be.visible')
+			cy.getByName(`${CANVAS_DATA_NAMES.BLOCK_PREFIX}letter`).should('be.visible')
+			cy.getByName(`${CANVAS_DATA_NAMES.BLOCK_PREFIX}number`).should('be.visible')
+		})
+
+		it('opens activity picker and renders all pre-existing board activities', () => {
+			cy.visitLearner(populatedPassphrase, 'canvas')
+
+			// Click Edit to open controls
+			cy.getByName(CANVAS_DATA_NAMES.TOGGLE_EDIT_MODE_BTN).click()
+
+			// Open activity block palette
+			cy.getByName('palette-block-activity').scrollIntoView().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.ACTIVITY_PICKER_MODAL).should('be.visible')
+
+			// Should render all seeded board activity options
+			cy.getByName(CANVAS_DATA_NAMES.ACTIVITY_ITEM_OPTION)
+				.should('have.length.at.least', 3)
+
+			// Pick first activity
+			cy.getByName(CANVAS_DATA_NAMES.ACTIVITY_ITEM_OPTION).first().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.ACTIVITY_PICKER_MODAL).should('not.exist')
+		})
+
+		it('opens script picker and renders all pre-existing learner scripts', () => {
+			cy.visitLearner(populatedPassphrase, 'canvas')
+
+			// Click Edit to open controls
+			cy.getByName(CANVAS_DATA_NAMES.TOGGLE_EDIT_MODE_BTN).click()
+
+			// Open script block palette
+			cy.getByName('palette-block-script').scrollIntoView().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.SCRIPT_PICKER_MODAL).should('be.visible')
+
+			// Should render all seeded scripts
+			cy.getByName(CANVAS_DATA_NAMES.SCRIPT_ITEM_OPTION)
+				.should('have.length.at.least', 2)
+
+			// Pick first script
+			cy.getByName(CANVAS_DATA_NAMES.SCRIPT_ITEM_OPTION).first().click({ force: true })
+			cy.getByName(CANVAS_DATA_NAMES.SCRIPT_PICKER_MODAL).should('not.exist')
 		})
 	})
 })

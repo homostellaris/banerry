@@ -55,6 +55,32 @@ export default defineConfig({
 						}
 					}
 				},
+				createPopulatedLearner({
+					email,
+					name,
+					bio,
+				}: {
+					email: string
+					name: string
+					bio?: string
+				}) {
+					const args = JSON.stringify({ email, name, bio })
+					const result = execSync(
+						`bunx convex run ${envFlag}internal.testing.createPopulatedLearner '${args}'`,
+						{ encoding: 'utf-8' },
+					)
+					const trimmed = result.trim()
+					try {
+						return JSON.parse(trimmed)
+					} catch {
+						const unquoted = trimmed.replace(/^"|"$/g, '')
+						try {
+							return JSON.parse(unquoted)
+						} catch {
+							return unquoted
+						}
+					}
+				},
 			})
 		},
 		supportFile: 'cypress/support/e2e.ts',

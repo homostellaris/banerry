@@ -103,6 +103,159 @@ export const createTestLearner = internalMutation({
 	},
 })
 
+export const createPopulatedLearner = internalMutation({
+	args: {
+		email: v.string(),
+		name: v.string(),
+		bio: v.optional(v.string()),
+	},
+	returns: v.object({ learnerId: v.id('learners'), passphrase: v.string() }),
+	handler: async (ctx, args) => {
+		assertNotProduction()
+
+		let user = await ctx.db
+			.query('users')
+			.withIndex('email', q => q.eq('email', args.email))
+			.unique()
+		if (!user) {
+			const userId = await ctx.db.insert('users', {
+				email: args.email,
+				emailVerificationTime: Date.now(),
+			})
+			user = await ctx.db.get(userId)
+		}
+
+		let passphrase = generatePassphrase()
+		let attempts = 0
+		while (attempts < 10) {
+			const existing = await ctx.db
+				.query('learners')
+				.withIndex('by_passphrase', q => q.eq('passphrase', passphrase))
+				.unique()
+			if (!existing) break
+			passphrase = generatePassphrase()
+			attempts++
+		}
+
+		const learnerId = await ctx.db.insert('learners', {
+			name: args.name,
+			bio: args.bio ?? 'A wonderful learner profile with existing boards and activities',
+			passphrase,
+		})
+
+		await ctx.db.insert('learnerMentorRelationships', {
+			learnerId,
+			mentorId: user!._id,
+		})
+
+		// Seed scripts
+		await ctx.db.insert('scripts', {
+			learnerId,
+			dialogue: 'I would like some water please',
+			parentheticals: 'calm and polite',
+		})
+		await ctx.db.insert('scripts', {
+			learnerId,
+			dialogue: 'Time to play outside',
+			parentheticals: 'excited',
+		})
+
+		// Seed target script
+		await ctx.db.insert('targetScripts', {
+			learnerId,
+			dialogue: 'Can I have a break?',
+			parentheticals: 'raising hand',
+		})
+
+		// Seed active board with columns (activities)
+		await ctx.db.insert('boards', {
+			learnerId,
+			name: 'Daily Schedule',
+			columns: [
+				{
+					id: 'col-1',
+					title: 'Morning Circle',
+					position: 1,
+					imagePrompt: 'Children sitting in morning circle',
+					timerDuration: 600,
+				},
+				{
+					id: 'col-2',
+					title: 'Snack Time',
+					position: 2,
+					imagePrompt: 'Healthy snack bowl of apples and bananas',
+					timerDuration: 900,
+				},
+				{
+					id: 'col-3',
+					title: 'Art & Painting',
+					position: 3,
+					imagePrompt: 'Color palette with paintbrush',
+					timerDuration: 1200,
+				},
+			],
+			isActive: true,
+			createdAt: Date.now(),
+		})
+
+		// Seed initial canvas with multiple blocks
+		await ctx.db.insert('canvases', {
+			learnerId,
+			name: 'My Starter Canvas',
+			blocks: [
+				{
+					id: 'blk-script-1',
+					type: 'script',
+					content: 'I would like some water please',
+					x: 40,
+					y: 40,
+					width: 220,
+					height: 120,
+				},
+				{
+					id: 'blk-act-1',
+					type: 'activity',
+					content: 'Snack Time',
+					x: 300,
+					y: 40,
+					width: 200,
+					height: 160,
+				},
+				{
+					id: 'blk-emoji-1',
+					type: 'emoji',
+					content: '🌟',
+					x: 60,
+					y: 200,
+					width: 80,
+					height: 80,
+				},
+				{
+					id: 'blk-letter-1',
+					type: 'letter',
+					content: 'B',
+					x: 180,
+					y: 200,
+					width: 80,
+					height: 80,
+				},
+				{
+					id: 'blk-number-1',
+					type: 'number',
+					content: '7',
+					x: 300,
+					y: 240,
+					width: 80,
+					height: 80,
+				},
+			],
+			createdAt: Date.now(),
+		})
+
+		return { learnerId, passphrase }
+	},
+})
+
 export const resetCypressUsers = internalMutation({
 	args: {},
 	returns: v.null(),

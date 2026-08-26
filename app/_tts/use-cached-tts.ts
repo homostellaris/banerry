@@ -13,9 +13,11 @@ export function useCachedTTS() {
 	const [error, setError] = useState<string | null>(null)
 	const audioRef = useRef<HTMLAudioElement | null>(null)
 
-	// Initialize audio element
-	if (typeof window !== 'undefined' && !audioRef.current) {
-		audioRef.current = new Audio()
+	const getAudio = (): HTMLAudioElement | null => {
+		if (typeof window !== 'undefined' && !audioRef.current) {
+			audioRef.current = new Audio()
+		}
+		return audioRef.current
 	}
 
 	const speak = async (text: string, voice = 'nova') => {
@@ -24,9 +26,10 @@ export function useCachedTTS() {
 			setError(null)
 
 			// Stop any currently playing audio
-			if (audioRef.current) {
-				audioRef.current.pause()
-				audioRef.current.currentTime = 0
+			const audio = getAudio()
+			if (audio) {
+				audio.pause()
+				audio.currentTime = 0
 			}
 
 			console.log(`Requesting speech for: "${text}" with voice: ${voice}`)
@@ -90,20 +93,20 @@ export function useCachedTTS() {
 
 			console.log('Audio data ready, preparing to play')
 
-			if (audioRef.current) {
-				audioRef.current.src = audioUrl
+			if (audio) {
+				audio.src = audioUrl
 
-				audioRef.current.onerror = e => {
+				audio.onerror = e => {
 					console.error('Audio playback error:', e)
 					URL.revokeObjectURL(audioUrl)
 					setError('Failed to play audio')
 				}
 
-				await audioRef.current.play()
+				await audio.play()
 				console.log('Audio playback started')
 
 				// Clean up the URL when audio is done playing
-				audioRef.current.onended = () => {
+				audio.onended = () => {
 					URL.revokeObjectURL(audioUrl)
 					console.log('Audio playback completed')
 				}
