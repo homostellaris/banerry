@@ -38,10 +38,12 @@ export function VoiceProvider({ children }: { children: ReactNode }) {
 	)
 }
 
-export function useVoice() {
+const DEFAULT_VOICE_CONTEXT: VoiceContextType = {
+	selectedVoice: 'nova',
+	setSelectedVoice: () => {},
+}
+
+export function useVoice(): VoiceContextType {
 	const context = useContext(VoiceContext)
-	if (context === undefined) {
-		throw new Error('useVoice must be used within a VoiceProvider')
-	}
-	return context
+	return context || DEFAULT_VOICE_CONTEXT
 }

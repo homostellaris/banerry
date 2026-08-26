@@ -14,16 +14,7 @@ interface AudioButtonProps {
 }
 
 export default function AudioButton({ text, 'data-name': dataName, className, iconClassName }: AudioButtonProps) {
-	let selectedVoice = 'alloy'
-	try {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const voiceCtx = useVoice()
-		if (voiceCtx?.selectedVoice) {
-			selectedVoice = voiceCtx.selectedVoice
-		}
-	} catch {
-		selectedVoice = 'alloy'
-	}
+	const { selectedVoice } = useVoice()
 	const { speak, isLoading, error } = useCachedTTS()
 
 	const playAudio = (e: React.MouseEvent) => {
