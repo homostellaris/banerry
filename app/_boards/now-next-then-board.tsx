@@ -38,6 +38,7 @@ import {
 import posthog from 'posthog-js'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import AudioButton from '@/app/_tts/audio-button'
 import { ActivityRequestOverlay } from './activity-request-overlay'
 import { useCachedTTS } from '@/app/_tts/use-cached-tts'
 import { useVoice } from '@/app/_tts/voice-context'
@@ -595,18 +596,19 @@ export function NowNextThenBoard({
 								: ''
 						}`}
 					>
-						<CardHeader className="pb-3">
-							<div className="flex items-center justify-between gap-2">
+						<CardHeader className="p-4 sm:p-5 pb-3">
+							<div className="flex items-center justify-between gap-4">
 								{!readOnly && editingColumnId === column.id ? (
 									<div className="flex items-center gap-1 flex-1">
 										<Input
+											data-name="column-title-input"
 											value={editingTitle}
 											onChange={e => setEditingTitle(e.target.value)}
 											onKeyDown={e => {
 												if (e.key === 'Enter') handleSaveTitle()
 												if (e.key === 'Escape') handleCancelEditTitle()
 											}}
-											className="h-8 text-center"
+											className="h-8 text-left"
 											autoFocus
 										/>
 										<Button
@@ -645,7 +647,7 @@ export function NowNextThenBoard({
 											<div className="w-7" />
 										)}
 										<CardTitle
-											className={`text-center text-xl font-semibold flex-1 ${
+											className={`text-left text-xl sm:text-2xl font-bold text-gray-800 flex-1 truncate ${
 												!readOnly ? 'cursor-pointer hover:text-brand' : ''
 											}`}
 											onClick={e => {
@@ -671,18 +673,11 @@ export function NowNextThenBoard({
 												<Pencil className="h-4 w-4" />
 											</Button>
 										) : (
-											<Button
-												size="icon"
-												variant="ghost"
-												className="h-7 w-7 text-brand hover:bg-brand/10"
-												onClick={e => {
-													e.stopPropagation()
-													speak(column.title, selectedVoice)
-												}}
-												aria-label="Play audio"
-											>
-												<Volume2 className="h-4 w-4" />
-											</Button>
+											<AudioButton
+												text={column.title}
+												className="rounded-full h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 bg-brand/10 hover:bg-brand/20 text-brand"
+												iconClassName="h-6 w-6 sm:h-7 sm:w-7 text-brand"
+											/>
 										)}
 									</>
 								)}
@@ -690,7 +685,7 @@ export function NowNextThenBoard({
 							{column.timerDuration && (
 								<Badge
 									variant="secondary"
-									className="mx-auto w-fit"
+									className="mx-auto w-fit mt-2"
 								>
 									<Clock className="w-3 h-3 mr-1" />
 									{Math.round(column.timerDuration / 60)}m
@@ -698,7 +693,7 @@ export function NowNextThenBoard({
 							)}
 						</CardHeader>
 
-						<CardContent className="space-y-4">
+						<CardContent className="p-4 sm:p-5 pt-0">
 							<div
 								className={`relative aspect-square bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 transition-colors ${
 									!readOnly

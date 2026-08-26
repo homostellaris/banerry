@@ -95,7 +95,7 @@ describe('Board columns', () => {
 
 	it('edits a column title', () => {
 		cy.getByName('column-title').first().click()
-		cy.get("input[class*='text-center']").clear().type('Morning{enter}')
+		cy.getByName('column-title-input').clear().type('Morning{enter}')
 		cy.getByName('column-title').first().should('contain', 'Morning')
 	})
 

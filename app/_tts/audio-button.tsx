@@ -8,10 +8,22 @@ import { useCachedTTS } from '@/app/_tts/use-cached-tts'
 
 interface AudioButtonProps {
 	text: string
+	'data-name'?: string
+	className?: string
+	iconClassName?: string
 }
 
-export default function AudioButton({ text }: AudioButtonProps) {
-	const { selectedVoice } = useVoice()
+export default function AudioButton({ text, 'data-name': dataName, className, iconClassName }: AudioButtonProps) {
+	let selectedVoice = 'alloy'
+	try {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const voiceCtx = useVoice()
+		if (voiceCtx?.selectedVoice) {
+			selectedVoice = voiceCtx.selectedVoice
+		}
+	} catch {
+		selectedVoice = 'alloy'
+	}
 	const { speak, isLoading, error } = useCachedTTS()
 
 	const playAudio = (e: React.MouseEvent) => {
@@ -25,17 +37,18 @@ export default function AudioButton({ text }: AudioButtonProps) {
 	return (
 		<div className="relative">
 			<Button
+				data-name={dataName}
 				variant="ghost"
 				size="icon"
-				className="rounded-full h-14 w-14 flex-shrink-0 bg-brand/10 hover:bg-brand/20"
+				className={className || "rounded-full h-14 w-14 flex-shrink-0 bg-brand/10 hover:bg-brand/20"}
 				onClick={playAudio}
 				disabled={isLoading}
 				aria-label="Play audio"
 			>
 				{isLoading ? (
-					<Loader2 className="h-8 w-8 text-brand animate-spin" />
+					<Loader2 className={iconClassName || "h-8 w-8 text-brand animate-spin"} />
 				) : (
-					<Volume2 className="h-8 w-8 text-brand" />
+					<Volume2 className={iconClassName || "h-8 w-8 text-brand"} />
 				)}
 			</Button>
 			{error && (
