@@ -65,4 +65,27 @@ export default defineSchema({
 	})
 		.index('by_learner', ['learnerId'])
 		.index('by_learner_active', ['learnerId', 'isActive']),
+	canvases: defineTable({
+		learnerId: v.id('learners'),
+		name: v.string(),
+		blocks: v.array(
+			v.object({
+				id: v.string(),
+				type: v.string(),
+				content: v.string(),
+				x: v.number(),
+				y: v.number(),
+				width: v.optional(v.number()),
+				height: v.optional(v.number()),
+				color: v.optional(v.string()),
+				sourceId: v.optional(v.string()),
+				imageStorageId: v.optional(v.union(v.id('_storage'), v.string())),
+				imageUrl: v.optional(v.string()),
+				strokeWidth: v.optional(v.number()),
+				strokeColor: v.optional(v.string()),
+				points: v.optional(v.array(v.object({ x: v.number(), y: v.number() }))),
+			}),
+		),
+		createdAt: v.number(),
+	}).index('by_learner', ['learnerId']),
 })

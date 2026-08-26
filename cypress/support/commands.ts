@@ -3,7 +3,10 @@ declare global {
 		interface Chainable {
 			signIn(email: string): Chainable<void>
 			createLearner(name: string, bio?: string): Chainable<void>
-			getByName(name: string): Chainable<JQuery<HTMLElement>>
+			getByName(
+				name: string,
+				options?: Partial<Cypress.Timeoutable & Cypress.Withinable & Cypress.Shadow>
+			): Chainable<JQuery<HTMLElement>>
 			visitLearner(passphrase: string, subpath?: string): Chainable<AUTWindow>
 		}
 	}
@@ -55,8 +58,8 @@ Cypress.Commands.add('createLearner', (name: string, bio?: string) => {
 	cy.task('createTestLearner', { email, name, bio })
 })
 
-Cypress.Commands.add('getByName', (name: string) => {
-	return cy.get(`[data-name="${name}"]`)
+Cypress.Commands.add('getByName', (name: string, options?: any) => {
+	return cy.get(`[data-name="${name}"]`, options)
 })
 
 export {}

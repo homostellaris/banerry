@@ -2,8 +2,11 @@
 
 import { useState, useRef } from 'react'
 import { audioCache } from '@/app/_tts/audio-cache'
-import { streamSpeech } from '@/app/_tts/stream-speech'
-import type { StreamTextToSpeechRequest } from '@elevenlabs/elevenlabs-js/api'
+
+interface StreamTextToSpeechRequest {
+	text: string
+	modelId?: string
+}
 
 export function useCachedTTS() {
 	const [isLoading, setIsLoading] = useState(false)
@@ -62,6 +65,7 @@ export function useCachedTTS() {
 					// },
 				}
 				console.log('Generating new audio')
+				const { streamSpeech } = await import('@/app/_tts/stream-speech')
 				const result = await streamSpeech(FEATURED_VOICES[0].id, request)
 
 				if (!result.ok) {
