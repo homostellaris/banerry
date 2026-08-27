@@ -82,7 +82,7 @@ export const createTestLearner = internalMutation({
 			const existing = await ctx.db
 				.query('learners')
 				.withIndex('by_passphrase', q => q.eq('passphrase', passphrase))
-				.unique()
+				.first()
 			if (!existing) break
 			passphrase = generatePassphrase()
 			attempts++
@@ -131,7 +131,7 @@ export const createPopulatedLearner = internalMutation({
 			const existing = await ctx.db
 				.query('learners')
 				.withIndex('by_passphrase', q => q.eq('passphrase', passphrase))
-				.unique()
+				.first()
 			if (!existing) break
 			passphrase = generatePassphrase()
 			attempts++
@@ -267,6 +267,35 @@ export const resetCypressUsers = internalMutation({
 		)
 
 		for (const user of cypressUsers) {
+			const relationships = await ctx.db
+				.query('learnerMentorRelationships')
+				.withIndex('by_mentor', (q: any) => q.eq('mentorId', user._id))
+				.collect()
+			for (const rel of relationships) {
+				const canvases = await ctx.db
+					.query('canvases')
+					.withIndex('by_learner', (q: any) => q.eq('learnerId', rel.learnerId))
+					.collect()
+				for (const c of canvases) await ctx.db.delete(c._id)
+				const scripts = await ctx.db
+					.query('scripts')
+					.withIndex('by_learner', (q: any) => q.eq('learnerId', rel.learnerId))
+					.collect()
+				for (const s of scripts) await ctx.db.delete(s._id)
+				const targetScripts = await ctx.db
+					.query('targetScripts')
+					.withIndex('by_learner', (q: any) => q.eq('learnerId', rel.learnerId))
+					.collect()
+				for (const ts of targetScripts) await ctx.db.delete(ts._id)
+				const boards = await ctx.db
+					.query('boards')
+					.withIndex('by_learner', (q: any) => q.eq('learnerId', rel.learnerId))
+					.collect()
+				for (const b of boards) await ctx.db.delete(b._id)
+				await ctx.db.delete(rel.learnerId)
+				await ctx.db.delete(rel._id)
+			}
+
 			const accounts = await ctx.db
 				.query('authAccounts')
 				.withIndex('userIdAndProvider', (q: any) => q.eq('userId', user._id))
