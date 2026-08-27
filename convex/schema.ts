@@ -84,6 +84,7 @@ export default defineSchema({
 				strokeWidth: v.optional(v.number()),
 				strokeColor: v.optional(v.string()),
 				points: v.optional(v.array(v.object({ x: v.number(), y: v.number() }))),
+				isTransparent: v.optional(v.boolean()),
 			}),
 		),
 		createdAt: v.number(),

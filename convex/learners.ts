@@ -207,7 +207,7 @@ export const getLearnerByPassphrase = query({
 		return await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 	},
 })
 
@@ -373,7 +373,7 @@ export const getByPassphrase = query({
 		const learner = await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 		if (!learner) return null
 
 		const scripts = await ctx.db

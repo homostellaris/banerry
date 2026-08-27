@@ -37,7 +37,7 @@ export const getByPassphrase = query({
 		const learner = await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 
 		if (!learner) {
 			return []
@@ -76,7 +76,7 @@ export const create = mutation({
 		const learner = await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 
 		if (!learner) {
 			throw new Error('Invalid passphrase')
@@ -115,7 +115,7 @@ export const update = mutation({
 		const learner = await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 
 		if (!learner) {
 			throw new Error('Invalid passphrase')
@@ -148,7 +148,7 @@ export const remove = mutation({
 		const learner = await ctx.db
 			.query('learners')
 			.withIndex('by_passphrase', q => q.eq('passphrase', args.passphrase))
-			.unique()
+			.first()
 
 		if (!learner) {
 			throw new Error('Invalid passphrase')

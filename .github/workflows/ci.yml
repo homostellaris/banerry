@@ -58,3 +58,9 @@ jobs:
         with:
           name: cypress-integration-videos
           path: cypress/videos/
+      - name: Deploy Convex functions to production
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: bunx convex deploy
+        env:
+          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
+
