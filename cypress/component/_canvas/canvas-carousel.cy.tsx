@@ -158,5 +158,68 @@ describe('CanvasCarousel Component', () => {
 					.and('have.attr', 'src', 'https://example.com/breakfast.png')
 			})
 		})
+
+		it('constrains preview height on tablet viewport even with large images', () => {
+			cy.viewport(768, 1024) // iPad / Tablet viewport
+
+			const canvasWithLargeImage: Canvas[] = [
+				{
+					_id: 'canvas-img-1',
+					learnerId: 'learner-1',
+					name: 'Single Image Canvas',
+					createdAt: 1700000000000,
+					blocks: [
+						{
+							id: 'b-img',
+							type: 'activity',
+							content: 'Big Photo',
+							imageUrl: 'https://example.com/big.png',
+							x: 0,
+							y: 0,
+						},
+					],
+				},
+				{
+					_id: 'canvas-multi-1',
+					learnerId: 'learner-1',
+					name: 'Multi Block Canvas',
+					createdAt: 1700000000000,
+					blocks: [
+						{ id: 'b1', type: 'emoji', content: '🎈', x: 0, y: 0 },
+						{ id: 'b2', type: 'letter', content: 'B', x: 20, y: 20 },
+						{ id: 'b3', type: 'number', content: '3', x: 40, y: 40 },
+					],
+				},
+			]
+
+			cy.mount(
+				<CanvasCarousel
+					canvases={canvasWithLargeImage}
+					onSelectCanvas={cy.stub()}
+					onCreateNew={cy.stub()}
+				/>,
+			)
+
+			// The preview cards should have responsive basis classes matching boards carousel
+			cy.getByName('canvas-card').each($card => {
+				// Height should remain tightly constrained (< 220px total card height)
+				expect($card.height()).to.be.lessThan(220)
+			})
+		})
+
+		it('calls onDeleteCanvas when delete button is clicked', () => {
+			const onDeleteCanvas = cy.stub()
+			cy.mount(
+				<CanvasCarousel
+					canvases={mockCanvases}
+					onSelectCanvas={cy.stub()}
+					onCreateNew={cy.stub()}
+					onDeleteCanvas={onDeleteCanvas}
+				/>,
+			)
+
+			cy.getByName('delete-canvas-btn').eq(0).click()
+			cy.wrap(onDeleteCanvas).should('have.been.calledWith', 'canvas-1')
+		})
 	})
 })
