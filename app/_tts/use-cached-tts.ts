@@ -112,8 +112,6 @@ export function useCachedTTS() {
 				}
 			}
 		} catch (err) {
-			console.error('Error playing TTS:', err)
-
 			let errorMessage = 'Failed to play audio'
 
 			if (err instanceof Error) {
@@ -128,6 +126,7 @@ export function useCachedTTS() {
 				}
 			}
 
+			console.warn('Error playing TTS:', errorMessage)
 			setError(errorMessage)
 		} finally {
 			setIsLoading(false)
