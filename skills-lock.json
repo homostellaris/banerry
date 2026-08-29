@@ -8,12 +8,12 @@
       "computedHash": "73b3c91579ddd2f2dd7ebcf215774ea0de07823c1fe8de4b88b3225833bfa5cd"
     },
     "check-pr-run": {
-      "source": "/home/openclaw/code/homostellaris/dotfiles/agents/skills",
+      "source": "../../../dotfiles/agents/skills",
       "sourceType": "local",
       "computedHash": "4114a590ff249e2cc083edc3c101817f5bc922e50dc8fe0159daa3d09c9c5fcd"
     },
     "commit-and-push": {
-      "source": "/home/openclaw/code/homostellaris/dotfiles/agents/skills",
+      "source": "../../../dotfiles/agents/skills",
       "sourceType": "local",
       "computedHash": "2095de90f6a9fc04f330a01af62b0ea82560c2286404eca19cf66e4fd1cdb94f"
     },
@@ -34,6 +34,12 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "66e8a50c83c3c724fcfe0769701b665c56cec220cc4f49cc1aee8bdfc07de94a"
+    },
+    "next-dev-loop": {
+      "source": "vercel/next.js",
+      "sourceType": "github",
+      "skillPath": "skills/next-dev-loop/SKILL.md",
+      "computedHash": "d2a697a0a0429cad0bb7264644115457f588d4ed1007eeb0bb7f965b1185fa6e"
     },
     "nextjs-app-router-patterns": {
       "source": "wshobson/agents",
