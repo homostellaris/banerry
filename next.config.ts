@@ -18,13 +18,11 @@ const nextConfig: NextConfig = {
 		}
 		return config
 	},
+	turbopack: {},
 	experimental: {
 		serverActions: {
 			bodySizeLimit: '10mb',
 		},
-	},
-	eslint: {
-		ignoreDuringBuilds: true,
 	},
 	typescript: {
 		ignoreBuildErrors: true,
