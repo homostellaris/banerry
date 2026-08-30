@@ -7,16 +7,6 @@
       "skillPath": "skills/bun-runtime/SKILL.md",
       "computedHash": "73b3c91579ddd2f2dd7ebcf215774ea0de07823c1fe8de4b88b3225833bfa5cd"
     },
-    "check-pr-run": {
-      "source": "../../../dotfiles/agents/skills",
-      "sourceType": "local",
-      "computedHash": "4114a590ff249e2cc083edc3c101817f5bc922e50dc8fe0159daa3d09c9c5fcd"
-    },
-    "commit-and-push": {
-      "source": "../../../dotfiles/agents/skills",
-      "sourceType": "local",
-      "computedHash": "2095de90f6a9fc04f330a01af62b0ea82560c2286404eca19cf66e4fd1cdb94f"
-    },
     "cucumber-gherkin": {
       "source": "el-feo/ai-context",
       "sourceType": "github",
@@ -33,13 +23,13 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
-      "computedHash": "66e8a50c83c3c724fcfe0769701b665c56cec220cc4f49cc1aee8bdfc07de94a"
+      "computedHash": "2449db6ab1ded9581f69fcc56c1f64818112d05e271fd4c5da23c6523f9d3d9d"
     },
     "next-dev-loop": {
       "source": "vercel/next.js",
       "sourceType": "github",
       "skillPath": "skills/next-dev-loop/SKILL.md",
-      "computedHash": "d2a697a0a0429cad0bb7264644115457f588d4ed1007eeb0bb7f965b1185fa6e"
+      "computedHash": "fcfd05ce87d9edafda2e454f3f998bc45cb96fa2a3b695a4c3c144a9a13e7c39"
     },
     "nextjs-app-router-patterns": {
       "source": "wshobson/agents",
@@ -57,7 +47,7 @@
       "source": "warpdotdev/common-skills",
       "sourceType": "github",
       "skillPath": ".agents/skills/review-pr/SKILL.md",
-      "computedHash": "f27bfc9743fa0d240763a26519b25112a0ad8652c9a2b2b52daeb7af2d2a862c"
+      "computedHash": "f1e389e40df08b22a70013756f40147c9a4a4d3641e08c28c40028ceef0a632e"
     },
     "tailwind-css-patterns": {
       "source": "giuseppe-trisciuoglio/developer-kit",
@@ -69,7 +59,7 @@
       "source": "mattpocock/skills",
       "sourceType": "github",
       "skillPath": "skills/engineering/tdd/SKILL.md",
-      "computedHash": "81eca2a5b53a63f481c0849be7a663a8cd43d5cf53f32b644ec0a2f50cf91aa2"
+      "computedHash": "e753a5da75292bbe59d302d89566bc2c53d0e73944da2f0e944a7578883c07d0"
     },
     "vercel-composition-patterns": {
       "source": "vercel-labs/agent-skills",
