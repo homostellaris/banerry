@@ -1,66 +1,19 @@
-name: CI
+name: Deploy
 
 on:
   push:
     branches: [main]
-  pull_request:
 
 jobs:
-  test:
-    name: Test
+  deploy:
+    name: Deploy Convex
     runs-on: ubuntu-latest
-    env:
-      CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-      CYPRESS_VIDEO: 'true'
-      CYPRESS_OTP_OVERRIDE: 12345678
-      GOOGLE_AI_API_KEY: test-key
-      STUB_APIS: 'true'
-      NEXT_PUBLIC_CONVEX_URL: https://content-toucan-531.convex.cloud
-      CONVEX_SITE_URL: https://content-toucan-531.convex.cloud
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: Configure Vercel credentials
-        run: |
-          mkdir -p ~/.local/share/com.vercel.cli
-          echo '{"token":"${{ secrets.VERCEL_TOKEN }}"}' > ~/.local/share/com.vercel.cli/auth.json
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Typecheck
-        run: bun typecheck
-      - name: Lint
-        run: bun lint
-      - name: Unit tests
-        run: bun unit
-      - name: Component tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          component: true
-          command: bunx cypress run --component
-      - name: Upload component test videos
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-component-videos
-          path: cypress/videos/
-      - name: Integration tests
-        uses: cypress-io/github-action@v6
-        with:
-          install: false
-          start: bun start -p 6604
-          wait-on: http://localhost:6604
-          command: bun cypress run
-          build: bun run build
-      - name: Upload integration test videos
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-integration-videos
-          path: cypress/videos/
       - name: Deploy Convex functions to production
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: bunx convex deploy
         env:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
-

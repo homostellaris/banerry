@@ -1,6 +1,6 @@
-# CLAUDE.md
+# Banerry Agent Guide
 
-@~/code/convex.md
+For Convex guidelines and patterns, consult [.agents/rules/convex.md](.agents/rules/convex.md).
 
 ## Project Overview
 

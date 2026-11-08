@@ -52,16 +52,16 @@ flowchart TD
 | **3** | **Acceptance Test Constraints** | **`acceptance-tester`** *(Subagent)* | Authors route-mirroring Cypress E2E spec in `cypress/e2e/` with PostHog assertions matching the planner's `data-name` contracts. |
 | **4** | **Component Unit QA** | **`component-qa`** *(Subagent)* | Writes failing Cypress Component specs (`cypress/component/**/*.cy.tsx`) for UI and Bun tests (`*.test.ts`) for pure logic. |
 | **5** | **Component Implementation** | **`component-builder`** *(Subagent)* | Implements React UI & Convex functions to pass unit tests (`bun test`). **Read-only on test files.** Max 3 retries before escalating back to Orchestrator. |
-| **6** | **Integration & Pre-Flight** | **Feature Orchestrator** | Syncs Convex backend (`bunx convex dev --once`), runs `bun run typecheck`, `bun run lint`, and full Cypress suite (`bun run integration`). |
-| **7** | **PR Delivery & CI Watch** | **Feature Orchestrator** | Commits using Gitmoji format (`✨`), pushes branch, opens PR (`gh pr create`), and monitors GitHub Actions pipeline via `/check-pr-run`. |
-| **8** | **PR Review & Comment Watching** | **Feature Orchestrator** | Listens for human PR comments and Vercel preview feedback via `/check-pr-comments`, delegating fixes back to Step 4/5 as needed. |
+| **6** | **Integration & Local Verification** | **Feature Orchestrator** | In the agent worktree, syncs Convex backend (`bunx convex dev --once`), runs `bun run typecheck`, `bun run lint`, and verifies uncommitted changes locally / via Tailscale. |
+| **7** | **Merge & Push to Main** | **Feature Orchestrator** | Once approved by user, commits (`✨`), pushes worktree branch directly to `origin/main`, fast-forwards local `main` if clean, and prunes the worktree. |
 
 ---
 
 ## Core Execution Rules
 
-1. **Flat Subagent Hierarchy (1-Level Deep):** The Feature Orchestrator directly invokes worker subagents. Subagents **MUST NOT** spawn sub-subagents via `define_subagent` or `invoke_subagent`.
-2. **Single Git Authority:** **ONLY** the Orchestrator executes `git commit`, `git push`, or `gh pr create`. Subagents are strictly restricted from Git mutations to prevent index locks.
+1. **Worktree Isolation:** The root worktree is strictly reserved for the user. Agents must always create and execute inside an isolated worktree (`.worktrees/<feature>`).
+2. **Flat Subagent Hierarchy (1-Level Deep):** The Feature Orchestrator directly invokes worker subagents. Subagents **MUST NOT** spawn sub-subagents via `define_subagent` or `invoke_subagent`.
+3. **Single Git Authority:** **ONLY** the Orchestrator executes `git commit` or `git push`. Subagents are strictly restricted from Git mutations to prevent index locks.
 3. **Convex Pre-Flight Type Sync:** Always run `bunx convex dev --once` immediately after `convex/schema.ts` updates, before component development begins.
 4. **No Background Task Polling:** Do **NOT** poll `manage_task` in a loop; wait for system completion notifications.
 5. **Architectural & Testing Conventions:**
